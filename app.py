@@ -171,45 +171,92 @@ def authenticate():
 if 'current_page' not in st.session_state:
     st.session_state.current_page = "Free Demo"
 
-def navigation():
-    st.sidebar.markdown("""
-    <div style="text-align: center; margin-bottom: 2rem;">
-        <h1 style="font-size: 1.8rem; margin-bottom: 0.5rem; color: #333;">Code Efficiency Analyzer</h1>
-        <p style="color: #666; font-size: 0.9rem;">Pharmaceutical & Biotech Applications</p>
-    </div>
-    """, unsafe_allow_html=True)
-    
-    st.sidebar.markdown("---")
-    
-    # Navigation buttons
-    col1, col2 = st.sidebar.columns(2)
-    
-    with col1:
-        if st.button("Free Demo", use_container_width=True, 
-                    type="primary" if st.session_state.current_page == "Free Demo" else "secondary"):
+def create_sidebar_navigation():
+    with st.sidebar:
+        # Logo and title
+        st.markdown("""
+        <div style="text-align: center; margin-bottom: 2rem;">
+            <h1 style="font-size: 1.8rem; margin-bottom: 0.5rem; color: #333;">Code Efficiency Analyzer</h1>
+            <p style="color: #666; font-size: 0.9rem; margin-bottom: 2rem;">Pharmaceutical & Biotech Applications</p>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        st.markdown("---")
+        
+        # Navigation section with clear heading
+        st.markdown("### 📍 Navigation")
+        
+        # Free Demo button
+        if st.session_state.current_page == "Free Demo":
+            demo_btn = st.button(
+                "🧪 Free Demo", 
+                use_container_width=True, 
+                type="primary",
+                key="nav_demo"
+            )
+        else:
+            demo_btn = st.button(
+                "🧪 Free Demo", 
+                use_container_width=True,
+                key="nav_demo"
+            )
+            
+        if demo_btn:
             st.session_state.current_page = "Free Demo"
             st.rerun()
-    
-    with col2:
-        if st.button("About", use_container_width=True,
-                    type="primary" if st.session_state.current_page == "About" else "secondary"):
+        
+        # About button
+        if st.session_state.current_page == "About":
+            about_btn = st.button(
+                "📖 About", 
+                use_container_width=True, 
+                type="primary",
+                key="nav_about"
+            )
+        else:
+            about_btn = st.button(
+                "📖 About", 
+                use_container_width=True,
+                key="nav_about"
+            )
+            
+        if about_btn:
             st.session_state.current_page = "About"
             st.rerun()
-    
-    st.sidebar.markdown("---")
-    
-    # Platform info in sidebar
-    st.sidebar.markdown("""
-    <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 1rem; border-radius: 8px; color: white;">
-        <h4 style="color: white; margin-bottom: 0.5rem;">Platform Features</h4>
-        <ul style="color: white; font-size: 0.8rem; padding-left: 1rem;">
-            <li>AI-powered code analysis</li>
-            <li>Pharma-specific patterns</li>
-            <li>Performance optimization</li>
-            <li>Best practices guidance</li>
-        </ul>
-    </div>
-    """, unsafe_allow_html=True)
+        
+        st.markdown("---")
+        
+        # Current page indicator
+        st.markdown(f"""
+        <div style="background: #e9ecef; padding: 0.5rem; border-radius: 6px; text-align: center; margin: 1rem 0;">
+            <small><strong>Current Page:</strong> {st.session_state.current_page}</small>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        st.markdown("---")
+        
+        # Platform info in sidebar
+        st.markdown("### 🚀 Platform Features")
+        st.markdown("""
+        <div style="background: white; padding: 1rem; border-radius: 8px; border: 1px solid #e0e0e0;">
+            <ul style="font-size: 0.8rem; padding-left: 1rem;">
+                <li>AI-powered code analysis</li>
+                <li>Pharma-specific patterns</li>
+                <li>Performance optimization</li>
+                <li>Best practices guidance</li>
+            </ul>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        st.markdown("---")
+        
+        # Status indicator
+        st.markdown("### 📊 System Status")
+        st.markdown("""
+        <div style="background: #d4edda; color: #155724; padding: 0.5rem; border-radius: 6px; text-align: center;">
+            <small>🟢 All Systems Operational</small>
+        </div>
+        """, unsafe_allow_html=True)
 
 # About page
 def render_about():
@@ -490,7 +537,7 @@ def main():
         return
     
     # Navigation
-    navigation()
+   create_sidebar_navigation()
     
     # Route to appropriate page
     if st.session_state.current_page == "About":
