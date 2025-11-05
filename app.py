@@ -21,13 +21,13 @@ with st.sidebar:
     
     Detects
     
-    [Learn More](about.html)
+    [Learn More](about.py)
     """)
     
     # Quick links in sidebar
     st.markdown("### Quick Links")
     st.markdown("""
-    - [About Page](about.html)
+    - [About Page](about.py)
 
     """)
 
