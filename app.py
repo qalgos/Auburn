@@ -41,7 +41,7 @@ def authenticate():
             with st.container():
                 st.markdown('<div class="auth-container">', unsafe_allow_html=True)
                 st.title("🔒 Secure Access")
-                st.write("Authentication required to access the Code Efficiency Analyzer")
+                st.write("Authentication required to access Auburn")
                 
                 with st.form("auth_form"):
                     password = st.text_input(
@@ -168,7 +168,7 @@ def find_patient_by_id(patients, target_id):
             return patient
     return None""",
 
-        "🧪 Manual Matrix Operations": """# Manual matrix multiplication for dose-response modeling
+        " Matrix Operations": """#  matrix multiplication for dose-response modeling
 def manual_matrix_multiply(A, B):
     rows_A, cols_A = len(A), len(A[0])
     rows_B, cols_B = len(B), len(B[0])
@@ -182,7 +182,7 @@ def manual_matrix_multiply(A, B):
 
     # ABOUT PAGE
     if page == "ℹ️ About":
-        st.markdown('<h1 class="main-header">Code Efficiency Analyzer</h1>', unsafe_allow_html=True)
+        st.markdown('<h1 class="main-header">Auburn</h1>', unsafe_allow_html=True)
         
         col1, col2 = st.columns([2, 1])
         
@@ -210,12 +210,12 @@ def manual_matrix_multiply(A, B):
                     st.write(description)
         
         with col2:
-            st.subheader("🔍 Supported Patterns")
+            st.subheader("🔍 Supported operations")
             st.markdown("""
-            - **Inefficient Sorting Algorithms**
-            - **Linear Search Patterns**  
-            - **Manual Matrix Operations**
-            - **Nested Loop Inefficiencies**
+            - **Sorting**
+            - **Database Search**  
+            - **Matrix Operations**
+            - **Nested Loops**
             - **Suboptimal Data Structures**
             - **Redundant Calculations**
             """)
@@ -223,9 +223,10 @@ def manual_matrix_multiply(A, B):
             st.subheader("📈 Impact")
             st.markdown("""
             <div class="success-box">
-            **Average performance improvement**: 3-10x  
-            **Reduced computation time**: Up to 70%  
-            **Memory optimization**: Up to 50%  
+            **Average performance improvement**
+            **Reduced computation time** 
+            **Memory optimization**%  
+            **Quantum speedup potential**
             </div>
             """, unsafe_allow_html=True)
         
@@ -257,7 +258,7 @@ def manual_matrix_multiply(A, B):
 
     # DEMO PAGE
     else:
-        st.markdown('<h1 class="main-header">Code Efficiency Analyzer</h1>', unsafe_allow_html=True)
+        st.markdown('<h1 class="main-header">Auburn</h1>', unsafe_allow_html=True)
         st.subheader("Detect inefficiencies in pharma/biotech codebases")
         
         # Quick stats in sidebar
@@ -268,6 +269,7 @@ def manual_matrix_multiply(A, B):
             - Real-time analysis
             - Confidence scoring
             - Optimization suggestions
+            - Evaluating quantum speedup potential 
             """)
             
             if st.button("🔄 Clear Session", use_container_width=True):
@@ -306,7 +308,7 @@ def manual_matrix_multiply(A, B):
         st.markdown("---")
         
         # Main Analysis Section
-        st.subheader("🔍 Code Analysis")
+        st.subheader(" Code Analysis")
         
         # Initialize session state
         if 'analysis_code' not in st.session_state:
@@ -318,7 +320,7 @@ def manual_matrix_multiply(A, B):
             height=250,
             value=st.session_state.analysis_code,
             placeholder="""# Paste your code here or use an example above\n\ndef your_function():\n    # Your code here\n    return result""",
-            help="The analyzer will detect inefficient patterns in sorting, searching, and matrix operations"
+            help="Auburn will detect inefficient patterns in sorting, searching, and matrix operations"
         )
         
         col1, col2 = st.columns([1, 1])
@@ -424,7 +426,7 @@ def manual_matrix_multiply(A, B):
     st.markdown("---")
     col1, col2, col3 = st.columns([2, 1, 1])
     with col1:
-        st.markdown("**Code Efficiency Analyzer** • Built with Streamlit & TensorFlow")
+        st.markdown("**Auburn** • Built with Streamlit & TensorFlow")
     with col2:
         st.markdown("Detects inefficient patterns in scientific computing")
     with col3:
