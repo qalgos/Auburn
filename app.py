@@ -141,7 +141,7 @@ st.markdown("""
     
     /* Buttons */
     .stButton button {
-        background-color: #f2d4c4;
+        background-color: #e3bea8;
         color: white;
         border: none;
         border-radius: 8px;
@@ -150,7 +150,7 @@ st.markdown("""
     }
     
     .stButton button:hover {
-        background-color: #fffaf7;
+        background-color: #e38146;
         color: white;
     }
     
