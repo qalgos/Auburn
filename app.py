@@ -329,6 +329,14 @@ if st.button("Analyze Code", type="primary", use_container_width=True):
                 st.error(f"❌ Error analyzing code: {str(e)}")
     else:
         st.warning("Please enter some code to analyze")
+         # Show raw confidence scores
+            with st.expander("🔍 Detailed Confidence Scores"):
+                    for label, confidence in sorted(confidence_scores.items(), key=lambda x: x[1], reverse=True):
+                        st.write(f"{label}: {confidence:.3f}")
+                        
+            except Exception as e:
+                st.error(f"❌ Error analyzing code: {str(e)}")
+                st.info("Make sure all model files (model.h5, tokenizer.pkl, mlb.pkl, metadata.pkl) are in the repository.")
 
 # Clear button
 if st.button("Clear All", use_container_width=True):
