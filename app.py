@@ -15,8 +15,8 @@ st.set_page_config(
 # Sidebar Navigation
 with st.sidebar:
     st.title("🧪 Navigation")
-    st.page_link("app.py", label="🏠 Home", icon="🏠")
-    st.page_link("about.py", label="📖 About", icon="📖")
+    st.page_link("app.py", label=" Home")
+    st.page_link("about.py", label=" About")
     
     st.markdown("---")
     st.subheader("Quick Info")
