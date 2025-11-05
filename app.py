@@ -238,9 +238,7 @@ def find_drug_interactions(drug, drug_library):
     return interactions"""
 }
 
-# UI
-st.title("🧪 Pharmaceutical Code Efficiency Analyzer")
-st.write("Detect inefficient patterns in pharmaceutical/biotech code")
+
 
 # Example Gallery Section - ABOVE the analysis
 st.subheader("📚 Example Code Gallery")
