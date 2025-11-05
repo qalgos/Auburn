@@ -11,19 +11,36 @@ st.set_page_config(
     page_icon="",
     layout="wide"
 )
+
 # About section in sidebar
 with st.sidebar:
     st.markdown("---")
     st.subheader("About")
     st.markdown("""
-    **Developed by **
-
+    **Auburn**
+    
+    Detects
+    
+    [Learn More](about.html)
+    """)
+    
     # Quick links in sidebar
     st.markdown("### Quick Links")
     st.markdown("""
     - [About Page](about.html)
 
     """)
+
+# Footer
+st.markdown("---")
+st.markdown("""
+<div style="text-align: center; color: #666;">
+    <p>Built with Streamlit • 
+    <a href="about.html" style="color: #A52A2A; text-decoration: none;">About</a> • 
+    </p>
+</div>
+""", unsafe_allow_html=True)
+
 
 # Load Keras model
 @st.cache_resource
