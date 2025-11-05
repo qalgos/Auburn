@@ -11,6 +11,31 @@ st.set_page_config(
     page_icon="",
     layout="wide"
 )
+# About section in sidebar
+with st.sidebar:
+    st.markdown("---")
+    st.subheader("About")
+    st.markdown("""
+    **Pharma Code Efficiency Analyzer**
+    
+    Detects inefficient patterns in pharmaceutical and biotech code:
+    
+    - 🚨 Inefficient sorting algorithms
+    - 🔍 Poor search implementations  
+    - 🧪 Manual matrix operations
+    - 📊 Memory inefficiencies
+    
+    [Learn More](about.html)
+    """)
+    
+    # Quick links in sidebar
+    st.markdown("### Quick Links")
+    st.markdown("""
+    - [About Page](about.html)
+    - [Documentation](#)
+    - [GitHub Repository](https://github.com/yourusername/your-repo)
+    - [Report Issue](https://github.com/yourusername/your-repo/issues)
+    """)
 
 # Load Keras model
 @st.cache_resource
