@@ -165,7 +165,7 @@ def preprocess_code(code):
 
 
 # UI
-st.title("Auburn Efficiency Analyser")
+st.title("Auburn free demo")
 st.write("Detect inefficiencies in pharma/biotech codebases")
 
 # Example codes database
@@ -242,90 +242,106 @@ def find_drug_interactions(drug, drug_library):
 st.title("🧪 Pharmaceutical Code Efficiency Analyzer")
 st.write("Detect inefficient patterns in pharmaceutical/biotech code")
 
-# Main analysis section
-col1, col2 = st.columns([2, 1])
+# Example Gallery Section - ABOVE the analysis
+st.subheader("📚 Example Code Gallery")
+st.write("Click on examples to load them into the analyzer below:")
 
-with col1:
-    st.subheader("Code Analysis")
-    code_input = st.text_area("Paste your code here:", height=200, 
-                             placeholder="Paste your pharmaceutical code here...")
-    
-    if st.button("Analyze Code", type="primary", use_container_width=True):
-        if code_input.strip():
-            with st.spinner("🔍 Analyzing code patterns..."):
-                try:
-                    model = load_model()
-                    tokenizer, mlb, metadata = load_components()
-                    
-                    # Preprocess and predict
-                    processed_code = preprocess_code(code_input)
-                    sequence = tokenizer.texts_to_sequences([processed_code])
-                    padded_sequence = pad_sequences(sequence, maxlen=metadata['max_len'], padding='post')
-                    
-                    # Keras prediction
-                    predictions = model.predict(padded_sequence, verbose=0)
-                    
-                    # Get results
-                    binary_predictions = (predictions > 0.5).astype(int)
-                    predicted_labels = mlb.inverse_transform(binary_predictions)
-                    
-                    # Get confidence scores
-                    confidence_scores = {}
-                    for i, label in enumerate(mlb.classes_):
-                        confidence_scores[label] = float(predictions[0][i])
-                    
-                    # Display results
-                    st.subheader("📊 Analysis Results")
-                    
-                    if predicted_labels[0]:
-                        st.error("🚨 Inefficiencies Detected:")
-                        for label in predicted_labels[0]:
-                            confidence = confidence_scores.get(label, 0) * 100
-                            st.write(f"**{label.replace('_', ' ').title()}** (Confidence: {confidence:.1f}%)")
-                            
-                            if label in metadata.get('fundamental_operations', {}):
-                                info = metadata['fundamental_operations'][label]
-                                with st.expander(f"Details for {label}"):
-                                    st.write(f"**Description**: {info.get('description', 'N/A')}")
-                                    st.write(f"**Quantum Speedup**: {info.get('quantum_speedup', 'N/A')}")
-                                    st.write(f"**Optimization**: {info.get('optimization_notes', 'N/A')}")
-                    else:
-                        st.success("✅ No inefficiencies detected!")
-                        st.info("The code appears to use efficient implementations.")
-                        
-                except Exception as e:
-                    st.error(f"❌ Error analyzing code: {str(e)}")
-        else:
-            st.warning("Please enter some code to analyze")
+# Create columns for the example gallery
+cols = st.columns(2)
 
-with col2:
-    st.subheader("Example Gallery")
-    st.write("Click on examples to load them:")
-    
-    # Create expandable example gallery
-    with st.expander("🧪 Load Example Codes", expanded=True):
-        for title, code in EXAMPLE_CODES.items():
-            if st.button(title, use_container_width=True, key=title):
-                st.session_state.example_code = code
-                st.rerun()
+# Distribute examples across columns
+example_titles = list(EXAMPLE_CODES.keys())
+for i, title in enumerate(example_titles):
+    with cols[i % 2]:  # Alternate between columns
+        if st.button(title, use_container_width=True, key=f"btn_{title}"):
+            st.session_state.example_code = EXAMPLE_CODES[title]
+            st.session_state.selected_example = title
 
-# Load example code if selected
+# Display selected example code
 if 'example_code' in st.session_state:
-    code_input = st.session_state.example_code
+    st.subheader(f"📋 Example: {st.session_state.get('selected_example', 'Selected Code')}")
     st.code(st.session_state.example_code, language='python')
-
-# Additional examples in expanders
-with st.expander("📚 More Example Patterns", expanded=False):
-    st.write("""
-    **Common Inefficient Patterns in Pharma/Biotech Code:**
     
-    - **O(n²) Sorting**: Bubble sort, insertion sort, selection sort on large datasets
-    - **Linear Search**: Scanning lists instead of using hash tables or indexes
-    - **Manual Matrix Ops**: Triple nested loops instead of optimized BLAS routines
-    - **Nested Loops**: Drug-drug interaction screening without optimization
-    - **Repeated Calculations**: Recomputing expensive functions in loops
-    """)
+    # Add a button to use this code for analysis
+    if st.button("🔍 Analyze This Example", type="primary"):
+        st.session_state.analysis_code = st.session_state.example_code
+        st.rerun()
 
+# Analysis Section - BELOW the examples
+st.markdown("---")
+st.subheader("🔍 Code Analysis")
+
+# Initialize session state for analysis code
+if 'analysis_code' not in st.session_state:
+    st.session_state.analysis_code = ""
+
+# Text area for code input - prefill with selected example
+code_input = st.text_area(
+    "Paste or modify your code here:", 
+    height=200,
+    value=st.session_state.analysis_code,
+    placeholder="Paste your pharmaceutical code here or use an example above..."
+)
+
+# Analysis button
+if st.button("Analyze Code", type="primary", use_container_width=True):
+    if code_input.strip():
+        with st.spinner("🔍 Analyzing code patterns..."):
+            try:
+                model = load_model()
+                tokenizer, mlb, metadata = load_components()
+                
+                # Preprocess and predict
+                processed_code = preprocess_code(code_input)
+                sequence = tokenizer.texts_to_sequences([processed_code])
+                padded_sequence = pad_sequences(sequence, maxlen=metadata['max_len'], padding='post')
+                
+                # Keras prediction
+                predictions = model.predict(padded_sequence, verbose=0)
+                
+                # Get results
+                binary_predictions = (predictions > 0.5).astype(int)
+                predicted_labels = mlb.inverse_transform(binary_predictions)
+                
+                # Get confidence scores
+                confidence_scores = {}
+                for i, label in enumerate(mlb.classes_):
+                    confidence_scores[label] = float(predictions[0][i])
+                
+                # Display results
+                st.subheader("📊 Analysis Results")
+                
+                if predicted_labels[0]:
+                    st.error("🚨 Inefficiencies Detected:")
+                    for label in predicted_labels[0]:
+                        confidence = confidence_scores.get(label, 0) * 100
+                        st.write(f"**{label.replace('_', ' ').title()}** (Confidence: {confidence:.1f}%)")
+                        
+                        if label in metadata.get('fundamental_operations', {}):
+                            info = metadata['fundamental_operations'][label]
+                            with st.expander(f"Details for {label}"):
+                                st.write(f"**Description**: {info.get('description', 'N/A')}")
+                                st.write(f"**Quantum Speedup**: {info.get('quantum_speedup', 'N/A')}")
+                                st.write(f"**Optimization**: {info.get('optimization_notes', 'N/A')}")
+                else:
+                    st.success("✅ No inefficiencies detected!")
+                    st.info("The code appears to use efficient implementations.")
+                    
+            except Exception as e:
+                st.error(f"❌ Error analyzing code: {str(e)}")
+    else:
+        st.warning("Please enter some code to analyze")
+
+# Clear button
+if st.button("Clear All", use_container_width=True):
+    st.session_state.analysis_code = ""
+    if 'example_code' in st.session_state:
+        del st.session_state.example_code
+    if 'selected_example' in st.session_state:
+        del st.session_state.selected_example
+    st.rerun()
+
+# Footer
 
 # Footer
 st.markdown("---")
