@@ -462,7 +462,7 @@ if authenticate():
             # Collapse multiple spaces and trim
             code = re.sub(r'\s+', ' ', code).strip()
         
-            return code
+        return code
         
         # Example codes for the analysis page
         EXAMPLE_CODES = {
