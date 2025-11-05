@@ -52,7 +52,7 @@ def authenticate():
                     submit = st.form_submit_button("🚀 Login", use_container_width=True)
                     
                     if submit:
-                        if password == "my password":  # Replace with your actual password
+                        if password == "AuburninYC2026!":  # Replace with your actual password
                             st.session_state.authenticated = True
                             st.rerun()
                         else:
