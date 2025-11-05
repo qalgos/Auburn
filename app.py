@@ -9,351 +9,83 @@ import base64
 import time
 import os
 
+import streamlit as st
+import tensorflow as tf
+import numpy as np
+from tensorflow.keras.preprocessing.sequence import pad_sequences
+import pickle
+import re
+
 # Set page config
 st.set_page_config(
-    page_title="Code Efficiency Analyzer | Pharma/Biotech",
-    page_icon="🔬",
-    layout="wide",
-    initial_sidebar_state="expanded"
+    page_title="Pharma Code Analyzer",
+    page_icon="🧪",
+    layout="wide"
 )
 
-# Custom CSS for modern styling
-def apply_custom_css():
-    st.markdown("""
-    <style>
-    /* Main styling */
-    .main-header {
-        font-size: 2.5rem;
-        font-weight: 700;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        margin-bottom: 0.5rem;
-        text-align: center;
-    }
-    
-    .sub-header {
-        font-size: 1.1rem;
-        color: #666;
-        margin-bottom: 2rem;
-        text-align: center;
-        font-weight: 400;
-    }
-    
-    /* Card styling */
-    .custom-card {
-        background: white;
-        border-radius: 12px;
-        padding: 1.5rem;
-        margin: 1rem 0;
-        border: 1px solid #e0e0e0;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
-    }
-    
-    .custom-card:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
-    }
-    
-    /* Feature cards */
-    .feature-card {
-        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-        border-radius: 10px;
-        padding: 1.5rem;
-        margin: 1rem 0;
-        border-left: 4px solid #667eea;
-    }
-    
-    /* Button styling */
-    .stButton button {
-        border-radius: 8px;
-        font-weight: 600;
-        transition: all 0.3s ease;
-        border: none;
-    }
-    
-    .stButton button:hover {
-        transform: translateY(-1px);
-        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    }
-    
-    /* Example gallery buttons */
-    .example-btn {
-        width: 100%;
-        margin: 0.3rem 0;
-        border-radius: 8px !important;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-    }
-    
-    /* Code block styling */
-    .stCodeBlock {
-        border-radius: 8px;
-        border: 1px solid #e0e0e0;
-    }
-    
-    /* Progress bar */
-    .stProgress > div > div {
-        background: linear-gradient(90deg, #667eea, #764ba2);
-    }
-    
-    /* Hide default Streamlit elements */
-    #MainMenu {visibility: hidden;}
-    footer {visibility: hidden;}
-    header {visibility: hidden;}
-    
-    /* Sidebar styling */
-    .sidebar .sidebar-content {
-        background: #f8f9fa;
-    }
-    
-    /* Analysis results */
-    .result-card {
-        background: #f8f9fa;
-        border-radius: 10px;
-        padding: 1.5rem;
-        margin: 1rem 0;
-        border-left: 4px solid #28a745;
-    }
-    
-    .warning-card {
-        background: #fff3cd;
-        border-radius: 10px;
-        padding: 1.5rem;
-        margin: 1rem 0;
-        border-left: 4px solid #ffc107;
-    }
-    
-    .error-card {
-        background: #f8d7da;
-        border-radius: 10px;
-        padding: 1.5rem;
-        margin: 1rem 0;
-        border-left: 4px solid #dc3545;
-    }
-    </style>
-    """, unsafe_allow_html=True)
+# Load Keras model
+@st.cache_resource
+def load_model():
+    model = tf.keras.models.load_model("model.h5")
+    return model
 
-def authenticate():
-    if 'authenticated' not in st.session_state:
-        st.session_state.authenticated = False
-    
-    if not st.session_state.authenticated:
-        # Centered authentication layout
-        col1, col2, col3 = st.columns([1, 2, 1])
-        with col2:
-            st.markdown("""
-            <div style='text-align: center; margin-bottom: 2rem;'>
-                <h1 style='font-size: 2.5rem; margin-bottom: 0.5rem;'>🔒</h1>
-                <h2 style='color: #333;'>Secure Access Portal</h2>
-            </div>
-            """, unsafe_allow_html=True)
-            
-            with st.form("auth_form"):
-                password = st.text_input("Enter Access Password", type="password", 
-                                       placeholder="Enter your password...")
-                submit = st.form_submit_button("Login to Platform", use_container_width=True)
-                
-                if submit:
-                    if password == "my password":  # Replace with your actual password
-                        st.session_state.authenticated = True
-                        st.rerun()
-                    else:
-                        st.error("Incorrect password. Please try again.")
-            
-            st.info("Contact administrator for access credentials")
-            st.stop()
-    
-    return True
+# Load other components
+@st.cache_resource
+def load_components():
+    with open('tokenizer.pkl', 'rb') as f:
+        tokenizer = pickle.load(f)
+    with open('mlb.pkl', 'rb') as f:
+        mlb = pickle.load(f)
+    with open('metadata.pkl', 'rb') as f:
+        metadata = pickle.load(f)
+    return tokenizer, mlb, metadata
 
-# Initialize session state for navigation
-if 'current_page' not in st.session_state:
-    st.session_state.current_page = "Free Demo"
-
-def create_sidebar_navigation():
-    with st.sidebar:
-        # Logo and title
-        st.markdown("""
-        <div style="text-align: center; margin-bottom: 2rem;">
-            <h1 style="font-size: 1.8rem; margin-bottom: 0.5rem; color: #333;">Code Efficiency Analyzer</h1>
-            <p style="color: #666; font-size: 0.9rem; margin-bottom: 2rem;">Pharmaceutical & Biotech Applications</p>
-        </div>
-        """, unsafe_allow_html=True)
-        
-        st.markdown("---")
-        
-        # Navigation section with clear heading
-        st.markdown("### 📍 Navigation")
-        
-        # Free Demo button
-        if st.session_state.current_page == "Free Demo":
-            demo_btn = st.button(
-                "🧪 Free Demo", 
-                use_container_width=True, 
-                type="primary",
-                key="nav_demo"
-            )
-        else:
-            demo_btn = st.button(
-                "🧪 Free Demo", 
-                use_container_width=True,
-                key="nav_demo"
-            )
-            
-        if demo_btn:
-            st.session_state.current_page = "Free Demo"
-            st.rerun()
-        
-        # About button
-        if st.session_state.current_page == "About":
-            about_btn = st.button(
-                "📖 About", 
-                use_container_width=True, 
-                type="primary",
-                key="nav_about"
-            )
-        else:
-            about_btn = st.button(
-                "📖 About", 
-                use_container_width=True,
-                key="nav_about"
-            )
-            
-        if about_btn:
-            st.session_state.current_page = "About"
-            st.rerun()
-        
-        st.markdown("---")
-        
-        # Current page indicator
-        st.markdown(f"""
-        <div style="background: #e9ecef; padding: 0.5rem; border-radius: 6px; text-align: center; margin: 1rem 0;">
-            <small><strong>Current Page:</strong> {st.session_state.current_page}</small>
-        </div>
-        """, unsafe_allow_html=True)
-        
-        st.markdown("---")
-        
-        # Platform info in sidebar
-        st.markdown("### 🚀 Platform Features")
-        st.markdown("""
-        <div style="background: white; padding: 1rem; border-radius: 8px; border: 1px solid #e0e0e0;">
-            <ul style="font-size: 0.8rem; padding-left: 1rem;">
-                <li>AI-powered code analysis</li>
-                <li>Pharma-specific patterns</li>
-                <li>Performance optimization</li>
-                <li>Best practices guidance</li>
-            </ul>
-        </div>
-        """, unsafe_allow_html=True)
-        
-        st.markdown("---")
-        
-        # Status indicator
-        st.markdown("### 📊 System Status")
-        st.markdown("""
-        <div style="background: #d4edda; color: #155724; padding: 0.5rem; border-radius: 6px; text-align: center;">
-            <small>🟢 All Systems Operational</small>
-        </div>
-        """, unsafe_allow_html=True)
-
-# About page
-def render_about():
-    st.markdown('<div class="main-header">About the Platform</div>', unsafe_allow_html=True)
-    st.markdown('<div class="sub-header">Advanced Code Efficiency Analysis for Pharmaceutical and Biotech Applications</div>', unsafe_allow_html=True)
+def preprocess_code(code):
+    # Your preprocessing function here
+    code = code.lower()
     
-    # Platform overview
-    col1, col2 = st.columns([2, 1])
-    
-    with col1:
-        st.markdown("""
-        <div class="custom-card">
-            <h3>Our Mission</h3>
-            <p>We provide cutting-edge code analysis specifically designed for pharmaceutical and biotech applications, 
-            helping researchers and developers optimize computational workflows and accelerate drug discovery processes.</p>
-        </div>
-        """, unsafe_allow_html=True)
-    
-    with col2:
-        st.markdown("""
-        <div class="custom-card">
-            <h3>Technology Stack</h3>
-            <p><strong>Machine Learning:</strong> TensorFlow/Keras</p>
-            <p><strong>Frontend:</strong> Streamlit</p>
-            <p><strong>Analysis:</strong> Custom NLP pipelines</p>
-        </div>
-        """, unsafe_allow_html=True)
-    
-    # Features grid
-    st.subheader("Core Capabilities")
-    
-    features = [
-        {
-            "title": "Algorithm Analysis",
-            "description": "Detect inefficient sorting, searching, and computational patterns in scientific code"
-        },
-        {
-            "title": "Performance Optimization",
-            "description": "Identify bottlenecks and suggest optimized implementations for better performance"
-        },
-        {
-            "title": "Domain-Specific Patterns",
-            "description": "Specialized analysis for pharmaceutical and biotech computational workflows"
-        },
-        {
-            "title": "Best Practices",
-            "description": "Provide industry-standard recommendations for scientific computing"
-        }
+    # Add your preprocessing patterns
+    matrix_ops = [
+        (r'np\.dot\s*\(', ' dot '),
+        (r'tf\.matmul\s*\(', ' matmul '),
+        (r'torch\.mm\s*\(', ' mm '),
+        (r'@\s*\w', ' at_operator '),
+        (r'\.dot\s*\(', ' dot '),
     ]
+    for pattern, replacement in matrix_ops:
+        code = re.sub(pattern, replacement, code)
     
-    cols = st.columns(2)
-    for i, feature in enumerate(features):
-        with cols[i % 2]:
-            st.markdown(f"""
-            <div class="feature-card">
-                <h4>{feature['title']}</h4>
-                <p>{feature['description']}</p>
-            </div>
-            """, unsafe_allow_html=True)
-    
-    # Use cases
-    st.subheader("Common Use Cases")
-    
-    use_cases = [
-        "Drug compound analysis and sorting algorithms",
-        "Patient data processing and search optimization", 
-        "Clinical trial data filtering and analysis",
-        "Molecular dynamics simulations",
-        "Genomic data processing pipelines",
-        "Statistical analysis of experimental results"
+    # Sorting patterns
+    sort_ops = [
+        (r'sorted\s*\(', ' sorting_op '),
+        (r'\.sort\s*\(', ' sorting_op '),
+        (r'np\.sort\s*\(', ' sorting_op '),
     ]
+    for pattern, replacement in sort_ops:
+        code = re.sub(pattern, replacement, code)
     
-    for use_case in use_cases:
-        st.markdown(f"• {use_case}")
+    code = re.sub(r'([=<>(),.!;{}[\]])', r' \1 ', code)
+    code = re.sub(r'\s+', ' ', code).strip()
+    
+    return code
 
-# Free Demo page with full functionality
-def render_demo():
-    st.markdown('<div class="main-header">Code Efficiency Analyzer</div>', unsafe_allow_html=True)
-    st.markdown('<div class="sub-header">Detect and optimize inefficiencies in pharmaceutical and biotech codebases</div>', unsafe_allow_html=True)
-    
-    # Example codes database
-    EXAMPLE_CODES = {
-        "Drug Compound Sorting": """# Bubble sort for drug compounds by IC50 value
+# Example codes database
+EXAMPLE_CODES = {
+    "🧬 Drug Compound Sorting": """# Bubble sort for drug compounds by IC50 value
 compounds = load_compound_library()
 for i in range(len(compounds)):
     for j in range(len(compounds)-1):
         if compounds[j].ic50 > compounds[j+1].ic50:
             compounds[j], compounds[j+1] = compounds[j+1], compounds[j]""",
 
-        "Patient Record Search": """# Linear search for patient records by ID
+    "🔍 Patient Record Search": """# Linear search for patient records by ID
 def find_patient_by_id(patients, target_id):
     for patient in patients:
         if patient.id == target_id:
             return patient
     return None""",
 
-        "Matrix Operations": """# Manual matrix multiplication for dose-response modeling
+    "🧪 Manual Matrix Operations": """# Manual matrix multiplication for dose-response modeling
 def manual_matrix_multiply(A, B):
     rows_A, cols_A = len(A), len(A[0])
     rows_B, cols_B = len(B), len(B[0])
@@ -364,7 +96,7 @@ def manual_matrix_multiply(A, B):
                 result[i][j] += A[i][k] * B[k][j]
     return result""",
 
-        "Clinical Trial Filtering": """# Linear filtering of clinical trial data
+    "📊 Clinical Trial Filtering": """# Linear filtering of clinical trial data
 def find_eligible_trials(trials, min_age, max_age, condition):
     eligible = []
     for trial in trials:
@@ -374,7 +106,7 @@ def find_eligible_trials(trials, min_age, max_age, condition):
             eligible.append(trial)
     return eligible""",
 
-        "Molecular Weight Sorting": """# Selection sort for compounds by molecular weight
+    "⚗️ Molecular Weight Sorting": """# Selection sort for compounds by molecular weight
 def sort_compounds_by_weight(compounds):
     for i in range(len(compounds)):
         min_idx = i
@@ -384,7 +116,7 @@ def sort_compounds_by_weight(compounds):
         compounds[i], compounds[min_idx] = compounds[min_idx], compounds[i]
     return compounds""",
 
-        "Statistical Calculations": """# Manual covariance calculation for gene expression
+    "🧫 Manual Statistical Calculations": """# Manual covariance calculation for gene expression
 gene_data = load_gene_expression_dataset()
 cov_matrix = []
 for i in range(len(gene_data[0])):
@@ -394,156 +126,122 @@ for i in range(len(gene_data[0])):
         for k in range(len(gene_data)):
             cov += (gene_data[k][i] - mean_i) * (gene_data[k][j] - mean_j)
         row.append(cov / (len(gene_data) - 1))
-    cov_matrix.append(row)"""
-    }
-    
-    # Example Gallery Section
-    st.markdown("""
-    <div class="custom-card">
-        <h3>Example Code Gallery</h3>
-        <p>Select from common pharmaceutical code patterns to analyze:</p>
-    </div>
-    """, unsafe_allow_html=True)
-    
-    # Create columns for examples
-    cols = st.columns(3)
-    example_items = list(EXAMPLE_CODES.items())
-    
-    for i, (title, code) in enumerate(example_items):
-        with cols[i % 3]:
-            if st.button(title, use_container_width=True, key=f"btn_{title}"):
-                st.session_state.example_code = code
-                st.session_state.selected_example = title
-    
-    # Display selected example
-    if 'example_code' in st.session_state:
-        st.subheader(f"Selected Example: {st.session_state.get('selected_example', 'Code')}")
-        st.code(st.session_state.example_code, language='python')
-        
-        if st.button("Analyze This Example", type="primary", use_container_width=True):
-            st.session_state.analysis_code = st.session_state.example_code
+    cov_matrix.append(row)""",
 
-    # Analysis Section
-    st.markdown("---")
-    st.subheader("Code Analysis")
-    
-    # Initialize session state
-    if 'analysis_code' not in st.session_state:
-        st.session_state.analysis_code = ""
-    
-    # Code input area
-    code_input = st.text_area(
-        "Paste your Python code here:",
-        height=250,
-        value=st.session_state.analysis_code,
-        placeholder="Paste your pharmaceutical/biotech code here...\n\n# Example:\ndef analyze_compound(compound):\n    # Your code here\n    return result",
-        help="Enter Python code to analyze for computational inefficiencies"
-    )
-    
-    # Analysis controls
-    col1, col2, col3 = st.columns([1, 2, 1])
-    
-    with col2:
-        analyze_btn = st.button("Analyze Code", type="primary", use_container_width=True)
-    
-    if analyze_btn:
-        if code_input.strip():
-            with st.spinner("Analyzing code patterns..."):
-                # Simulate analysis progress
-                progress_bar = st.progress(0)
-                for i in range(100):
-                    time.sleep(0.01)
-                    progress_bar.progress(i + 1)
-                
-                # Display comprehensive results
-                st.subheader("Analysis Results")
-                
-                # Mock analysis results - replace with your actual model predictions
-                st.markdown("""
-                <div class="error-card">
-                    <h4>Inefficiencies Detected</h4>
-                    <ul>
-                    <li><strong>Inefficient Sorting Algorithm</strong>: Bubble sort detected - consider using built-in sorted() or numpy.argsort()</li>
-                    <li><strong>Linear Search Pattern</strong>: O(n) complexity - consider using dictionary lookups or binary search</li>
-                    <li><strong>Manual Matrix Operations</strong>: Nested loops detected - use NumPy vectorized operations</li>
-                    </ul>
-                </div>
-                """, unsafe_allow_html=True)
-                
-                st.markdown("""
-                <div class="result-card">
-                    <h4>Optimization Suggestions</h4>
-                    <ul>
-                    <li>Replace bubble sort with optimized sorting algorithms (O(n log n) complexity)</li>
-                    <li>Use hash tables for patient record lookups (O(1) average case)</li>
-                    <li>Leverage NumPy for matrix operations (significant speedup for large datasets)</li>
-                    <li>Consider parallel processing for large-scale data analysis</li>
-                    <li>Implement caching for frequently accessed data</li>
-                    </ul>
-                </div>
-                """, unsafe_allow_html=True)
-                
-                # Performance metrics
-                with st.expander("Detailed Performance Analysis"):
-                    st.markdown("""
-                    | Pattern | Confidence | Severity | Impact |
-                    |---------|------------|----------|---------|
-                    | Inefficient Sorting | 92% | High | 40-60x slower |
-                    | Linear Search | 87% | Medium | 10-100x slower |
-                    | Manual Matrix Ops | 95% | High | 100-1000x slower |
-                    """)
-                    
-                    st.markdown("""
-                    **Performance Impact Summary:**
-                    - Current implementation estimated runtime: ~15 seconds
-                    - Optimized implementation estimated runtime: ~0.15 seconds
-                    - **Potential speedup: 100x**
-                    """)
-                
-                # Code suggestions
-                with st.expander("Optimized Code Examples"):
-                    st.code("""
-# Optimized sorting using NumPy
-compound_ic50 = np.array([c.ic50 for c in compounds])
-sorted_indices = np.argsort(compound_ic50)
-sorted_compounds = [compounds[i] for i in sorted_indices]
+    "💊 Drug Interaction Search": """# Nested loop search for drug interactions
+def find_drug_interactions(drug, drug_library):
+    interactions = []
+    for other_drug in drug_library:
+        if drug != other_drug:
+            affinity = calculate_binding_affinity(drug, other_drug)
+            if affinity < 10:  # Strong binding
+                interactions.append(other_drug)
+    return interactions"""
+}
 
-# Optimized search using dictionary
-patient_dict = {p.id: p for p in patients}
-patient = patient_dict.get(target_id)
+# UI
+st.title("🧪 Pharmaceutical Code Efficiency Analyzer")
+st.write("Detect inefficient patterns in pharmaceutical/biotech code")
 
-# Optimized matrix operations
-result = np.dot(A, B)  # Instead of manual multiplication
-                    """, language='python')
-        else:
-            st.warning("Please enter some code to analyze")
+# Example Gallery Section - ABOVE the analysis
+st.subheader("📚 Example Code Gallery")
+st.write("Click on examples to load them into the analyzer below:")
 
-    # Clear button
-    if st.button("Clear Analysis", use_container_width=True):
-        st.session_state.analysis_code = ""
-        if 'example_code' in st.session_state:
-            del st.session_state.example_code
-        if 'selected_example' in st.session_state:
-            del st.session_state.selected_example
+# Create columns for the example gallery
+cols = st.columns(2)
+
+# Distribute examples across columns
+example_titles = list(EXAMPLE_CODES.keys())
+for i, title in enumerate(example_titles):
+    with cols[i % 2]:  # Alternate between columns
+        if st.button(title, use_container_width=True, key=f"btn_{title}"):
+            st.session_state.example_code = EXAMPLE_CODES[title]
+            st.session_state.selected_example = title
+
+# Display selected example code
+if 'example_code' in st.session_state:
+    st.subheader(f"📋 Example: {st.session_state.get('selected_example', 'Selected Code')}")
+    st.code(st.session_state.example_code, language='python')
+    
+    # Add a button to use this code for analysis
+    if st.button("🔍 Analyze This Example", type="primary"):
+        st.session_state.analysis_code = st.session_state.example_code
         st.rerun()
 
-# Main app logic
-def main():
-    # Apply custom CSS
-    apply_custom_css()
-    
-    # Check authentication
-    if not authenticate():
-        return
-    
-    # Navigation
-    create_sidebar_navigation()
-    
-    # Route to appropriate page
-    if st.session_state.current_page == "About":
-        render_about()
-    else:  # Free Demo
-        render_demo()
+# Analysis Section - BELOW the examples
+st.markdown("---")
+st.subheader("🔍 Code Analysis")
 
-if __name__ == "__main__":
-    main()
+# Initialize session state for analysis code
+if 'analysis_code' not in st.session_state:
+    st.session_state.analysis_code = ""
+
+# Text area for code input - prefill with selected example
+code_input = st.text_area(
+    "Paste or modify your code here:", 
+    height=200,
+    value=st.session_state.analysis_code,
+    placeholder="Paste your pharmaceutical code here or use an example above..."
+)
+
+# Analysis button
+if st.button("Analyze Code", type="primary", use_container_width=True):
+    if code_input.strip():
+        with st.spinner("🔍 Analyzing code patterns..."):
+            try:
+                model = load_model()
+                tokenizer, mlb, metadata = load_components()
+                
+                # Preprocess and predict
+                processed_code = preprocess_code(code_input)
+                sequence = tokenizer.texts_to_sequences([processed_code])
+                padded_sequence = pad_sequences(sequence, maxlen=metadata['max_len'], padding='post')
+                
+                # Keras prediction
+                predictions = model.predict(padded_sequence, verbose=0)
+                
+                # Get results
+                binary_predictions = (predictions > 0.5).astype(int)
+                predicted_labels = mlb.inverse_transform(binary_predictions)
+                
+                # Get confidence scores
+                confidence_scores = {}
+                for i, label in enumerate(mlb.classes_):
+                    confidence_scores[label] = float(predictions[0][i])
+                
+                # Display results
+                st.subheader("📊 Analysis Results")
+                
+                if predicted_labels[0]:
+                    st.error("🚨 Inefficiencies Detected:")
+                    for label in predicted_labels[0]:
+                        confidence = confidence_scores.get(label, 0) * 100
+                        st.write(f"**{label.replace('_', ' ').title()}** (Confidence: {confidence:.1f}%)")
+                        
+                        if label in metadata.get('fundamental_operations', {}):
+                            info = metadata['fundamental_operations'][label]
+                            with st.expander(f"Details for {label}"):
+                                st.write(f"**Description**: {info.get('description', 'N/A')}")
+                                st.write(f"**Quantum Speedup**: {info.get('quantum_speedup', 'N/A')}")
+                                st.write(f"**Optimization**: {info.get('optimization_notes', 'N/A')}")
+                else:
+                    st.success("✅ No inefficiencies detected!")
+                    st.info("The code appears to use efficient implementations.")
+                    
+            except Exception as e:
+                st.error(f"❌ Error analyzing code: {str(e)}")
+    else:
+        st.warning("Please enter some code to analyze")
+
+# Clear button
+if st.button("Clear All", use_container_width=True):
+    st.session_state.analysis_code = ""
+    if 'example_code' in st.session_state:
+        del st.session_state.example_code
+    if 'selected_example' in st.session_state:
+        del st.session_state.selected_example
+    st.rerun()
+
+# Footer
+st.markdown("---")
+st.markdown("Built with Streamlit • Detects inefficient sorting, matrix operations, and search patterns in pharmaceutical code")
