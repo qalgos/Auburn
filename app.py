@@ -68,7 +68,7 @@ st.markdown("""
 <style>
     /* Main background */
     .stApp {
-        background-color: #fcfaf7;
+        background-color: #fafcfc;
     }
     
     /* Headers and text */
