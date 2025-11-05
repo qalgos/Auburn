@@ -332,137 +332,137 @@ if authenticate():
         
         
         def preprocess_code(code):
-             """
-                Enhanced preprocessing for pharmaceutical code patterns
-                Focuses on preserving operation-specific patterns while normalizing noise
-                """
-                # Convert to lowercase first for consistent matching
-                code = code.lower()
-                
-                # Step 1: Preserve critical operation patterns with context
-                # Matrix operations with context preservation
-                matrix_ops = [
-                    (r'np\.dot\s*\(', ' dot '),
-                    (r'tf\.matmul\s*\(', ' matmul '),
-                    (r'torch\.mm\s*\(', ' mm '),
-                    (r'torch\.matmul\s*\(', ' matmul '),
-                    (r'np\.matmul\s*\(', ' matmul '),
-                    (r'jnp\.dot\s*\(', ' dot '),
-                    (r'paddle\.matmul\s*\(', ' matmul '),
-                    (r'tf\.linalg\.matmul\s*\(', ' matmul '),
-                    (r'@\s*\w', ' at_operator '),
-                    (r'\.dot\s*\(', ' dot '),
-                    (r'tf\.tensordot\s*\(', ' tensordot '),
-                    (r'torch\.dot\s*\(', ' dot '),
-                    (r'np\.inner\s*\(', ' inner '),
-                    (r'tf\.linalg\.matvec\s*\(', ' matvec '),
-                    (r'np\.vdot\s*\(', ' vdot '),
-                    (r'linear_algebra\.dot_product\s*\(', ' dot_product ')
-                ]
-                for pattern, replacement in matrix_ops:
-                    code = re.sub(pattern, replacement, code)
-                
-                # Differential equation solvers
-                diff_eq_ops = [
-                    (r'solve_ivp\s*\(', ' diff_eq_solver '),
-                    (r'odeint\s*\(', ' diff_eq_solver '),
-                    (r'solve_ode\s*\(', ' diff_eq_solver '),
-                    (r'pde_solver\s*\(', ' diff_eq_solver '),
-                    (r'solve_bvp\s*\(', ' diff_eq_solver '),
-                    (r'scipy\.integrate\s*\.\s*(solve_ivp|odeint)', ' diff_eq_solver ')
-                ]
-                for pattern, replacement in diff_eq_ops:
-                    code = re.sub(pattern, replacement, code)
-                
-                # Matrix inversion operations
-                inversion_ops = [
-                    (r'np\.linalg\.inv\s*\(', ' matrix_inversion '),
-                    (r'tf\.linalg\.inv\s*\(', ' matrix_inversion '),
-                    (r'torch\.inverse\s*\(', ' matrix_inversion '),
-                    (r'scipy\.linalg\.inv\s*\(', ' matrix_inversion '),
-                    (r'scipy\.linalg\.pinv\s*\(', ' matrix_inversion '),
-                    (r'torch\.linalg\.pinv\s*\(', ' matrix_inversion ')
-                ]
-                for pattern, replacement in inversion_ops:
-                    code = re.sub(pattern, replacement, code)
-                
-                # Database operations - preserve full context
-                db_ops = [
-                    (r'select\s+.*?\s+from', ' database_query '),
-                    (r'db\.query\s*\(', ' database_query '),
-                    (r'cursor\.execute\s*\(', ' database_query '),
-                    (r'session\.query\s*\(', ' database_query '),
-                    (r'pd\.read_sql\s*\(', ' database_query '),
-                    (r'db\.collection\.find\s*\(', ' database_query '),
-                    (r'db\.find\s*\(', ' database_query '),
-                    (r'fetch\s*\(', ' database_query '),
-                    (r'conn\.query\s*\(', ' database_query '),
-                    (r'orm\.execute\s*\(', ' database_query ')
-                ]
-                for pattern, replacement in db_ops:
-                    code = re.sub(pattern, replacement, code)
-                
-                # Sorting operations
-                sort_ops = [
-                    (r'sorted\s*\(', ' sorting_op '),
-                    (r'\.sort\s*\(', ' sorting_op '),
-                    (r'order\s+by', ' sorting_op '),
-                    (r'arrange\s*\(', ' sorting_op '),
-                    (r'np\.sort\s*\(', ' sorting_op '),
-                    (r'torch\.sort\s*\(', ' sorting_op '),
-                    (r'tf\.sort\s*\(', ' sorting_op '),
-                    (r'df\.sort_values\s*\(', ' sorting_op '),
-                    (r'df\.orderBy\s*\(', ' sorting_op ')
-                ]
-                for pattern, replacement in sort_ops:
-                    code = re.sub(pattern, replacement, code)
-                
-                # Addition operations - be more specific to avoid false positives
-                addition_ops = [
-                    (r'\+\s*\w', ' addition_op '),
-                    (r'\+=', ' addition_op '),
-                    (r'np\.sum\s*\(', ' addition_op '),
-                    (r'tf\.add\s*\(', ' addition_op '),
-                    (r'torch\.sum\s*\(', ' addition_op '),
-                    (r'pandas\.Series\.add\s*\(', ' addition_op '),
-                    (r'jnp\.add\s*\(', ' addition_op '),
-                    (r'tf\.reduce_sum\s*\(', ' addition_op ')
-                ]
-                for pattern, replacement in addition_ops:
-                    code = re.sub(pattern, replacement, code)
-                
-                # Step 2: Preserve structural elements
-                code = re.sub(r'([=<>(),.!;{}[\]])', r' \1 ', code)
-                
-                # Step 3: Handle literals and variables
-                # Preserve string literals
-                code = re.sub(r'("[^"]*"|\'[^\']*\')', ' _str_literal_ ', code)
-                
-                # Replace numbers (including scientific notation and decimals)
-                code = re.sub(r'\b\d+\.?\d*([eE][-+]?\d+)?\b', ' _number_ ', code)
-                
-                # Replace variable names but preserve common pharmaceutical terms
-                pharma_terms = [
-                    'concentration', 'dosage', 'compound', 'patient', 'clinical', 'trial',
-                    'drug', 'molecular', 'protein', 'gene', 'toxicity', 'efficacy',
-                    'binding', 'affinity', 'receptor', 'ligand', 'pharmacokinetic',
-                    'pharmacodynamic', 'ic50', 'ld50', 'biomarker', 'expression',
-                    'pathway', 'metabolic', 'enzyme', 'kinetic', 'cell_growth',
-                    'dose', 'response', 'treatment', 'control', 'placebo', 'therapy'
-                ]
-                
-                # Replace generic variable names
-                for term in pharma_terms:
-                    code = re.sub(r'\b' + term + r'\b', f' _pharma_{term}_ ', code)
-                
-                # Replace remaining variable names
-                code = re.sub(r'\b[a-z_][a-z0-9_]{2,}\b', ' _variable_ ', code)
-                
-                # Step 4: Clean up and normalize
-                # Collapse multiple spaces and trim
-                code = re.sub(r'\s+', ' ', code).strip()
+         """
+            Enhanced preprocessing for pharmaceutical code patterns
+            Focuses on preserving operation-specific patterns while normalizing noise
+            """
+            # Convert to lowercase first for consistent matching
+            code = code.lower()
             
-                return code
+            # Step 1: Preserve critical operation patterns with context
+            # Matrix operations with context preservation
+            matrix_ops = [
+                (r'np\.dot\s*\(', ' dot '),
+                (r'tf\.matmul\s*\(', ' matmul '),
+                (r'torch\.mm\s*\(', ' mm '),
+                (r'torch\.matmul\s*\(', ' matmul '),
+                (r'np\.matmul\s*\(', ' matmul '),
+                (r'jnp\.dot\s*\(', ' dot '),
+                (r'paddle\.matmul\s*\(', ' matmul '),
+                (r'tf\.linalg\.matmul\s*\(', ' matmul '),
+                (r'@\s*\w', ' at_operator '),
+                (r'\.dot\s*\(', ' dot '),
+                (r'tf\.tensordot\s*\(', ' tensordot '),
+                (r'torch\.dot\s*\(', ' dot '),
+                (r'np\.inner\s*\(', ' inner '),
+                (r'tf\.linalg\.matvec\s*\(', ' matvec '),
+                (r'np\.vdot\s*\(', ' vdot '),
+                (r'linear_algebra\.dot_product\s*\(', ' dot_product ')
+            ]
+            for pattern, replacement in matrix_ops:
+                code = re.sub(pattern, replacement, code)
+            
+            # Differential equation solvers
+            diff_eq_ops = [
+                (r'solve_ivp\s*\(', ' diff_eq_solver '),
+                (r'odeint\s*\(', ' diff_eq_solver '),
+                (r'solve_ode\s*\(', ' diff_eq_solver '),
+                (r'pde_solver\s*\(', ' diff_eq_solver '),
+                (r'solve_bvp\s*\(', ' diff_eq_solver '),
+                (r'scipy\.integrate\s*\.\s*(solve_ivp|odeint)', ' diff_eq_solver ')
+            ]
+            for pattern, replacement in diff_eq_ops:
+                code = re.sub(pattern, replacement, code)
+            
+            # Matrix inversion operations
+            inversion_ops = [
+                (r'np\.linalg\.inv\s*\(', ' matrix_inversion '),
+                (r'tf\.linalg\.inv\s*\(', ' matrix_inversion '),
+                (r'torch\.inverse\s*\(', ' matrix_inversion '),
+                (r'scipy\.linalg\.inv\s*\(', ' matrix_inversion '),
+                (r'scipy\.linalg\.pinv\s*\(', ' matrix_inversion '),
+                (r'torch\.linalg\.pinv\s*\(', ' matrix_inversion ')
+            ]
+            for pattern, replacement in inversion_ops:
+                code = re.sub(pattern, replacement, code)
+            
+            # Database operations - preserve full context
+            db_ops = [
+                (r'select\s+.*?\s+from', ' database_query '),
+                (r'db\.query\s*\(', ' database_query '),
+                (r'cursor\.execute\s*\(', ' database_query '),
+                (r'session\.query\s*\(', ' database_query '),
+                (r'pd\.read_sql\s*\(', ' database_query '),
+                (r'db\.collection\.find\s*\(', ' database_query '),
+                (r'db\.find\s*\(', ' database_query '),
+                (r'fetch\s*\(', ' database_query '),
+                (r'conn\.query\s*\(', ' database_query '),
+                (r'orm\.execute\s*\(', ' database_query ')
+            ]
+            for pattern, replacement in db_ops:
+                code = re.sub(pattern, replacement, code)
+            
+            # Sorting operations
+            sort_ops = [
+                (r'sorted\s*\(', ' sorting_op '),
+                (r'\.sort\s*\(', ' sorting_op '),
+                (r'order\s+by', ' sorting_op '),
+                (r'arrange\s*\(', ' sorting_op '),
+                (r'np\.sort\s*\(', ' sorting_op '),
+                (r'torch\.sort\s*\(', ' sorting_op '),
+                (r'tf\.sort\s*\(', ' sorting_op '),
+                (r'df\.sort_values\s*\(', ' sorting_op '),
+                (r'df\.orderBy\s*\(', ' sorting_op ')
+            ]
+            for pattern, replacement in sort_ops:
+                code = re.sub(pattern, replacement, code)
+            
+            # Addition operations - be more specific to avoid false positives
+            addition_ops = [
+                (r'\+\s*\w', ' addition_op '),
+                (r'\+=', ' addition_op '),
+                (r'np\.sum\s*\(', ' addition_op '),
+                (r'tf\.add\s*\(', ' addition_op '),
+                (r'torch\.sum\s*\(', ' addition_op '),
+                (r'pandas\.Series\.add\s*\(', ' addition_op '),
+                (r'jnp\.add\s*\(', ' addition_op '),
+                (r'tf\.reduce_sum\s*\(', ' addition_op ')
+            ]
+            for pattern, replacement in addition_ops:
+                code = re.sub(pattern, replacement, code)
+            
+            # Step 2: Preserve structural elements
+            code = re.sub(r'([=<>(),.!;{}[\]])', r' \1 ', code)
+            
+            # Step 3: Handle literals and variables
+            # Preserve string literals
+            code = re.sub(r'("[^"]*"|\'[^\']*\')', ' _str_literal_ ', code)
+            
+            # Replace numbers (including scientific notation and decimals)
+            code = re.sub(r'\b\d+\.?\d*([eE][-+]?\d+)?\b', ' _number_ ', code)
+            
+            # Replace variable names but preserve common pharmaceutical terms
+            pharma_terms = [
+                'concentration', 'dosage', 'compound', 'patient', 'clinical', 'trial',
+                'drug', 'molecular', 'protein', 'gene', 'toxicity', 'efficacy',
+                'binding', 'affinity', 'receptor', 'ligand', 'pharmacokinetic',
+                'pharmacodynamic', 'ic50', 'ld50', 'biomarker', 'expression',
+                'pathway', 'metabolic', 'enzyme', 'kinetic', 'cell_growth',
+                'dose', 'response', 'treatment', 'control', 'placebo', 'therapy'
+            ]
+            
+            # Replace generic variable names
+            for term in pharma_terms:
+                code = re.sub(r'\b' + term + r'\b', f' _pharma_{term}_ ', code)
+            
+            # Replace remaining variable names
+            code = re.sub(r'\b[a-z_][a-z0-9_]{2,}\b', ' _variable_ ', code)
+            
+            # Step 4: Clean up and normalize
+            # Collapse multiple spaces and trim
+            code = re.sub(r'\s+', ' ', code).strip()
+        
+            return code
         
         # Example codes for the analysis page
         EXAMPLE_CODES = {
