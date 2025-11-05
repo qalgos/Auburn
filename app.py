@@ -7,7 +7,7 @@ import numpy as np
 # -------------------------------
 @st.cache_resource
 def load_model():
-    model = torch.load("MODEL/model.pt", map_location="cpu")
+    model = torch.load("MODEL/model.h5", map_location="cpu")
     model.eval()
     return model
 
@@ -17,8 +17,8 @@ model = load_model()
 # UI Configuration
 # -------------------------------
 st.set_page_config(
-    page_title="Model Playground",
-    page_icon="🤖",
+    page_title="Auburn",
+    page_icon="O",
     layout="centered"
 )
 
@@ -58,8 +58,8 @@ st.markdown("""
 # -------------------------------
 # Header
 # -------------------------------
-st.title("🤖 Model Playground")
-st.caption("Try your model interactively — type a query or click a suggestion!")
+st.title(" Auburn")
+st.caption("Try Auburn AI — type a query or click a suggestion!")
 
 # -------------------------------
 # Suggested Queries
