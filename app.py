@@ -278,7 +278,7 @@ code_input = st.text_area(
     "Paste or modify your code here:", 
     height=200,
     value=st.session_state.analysis_code,
-    placeholder="Paste your pharmaceutical code here or use an example above..."
+    placeholder="Paste your code here or use an example above..."
 )
 
 # Analysis button
