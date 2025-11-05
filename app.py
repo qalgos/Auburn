@@ -156,12 +156,12 @@ st.markdown("""
     
     /* Primary buttons */
     .stButton button[kind="primary"] {
-        background-color: #A52A2A;
-        color: white;
+        background-color: #FFFFFF;
+        color: black;
     }
     
     .stButton button[kind="primary"]:hover {
-        background-color: #800080;
+        background-color: #fafcfc;
     }
     
     /* Text areas and inputs */
