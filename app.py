@@ -63,15 +63,14 @@ def authenticate():
     
     return True
 
-# Custom CSS for modern styling
 st.markdown("""
 <style>
-    /* Main background - warm white */
+    /* Main background - pure white */
     .stApp {
-        background-color: #FFF8F0;
+        background-color: #FFFFFF;
     }
     
-    /* Headers - black for main headers */
+    /* Headers - black */
     .main-header {
         font-size: 3rem;
         color: #000000;
@@ -80,54 +79,54 @@ st.markdown("""
         font-weight: 700;
     }
     
-    h1 {
+    h1, h2, h3, h4, h5, h6 {
         color: #000000 !important;
     }
     
-    h2, h3 {
-        color: #333333 !important;
+    /* All text black */
+    .stMarkdown, .stText, p, div, span {
+        color: #000000 !important;
     }
     
-    /* Cards and containers - pure white */
+    /* Cards and containers - white with subtle borders */
     .feature-card {
         background: #FFFFFF;
         padding: 1.5rem;
         border-radius: 10px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-        border-left: 4px solid #A52A2A;
-        margin-bottom: 1rem;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
         border: 1px solid #F0F0F0;
+        margin-bottom: 1rem;
     }
     
-    /* Status boxes - white with colored accents */
+    /* Status boxes - white with delicate colored accents */
     .success-box {
         background: #FFFFFF;
         padding: 1rem;
         border-radius: 10px;
-        border-left: 4px solid #2E8B57;
-        border: 1px solid #E8F5E8;
+        border-left: 3px solid #90EE90;
+        border: 1px solid #F0F0F0;
     }
     
     .warning-box {
         background: #FFFFFF;
         padding: 1rem;
         border-radius: 10px;
-        border-left: 4px solid #FFA500;
-        border: 1px solid #FFF0E0;
+        border-left: 3px solid #FFD700;
+        border: 1px solid #F0F0F0;
     }
     
     .danger-box {
         background: #FFFFFF;
         padding: 1rem;
         border-radius: 10px;
-        border-left: 4px solid #A52A2A;
-        border: 1px solid #FFE0E0;
+        border-left: 3px solid #FFB6C1;
+        border: 1px solid #F0F0F0;
     }
     
-    /* Example cards - white with subtle hover */
+    /* Example cards - white with subtle borders */
     .example-card {
         background: #FFFFFF;
-        border: 1px solid #E8E8E8;
+        border: 1px solid #F0F0F0;
         border-radius: 8px;
         padding: 1rem;
         margin: 0.5rem 0;
@@ -135,9 +134,9 @@ st.markdown("""
     }
     
     .example-card:hover {
-        background: #F8F8F8;
-        transform: translateY(-2px);
-        border-color: #A52A2A;
+        background: #FAFAFA;
+        transform: translateY(-1px);
+        border-color: #E8E8E8;
     }
     
     /* Sidebar styling - white */
@@ -145,66 +144,78 @@ st.markdown("""
         background-color: #FFFFFF;
     }
     
-    /* Buttons - auburn and purple accents */
+    /* Buttons - delicate colors with white text */
     .stButton button {
-        background-color: #A52A2A;
-        color: white;
-        border: none;
-        border-radius: 8px;
+        background-color: #F8F8FF;
+        color: #000000;
+        border: 1px solid #E8E8E8;
+        border-radius: 6px;
         padding: 0.5rem 1rem;
         transition: all 0.3s ease;
     }
     
     .stButton button:hover {
-        background-color: #800080;
-        color: white;
+        background-color: #F0F0F0;
+        color: #000000;
+        border-color: #D0D0D0;
     }
     
-    /* Primary buttons - purple accent */
+    /* Primary buttons - delicate purple */
     .stButton button[kind="primary"] {
-        background-color: #800080;
-        color: white;
+        background-color: #F0E6FF;
+        color: #000000;
+        border: 1px solid #E0D6FF;
     }
     
     .stButton button[kind="primary"]:hover {
-        background-color: #A52A2A;
+        background-color: #E8DCFF;
+        color: #000000;
     }
     
     /* Text areas and inputs - white */
     .stTextArea textarea, .stTextInput input {
         background-color: #FFFFFF;
         border: 1px solid #E0E0E0;
-        border-radius: 8px;
+        border-radius: 6px;
+        color: #000000;
     }
     
     .stTextArea textarea:focus, .stTextInput input:focus {
-        border-color: #A52A2A;
-        box-shadow: 0 0 0 2px rgba(165, 42, 42, 0.1);
+        border-color: #C0C0C0;
+        box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1);
     }
     
     /* Expanders - white */
     .streamlit-expanderHeader {
         background-color: #FFFFFF;
-        border: 1px solid #E0E0E0;
-        border-radius: 8px;
+        border: 1px solid #F0F0F0;
+        border-radius: 6px;
+        color: #000000;
     }
     
-    /* Progress bars - auburn accent */
+    /* Progress bars - delicate purple */
     .stProgress > div > div > div {
-        background-color: #A52A2A;
+        background-color: #E0D6FF;
     }
     
-    /* Authentication container */
+    /* Authentication container - delicate gradient */
     .auth-container {
-        background: linear-gradient(135deg, #A52A2A 0%, #800080 100%);
+        background: linear-gradient(135deg, #F0E6FF 0%, #F8F8FF 100%);
         padding: 2rem;
         border-radius: 15px;
-        color: white;
+        color: #000000;
+        border: 1px solid #E8E8E8;
     }
     
-    /* Regular text color */
-    .stMarkdown, .stText {
-        color: #333333;
+    /* Radio buttons and other form elements */
+    .stRadio > div {
+        background-color: #FFFFFF;
+    }
+    
+    /* Code blocks */
+    .stCodeBlock {
+        background-color: #FAFAFA;
+        border: 1px solid #F0F0F0;
     }
 </style>
 """, unsafe_allow_html=True)
