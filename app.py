@@ -66,7 +66,7 @@ st.markdown("""
         <a href="/" class="menu-title">🧪 Pharma Code Analyzer</a>
         <div class="menu-links">
             <a href="/" class="menu-link">Home</a>
-            <a href="/about" class="menu-link active">About</a>
+            <a href="/about.py" class="menu-link active">About</a>
             <a href="https://github.com/yourusername/your-repo" class="menu-link" target="_blank">GitHub</a>
         </div>
     </div>
