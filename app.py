@@ -537,7 +537,7 @@ def main():
         return
     
     # Navigation
-   create_sidebar_navigation()
+    create_sidebar_navigation()
     
     # Route to appropriate page
     if st.session_state.current_page == "About":
