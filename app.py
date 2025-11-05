@@ -7,7 +7,7 @@ import numpy as np
 # -------------------------------
 @st.cache_resource
 def load_model():
-    model = torch.load("MODEL/model.h5", map_location="cpu")
+    model = torch.load("MODEL/model.pt", map_location="cpu")
     model.eval()
     return model
 
