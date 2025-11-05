@@ -66,63 +66,68 @@ def authenticate():
 # Custom CSS for modern styling
 st.markdown("""
 <style>
-    /* Main background */
+    /* Main background - warm white */
     .stApp {
-        background-color: #fafcfc;
+        background-color: #FFF8F0;
     }
     
-    /* Headers and text */
+    /* Headers - black for main headers */
     .main-header {
         font-size: 3rem;
-        background: linear-gradient(135deg, #A52A2A 0%, #800080 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
+        color: #000000;
         text-align: center;
         margin-bottom: 2rem;
         font-weight: 700;
-        color: black;
     }
     
-    /* Cards and containers */
+    h1 {
+        color: #000000 !important;
+    }
+    
+    h2, h3 {
+        color: #333333 !important;
+    }
+    
+    /* Cards and containers - pure white */
     .feature-card {
         background: #FFFFFF;
         padding: 1.5rem;
         border-radius: 10px;
-        box-shadow: 0 4px 6px rgba(165, 42, 42, 0.1);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
         border-left: 4px solid #A52A2A;
         margin-bottom: 1rem;
-        border: 1px solid #FFE4CC;
+        border: 1px solid #F0F0F0;
     }
     
-    /* Status boxes */
+    /* Status boxes - white with colored accents */
     .success-box {
-        background: linear-gradient(135deg, #F0FFF0 0%, #E0F7E0 100%);
+        background: #FFFFFF;
         padding: 1rem;
         border-radius: 10px;
         border-left: 4px solid #2E8B57;
-        border: 1px solid #C1E1C1;
+        border: 1px solid #E8F5E8;
     }
     
     .warning-box {
-        background: linear-gradient(135deg, #FFF8E0 0%, #FFF0C0 100%);
+        background: #FFFFFF;
         padding: 1rem;
         border-radius: 10px;
         border-left: 4px solid #FFA500;
-        border: 1px solid #FFE4B5;
+        border: 1px solid #FFF0E0;
     }
     
     .danger-box {
-        background: linear-gradient(135deg, #FFE0E0 0%, #FFC0C0 100%);
+        background: #FFFFFF;
         padding: 1rem;
         border-radius: 10px;
         border-left: 4px solid #A52A2A;
-        border: 1px solid #FFB8B8;
+        border: 1px solid #FFE0E0;
     }
     
-    /* Example cards */
+    /* Example cards - white with subtle hover */
     .example-card {
-        background: #FFF0E0;
-        border: 1px solid #FFD8B8;
+        background: #FFFFFF;
+        border: 1px solid #E8E8E8;
         border-radius: 8px;
         padding: 1rem;
         margin: 0.5rem 0;
@@ -130,19 +135,19 @@ st.markdown("""
     }
     
     .example-card:hover {
-        background: #FFE4CC;
+        background: #F8F8F8;
         transform: translateY(-2px);
         border-color: #A52A2A;
     }
     
-    /* Sidebar styling */
+    /* Sidebar styling - white */
     .css-1d391kg {
-        background-color: #FFF8F0;
+        background-color: #FFFFFF;
     }
     
-    /* Buttons */
+    /* Buttons - auburn and purple accents */
     .stButton button {
-        background-color: #e3bea8;
+        background-color: #A52A2A;
         color: white;
         border: none;
         border-radius: 8px;
@@ -151,44 +156,55 @@ st.markdown("""
     }
     
     .stButton button:hover {
-        background-color: #e38146;
+        background-color: #800080;
         color: white;
     }
     
-    /* Primary buttons */
+    /* Primary buttons - purple accent */
     .stButton button[kind="primary"] {
-        background-color: #fafcfc;
-        color: black;
+        background-color: #800080;
+        color: white;
     }
     
     .stButton button[kind="primary"]:hover {
-        background-color: #f7f8fc;
-        color: black;
+        background-color: #A52A2A;
     }
     
-    /* Text areas and inputs */
+    /* Text areas and inputs - white */
     .stTextArea textarea, .stTextInput input {
         background-color: #FFFFFF;
-        border: 1px solid #FFD8B8;
+        border: 1px solid #E0E0E0;
         border-radius: 8px;
     }
     
     .stTextArea textarea:focus, .stTextInput input:focus {
         border-color: #A52A2A;
-        box-shadow: 0 0 0 2px rgba(165, 42, 42, 0.2);
+        box-shadow: 0 0 0 2px rgba(165, 42, 42, 0.1);
     }
     
-    /* Expanders */
+    /* Expanders - white */
     .streamlit-expanderHeader {
         background-color: #FFFFFF;
-        border: 1px solid #FFD8B8;
+        border: 1px solid #E0E0E0;
         border-radius: 8px;
-        color: black;
     }
     
-    /* Progress bars */
+    /* Progress bars - auburn accent */
     .stProgress > div > div > div {
         background-color: #A52A2A;
+    }
+    
+    /* Authentication container */
+    .auth-container {
+        background: linear-gradient(135deg, #A52A2A 0%, #800080 100%);
+        padding: 2rem;
+        border-radius: 15px;
+        color: white;
+    }
+    
+    /* Regular text color */
+    .stMarkdown, .stText {
+        color: #333333;
     }
 </style>
 """, unsafe_allow_html=True)
