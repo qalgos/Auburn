@@ -43,8 +43,8 @@ if authenticate():
         page_icon="",
         layout="wide"
     )
-    
-            #
+
+   #
         
             # Custom CSS for modern styling
         def apply_custom_css():
