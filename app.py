@@ -12,7 +12,7 @@ import os
 
 # Page configuration - MUST be first Streamlit command
 st.set_page_config(
-    page_title="Code Efficiency Analyzer | Pharma/Biotech",
+    page_title="Auburn",
     page_icon="🧬",
     layout="wide",
     initial_sidebar_state="expanded"
@@ -181,13 +181,13 @@ def manual_matrix_multiply(A, B):
     }
 
     # ABOUT PAGE
-    if page == "ℹ️ About":
-        st.markdown('<h1 class="main-header">Code Efficiency Analyzer</h1>', unsafe_allow_html=True)
+    if page == "About":
+        st.markdown('<h1 class="main-header">Auburn</h1>', unsafe_allow_html=True)
         
         col1, col2 = st.columns([2, 1])
         
         with col1:
-            st.subheader("🚀 Overview")
+            st.subheader("Overview")
             st.markdown("""
             <div class="feature-card">
             The **Code Efficiency Analyzer** is an advanced AI-powered tool specifically designed for 
@@ -196,7 +196,7 @@ def manual_matrix_multiply(A, B):
             </div>
             """, unsafe_allow_html=True)
             
-            st.subheader("🎯 Key Features")
+            st.subheader("Key Features")
             
             features = [
                 ("🧠 AI-Powered Analysis", "Deep learning models trained on thousands of code examples"),
@@ -223,9 +223,10 @@ def manual_matrix_multiply(A, B):
             st.subheader("📈 Impact")
             st.markdown("""
             <div class="success-box">
-            **Average performance improvement**: 3-10x  
-            **Reduced computation time**: Up to 70%  
-            **Memory optimization**: Up to 50%  
+            **Potential performance improvements**: 3-10x  
+            **Reduced computation time**:   
+            **Memory optimization**: 
+            **Quantum speedup potential estimation**
             </div>
             """, unsafe_allow_html=True)
         
@@ -257,17 +258,18 @@ def manual_matrix_multiply(A, B):
 
     # DEMO PAGE
     else:
-        st.markdown('<h1 class="main-header">Code Efficiency Analyzer</h1>', unsafe_allow_html=True)
+        st.markdown('<h1 class="main-header">Auburn</h1>', unsafe_allow_html=True)
         st.subheader("Detect inefficiencies in pharma/biotech codebases")
         
         # Quick stats in sidebar
         with st.sidebar:
             st.info("""
             **📊 Detection Capabilities**
-            - 15+ inefficiency patterns
+            - 5+ inefficiency patterns
             - Real-time analysis
             - Confidence scoring
             - Optimization suggestions
+            - Quantum speedup potential evaluation
             """)
             
             if st.button("🔄 Clear Session", use_container_width=True):
@@ -325,7 +327,7 @@ def manual_matrix_multiply(A, B):
         
         with col1:
             analyze_clicked = st.button(
-                "🚀 Analyze Code", 
+                "Analyze Code", 
                 type="primary", 
                 use_container_width=True,
                 disabled=not code_input.strip()
