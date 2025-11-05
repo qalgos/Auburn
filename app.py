@@ -66,51 +66,126 @@ def authenticate():
 # Custom CSS for modern styling
 st.markdown("""
 <style>
+    /* Main background */
+    .stApp {
+        background-color: #FFF8F0;
+    }
+    
+    /* Headers and text */
     .main-header {
         font-size: 3rem;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: linear-gradient(135deg, #A52A2A 0%, #800080 100%);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         text-align: center;
         margin-bottom: 2rem;
+        font-weight: 700;
     }
+    
+    /* Cards and containers */
     .feature-card {
-        background: white;
+        background: #FFFFFF;
         padding: 1.5rem;
         border-radius: 10px;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        border-left: 4px solid #667eea;
+        box-shadow: 0 4px 6px rgba(165, 42, 42, 0.1);
+        border-left: 4px solid #A52A2A;
         margin-bottom: 1rem;
+        border: 1px solid #FFE4CC;
     }
+    
+    /* Status boxes */
     .success-box {
-        background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+        background: linear-gradient(135deg, #F0FFF0 0%, #E0F7E0 100%);
         padding: 1rem;
         border-radius: 10px;
-        border-left: 4px solid #28a745;
+        border-left: 4px solid #2E8B57;
+        border: 1px solid #C1E1C1;
     }
+    
     .warning-box {
-        background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+        background: linear-gradient(135deg, #FFF8E0 0%, #FFF0C0 100%);
         padding: 1rem;
         border-radius: 10px;
-        border-left: 4px solid #ffc107;
+        border-left: 4px solid #FFA500;
+        border: 1px solid #FFE4B5;
     }
+    
     .danger-box {
-        background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
+        background: linear-gradient(135deg, #FFE0E0 0%, #FFC0C0 100%);
         padding: 1rem;
         border-radius: 10px;
-        border-left: 4px solid #dc3545;
+        border-left: 4px solid #A52A2A;
+        border: 1px solid #FFB8B8;
     }
+    
+    /* Example cards */
     .example-card {
-        background: #f8f9fa;
-        border: 1px solid #e9ecef;
+        background: #FFF0E0;
+        border: 1px solid #FFD8B8;
         border-radius: 8px;
         padding: 1rem;
         margin: 0.5rem 0;
         transition: all 0.3s ease;
     }
+    
     .example-card:hover {
-        background: #e9ecef;
+        background: #FFE4CC;
         transform: translateY(-2px);
+        border-color: #A52A2A;
+    }
+    
+    /* Sidebar styling */
+    .css-1d391kg {
+        background-color: #FFF8F0;
+    }
+    
+    /* Buttons */
+    .stButton button {
+        background-color: #A52A2A;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        padding: 0.5rem 1rem;
+        transition: all 0.3s ease;
+    }
+    
+    .stButton button:hover {
+        background-color: #800080;
+        color: white;
+    }
+    
+    /* Primary buttons */
+    .stButton button[kind="primary"] {
+        background-color: #A52A2A;
+        color: white;
+    }
+    
+    .stButton button[kind="primary"]:hover {
+        background-color: #800080;
+    }
+    
+    /* Text areas and inputs */
+    .stTextArea textarea, .stTextInput input {
+        background-color: #FFFFFF;
+        border: 1px solid #FFD8B8;
+        border-radius: 8px;
+    }
+    
+    .stTextArea textarea:focus, .stTextInput input:focus {
+        border-color: #A52A2A;
+        box-shadow: 0 0 0 2px rgba(165, 42, 42, 0.2);
+    }
+    
+    /* Expanders */
+    .streamlit-expanderHeader {
+        background-color: #FFFFFF;
+        border: 1px solid #FFD8B8;
+        border-radius: 8px;
+    }
+    
+    /* Progress bars */
+    .stProgress > div > div > div {
+        background-color: #A52A2A;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -118,11 +193,11 @@ st.markdown("""
 # Check authentication before running app
 if authenticate():
     # Navigation
-    st.sidebar.title("🧬 Navigation")
-    page = st.sidebar.radio("Go to", ["🏠 Demo", "ℹ️ About"], index=0)
+    st.sidebar.title("Navigation")
+    page = st.sidebar.radio("Go to", ["Demo", "About"], index=0)
     
     st.sidebar.markdown("---")
-    st.sidebar.title("🔧 Quick Actions")
+    st.sidebar.title("Auburn ai")
     
     # Load resources with caching
     @st.cache_resource
@@ -155,33 +230,76 @@ if authenticate():
     # Example codes database
     EXAMPLE_CODES = {
         "🧬 Drug Compound Sorting": """# Bubble sort for drug compounds by IC50 value
-compounds = load_compound_library()
-for i in range(len(compounds)):
-    for j in range(len(compounds)-1):
-        if compounds[j].ic50 > compounds[j+1].ic50:
-            compounds[j], compounds[j+1] = compounds[j+1], compounds[j]""",
-
+    compounds = load_compound_library()
+    for i in range(len(compounds)):
+        for j in range(len(compounds)-1):
+            if compounds[j].ic50 > compounds[j+1].ic50:
+                compounds[j], compounds[j+1] = compounds[j+1], compounds[j]""",
+    
         "🔍 Patient Record Search": """# Linear search for patient records by ID
-def find_patient_by_id(patients, target_id):
-    for patient in patients:
-        if patient.id == target_id:
-            return patient
-    return None""",
-
-        " Matrix Operations": """#  matrix multiplication for dose-response modeling
-def manual_matrix_multiply(A, B):
-    rows_A, cols_A = len(A), len(A[0])
-    rows_B, cols_B = len(B), len(B[0])
-    result = [[0 for _ in range(cols_B)] for _ in range(rows_A)]
-    for i in range(rows_A):
-        for j in range(cols_B):
-            for k in range(cols_A):
-                result[i][j] += A[i][k] * B[k][j]
-    return result""",
+    def find_patient_by_id(patients, target_id):
+        for patient in patients:
+            if patient.id == target_id:
+                return patient
+        return None""",
+    
+        "🧪 Manual Matrix Operations": """# Manual matrix multiplication for dose-response modeling
+    def manual_matrix_multiply(A, B):
+        rows_A, cols_A = len(A), len(A[0])
+        rows_B, cols_B = len(B), len(B[0])
+        result = [[0 for _ in range(cols_B)] for _ in range(rows_A)]
+        for i in range(rows_A):
+            for j in range(cols_B):
+                for k in range(cols_A):
+                    result[i][j] += A[i][k] * B[k][j]
+        return result""",
+    
+        "📊 Clinical Trial Filtering": """# Linear filtering of clinical trial data
+    def find_eligible_trials(trials, min_age, max_age, condition):
+        eligible = []
+        for trial in trials:
+            if (trial.min_age <= min_age and 
+                trial.max_age >= max_age and 
+                condition in trial.conditions):
+                eligible.append(trial)
+        return eligible""",
+    
+        "⚗️ Molecular Weight Sorting": """# Selection sort for compounds by molecular weight
+    def sort_compounds_by_weight(compounds):
+        for i in range(len(compounds)):
+            min_idx = i
+            for j in range(i+1, len(compounds)):
+                if compounds[j].molecular_weight < compounds[min_idx].molecular_weight:
+                    min_idx = j
+            compounds[i], compounds[min_idx] = compounds[min_idx], compounds[i]
+        return compounds""",
+    
+        "🧫 Manual Statistical Calculations": """# Manual covariance calculation for gene expression
+    gene_data = load_gene_expression_dataset()
+    cov_matrix = []
+    for i in range(len(gene_data[0])):
+        row = []
+        for j in range(len(gene_data[0])):
+            cov = 0
+            for k in range(len(gene_data)):
+                cov += (gene_data[k][i] - mean_i) * (gene_data[k][j] - mean_j)
+            row.append(cov / (len(gene_data) - 1))
+        cov_matrix.append(row)""",
+    
+        "💊 Drug Interaction Search": """# Nested loop search for drug interactions
+    def find_drug_interactions(drug, drug_library):
+        interactions = []
+        for other_drug in drug_library:
+            if drug != other_drug:
+                affinity = calculate_binding_affinity(drug, other_drug)
+                if affinity < 10:  # Strong binding
+                    interactions.append(other_drug)
+        return interactions"""
     }
+    
 
     # ABOUT PAGE
-    if page == "ℹ️ About":
+    if page == "About":
         st.markdown('<h1 class="main-header">Auburn</h1>', unsafe_allow_html=True)
         
         col1, col2 = st.columns([2, 1])
@@ -223,15 +341,15 @@ def manual_matrix_multiply(A, B):
             st.subheader("📈 Impact")
             st.markdown("""
             <div class="success-box">
-            **Average performance improvement**
-            **Reduced computation time** 
-            **Memory optimization**%  
-            **Quantum speedup potential**
+            Average performance improvement
+            Reduced computation time 
+            Memory optimization 
+            Quantum speedup potential
             </div>
             """, unsafe_allow_html=True)
         
         st.markdown("---")
-        st.subheader("🛠️ Technical Architecture")
+        st.subheader("How it works?")
         
         tech_cols = st.columns(3)
         with tech_cols[0]:
@@ -264,7 +382,7 @@ def manual_matrix_multiply(A, B):
         # Quick stats in sidebar
         with st.sidebar:
             st.info("""
-            **📊 Detection Capabilities**
+            **Capabilities**
             - 5+ inefficiency patterns
             - Real-time analysis
             - Confidence scoring
@@ -308,7 +426,7 @@ def manual_matrix_multiply(A, B):
         st.markdown("---")
         
         # Main Analysis Section
-        st.subheader(" Code Analysis")
+        st.subheader("Code Analysis")
         
         # Initialize session state
         if 'analysis_code' not in st.session_state:
