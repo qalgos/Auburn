@@ -156,12 +156,13 @@ st.markdown("""
     
     /* Primary buttons */
     .stButton button[kind="primary"] {
-        background-color: #FFFFFF;
+        background-color: #fafcfc;
         color: black;
     }
     
     .stButton button[kind="primary"]:hover {
-        background-color: #fafcfc;
+        background-color: #f7f8fc;
+        color: black;
     }
     
     /* Text areas and inputs */
@@ -181,6 +182,7 @@ st.markdown("""
         background-color: #FFFFFF;
         border: 1px solid #FFD8B8;
         border-radius: 8px;
+        color: black;
     }
     
     /* Progress bars */
