@@ -68,7 +68,7 @@ st.markdown("""
 <style>
     /* Main background */
     .stApp {
-        background-color: #FFF8F0;
+        background-color: #fcfaf7;
     }
     
     /* Headers and text */
@@ -396,7 +396,7 @@ if authenticate():
                 st.rerun()
         
         # Example Gallery Section
-        st.subheader("📚 Example Code Gallery")
+        st.subheader("Example Code Gallery")
         st.write("Click on examples to load them into the analyzer:")
         
         # Create columns for examples
@@ -417,10 +417,10 @@ if authenticate():
         
         # Display selected example
         if 'example_code' in st.session_state:
-            st.markdown(f"**📋 Example Loaded:** {st.session_state.get('selected_example', 'Selected Code')}")
+            st.markdown(f"**Example Loaded:** {st.session_state.get('selected_example', 'Selected Code')}")
             st.code(st.session_state.example_code, language='python')
             
-            if st.button("🔍 Analyze This Example", type="primary", use_container_width=True):
+            if st.button("Analyze This Example", type="primary", use_container_width=True):
                 st.session_state.analyze_clicked = True
         
         st.markdown("---")
