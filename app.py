@@ -16,7 +16,7 @@ st.set_page_config(
 with st.sidebar:
     st.title("🧪 Navigation")
     st.page_link("app.py", label="🏠 Home", icon="🏠")
-    st.page_link("pages/about.py", label="📖 About", icon="📖")
+    st.page_link("pages/02_About.py", label="📖 About", icon="📖")
     
     st.markdown("---")
     st.subheader("Quick Info")
@@ -27,6 +27,7 @@ with st.sidebar:
     - 🧪 Matrix operations
     - 📊 Data processing
     """)
+
 
 
 
