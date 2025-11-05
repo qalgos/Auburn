@@ -1,3 +1,5 @@
 streamlit
 torch
 numpy
+tensorflow
+scikit-learn
