@@ -313,7 +313,7 @@ if st.button("Analyze Code", type="primary", use_container_width=True):
                     st.error("🚨 Inefficiencies Detected:")
                     for label in predicted_labels[0]:
                         confidence = confidence_scores.get(label, 0) * 100
-                        st.write(f"**{label.replace('_', ' ').title()}** (Confidence: {confidence:.1f}%)")
+                        st.write(f"**{label}** (Confidence: {confidence:.1f}%)")
                         
                         if label in metadata.get('fundamental_operations', {}):
                             info = metadata['fundamental_operations'][label]
@@ -325,18 +325,17 @@ if st.button("Analyze Code", type="primary", use_container_width=True):
                     st.success("✅ No inefficiencies detected!")
                     st.info("The code appears to use efficient implementations.")
                     
-            except Exception as e:
-                st.error(f"❌ Error analyzing code: {str(e)}")
-    else:
-        st.warning("Please enter some code to analyze")
-         # Show raw confidence scores
-            with st.expander("🔍 Detailed Confidence Scores"):
+                # Show raw confidence scores
+                with st.expander("🔍 Detailed Confidence Scores"):
                     for label, confidence in sorted(confidence_scores.items(), key=lambda x: x[1], reverse=True):
                         st.write(f"{label}: {confidence:.3f}")
                         
             except Exception as e:
                 st.error(f"❌ Error analyzing code: {str(e)}")
                 st.info("Make sure all model files (model.h5, tokenizer.pkl, mlb.pkl, metadata.pkl) are in the repository.")
+    else:
+        st.warning("Please enter some code to analyze")
+
 
 # Clear button
 if st.button("Clear All", use_container_width=True):
