@@ -30,7 +30,7 @@ def load_components():
     return tokenizer, mlb, metadata
 
     # Keep your existing preprocessing function and model training code exactly as before
-    def preprocess_code(code):
+def preprocess_code(code):
         """
         Enhanced preprocessing for pharmaceutical code patterns
         Focuses on preserving operation-specific patterns while normalizing noise
