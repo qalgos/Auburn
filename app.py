@@ -293,7 +293,7 @@ def render_analysis():
     
     @st.cache_resource
     def load_components():
-        Replace with your actual component loading
+        
         with open('tokenizer.pkl', 'rb') as f:
             tokenizer = pickle.load(f)
         with open('mlb.pkl', 'rb') as f:
