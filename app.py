@@ -1,95 +1,72 @@
 import streamlit as st
 import torch
 import numpy as np
+from tensorflow.keras.preprocessing.sequence import pad_sequences
+import pickle
+import re
 
-# -------------------------------
-# Load the model
-# -------------------------------
+# Load model
 @st.cache_resource
 def load_model():
-    model = torch.load("MODEL/model.pt", map_location="cpu")
+    model = torch.load("model.pt", map_location="cpu")
     model.eval()
     return model
 
-model = load_model()
+# Load tokenizer and other components
+@st.cache_resource
+def load_components():
+    with open('tokenizer.pkl', 'rb') as f:
+        tokenizer = pickle.load(f)
+    with open('mlb.pkl', 'rb') as f:
+        mlb = pickle.load(f)
+    with open('metadata.pkl', 'rb') as f:
+        metadata = pickle.load(f)
+    return tokenizer, mlb, metadata
 
-# -------------------------------
-# UI Configuration
-# -------------------------------
-st.set_page_config(
-    page_title="Auburn",
-    page_icon="O",
-    layout="centered"
-)
+def preprocess_code(code):
+    # Your preprocessing function here
+    code = code.lower()
+    # ... rest of preprocessing
+    return code
 
-# Custom CSS for a smoother design
-st.markdown("""
-    <style>
-        .main {
-            background-color: #F9FAFB;
-        }
-        .stTextInput > div > div > input {
-            border-radius: 10px;
-            border: 1px solid #ccc;
-            padding: 0.5rem;
-        }
-        .stButton > button {
-            background-color: #4F46E5;
-            color: white;
-            border-radius: 10px;
-            padding: 0.5rem 1rem;
-            border: none;
-        }
-        .stButton > button:hover {
-            background-color: #4338CA;
-        }
-        .suggestion {
-            background-color: #EEF2FF;
-            padding: 0.4rem 0.8rem;
-            border-radius: 20px;
-            margin: 0.2rem;
-            display: inline-block;
-            cursor: pointer;
-            color: #4338CA;
-        }
-    </style>
-""", unsafe_allow_html=True)
+# Streamlit UI
+st.title("🧪 Pharmaceutical Code Efficiency Analyzer")
+st.write("Paste your code to detect inefficient patterns")
 
-# -------------------------------
-# Header
-# -------------------------------
-st.title(" Auburn")
-st.caption("Try Auburn AI — type a query or click a suggestion!")
+code_input = st.text_area("Code Input", height=200, 
+                         placeholder="Paste your pharmaceutical/biotech code here...")
 
-# -------------------------------
-# Suggested Queries
-# -------------------------------
-st.markdown("**Suggested Queries:**")
-suggestions = [
-    "Sample input 1",
-    "Sample input 2",
-    "Sample input 3"
-]
-
-cols = st.columns(len(suggestions))
-for i, s in enumerate(suggestions):
-    if cols[i].button(s):
-        st.session_state["user_query"] = s
-
-# -------------------------------
-# Query Input
-# -------------------------------
-query = st.text_input("Enter your query:", st.session_state.get("user_query", ""))
-
-# -------------------------------
-# Run Prediction
-# -------------------------------
-if st.button("🔍 Predict"):
-    try:
-        # Example: adapt this depending on your model
-        x = torch.tensor([[float(len(query))]], dtype=torch.float32)  # placeholder
-        with torch.no_grad():
-            y = model(x)
-        st.success(f"Model output: {y.item():.4f}")
-    except Exception as e:
-        st.error(f"Error: {e}")
+if st.button("Analyze Code"):
+    if code_input.strip():
+        with st.spinner("Analyzing code patterns..."):
+            try:
+                # Load components
+                model = load_model()
+                tokenizer, mlb, metadata = load_components()
+                
+                # Preprocess and predict
+                processed_code = preprocess_code(code_input)
+                sequence = tokenizer.texts_to_sequences([processed_code])
+                padded_sequence = pad_sequences(sequence, maxlen=metadata['max_len'], padding='post')
+                
+                # Convert to torch tensor and predict
+                input_tensor = torch.tensor(padded_sequence, dtype=torch.float32)
+                with torch.no_grad():
+                    predictions = model(input_tensor)
+                
+                # Display results
+                predictions_np = predictions.numpy()
+                binary_predictions = (predictions_np > 0.5).astype(int)
+                predicted_labels = mlb.inverse_transform(binary_predictions)
+                
+                if predicted_labels[0]:
+                    st.error("🚨 Inefficiencies Detected:")
+                    for label in predicted_labels[0]:
+                        st.write(f"- {label}")
+                else:
+                    st.success("✅ No inefficiencies detected!")
+                    
+            except Exception as e:
+                st.error(f"Error analyzing code: {e}")
+    else:
+        st.warning("Please enter some code to analyze")
