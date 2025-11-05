@@ -80,6 +80,7 @@ st.markdown("""
         text-align: center;
         margin-bottom: 2rem;
         font-weight: 700;
+        color: black;
     }
     
     /* Cards and containers */
