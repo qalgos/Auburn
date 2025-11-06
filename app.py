@@ -20,7 +20,7 @@ def get_base64_of_image(image_path):
     with open(image_path, "rb") as img_file:
         return base64.b64encode(img_file.read()).decode()
 
-logo_base64 = get_base64_of_image("your_logo.png")
+logo_base64 = get_base64_of_image("image0.jpeg")
 
 st.markdown(f"""
 <style>
