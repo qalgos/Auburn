@@ -297,21 +297,21 @@ if authenticate():
 
     # Example codes database
     EXAMPLE_CODES = {
-        "🧬 Drug Compound Sorting": """# Bubble sort for drug compounds by IC50 value
+        "🧬 Drug Compound Sorting (bubble sort mistake)": """#drug compounds by IC50 value
     compounds = load_compound_library()
     for i in range(len(compounds)):
         for j in range(len(compounds)-1):
             if compounds[j].ic50 > compounds[j+1].ic50:
                 compounds[j], compounds[j+1] = compounds[j+1], compounds[j]""",
     
-        "🔍 Patient Record Search": """# Linear search for patient records by ID
+        "🔍 Patient Record Search (inefficient for a large database of patients)": """#for patient records by ID
     def find_patient_by_id(patients, target_id):
         for patient in patients:
             if patient.id == target_id:
                 return patient
         return None""",
     
-        "🧪 Manual Matrix Operations": """# Manual matrix multiplication for dose-response modeling
+        "🧪Matrix Multiplication (not vectorized)": """# matrix multiplication for dose-response modeling
     def manual_matrix_multiply(A, B):
         rows_A, cols_A = len(A), len(A[0])
         rows_B, cols_B = len(B), len(B[0])
@@ -368,28 +368,26 @@ if authenticate():
 
     # ABOUT PAGE
     if page == "About":
-        
-        
-        
         col1, col2 = st.columns([2, 1])
         
         with col1:
-            st.subheader("🚀Overview")
+            st.subheader("Overview")
             st.markdown("""
             <div class="feature-card">
-            The **Auburn** is an advanced AI-powered tool specifically designed for 
+            Auburn is an advanced AI-powered tool designedspecifically for 
             the pharmaceutical and biotechnology industries. It automatically detects inefficient 
-            code patterns, suggests improvements and evaluates quantum speedup potential.
+            code patterns and suggests improvements. It also evaluates quantum speedup potential, and quantifies how much your business can benefit from the adoption of quantum computers.
             </div>
             """, unsafe_allow_html=True)
             
-            st.subheader("🎯 Key Features")
+            st.subheader("Key Features")
             
             features = [
-                ("🧠 AI-Powered Analysis", "Deep learning models trained on thousands of code examples"),
-                ("⚡ Performance Optimization", "Identifies bottlenecks in sorting, searching, and matrix operations"),
+                ("🧠 AI-Powered Analysis", "Deep learning models trained to recognise inefficiencies in many programming languages"),
+                ("⚡ Performance Optimization", "This demo identifies bottlenecks in sorting, searching, and matrix operations"),
                 ("🧬 Domain-Specific", "Optimized for pharma/biotech computational workflows"),
-                ("📊 Detailed Reporting", "Comprehensive analysis with confidence scores and improvement suggestions")
+                ("🔒 Private and Secure", "You can scan your codebase without worrying about leaks"),
+                ("📊 Detailed Reporting", "Comprehensive analysis with improvement suggestions and quantum potential evaluation.")
             ]
             
             for feature, description in features:
@@ -397,7 +395,7 @@ if authenticate():
                     st.write(description)
         
         with col2:
-            st.subheader("🔍 Supported operations")
+            st.subheader("Supported operations")
             st.markdown("""
             - **Sorting**
             - **Database Search**  
@@ -411,7 +409,7 @@ if authenticate():
             st.markdown("""
             <div class="success-box">
             Average performance improvement
-            Reduced computation time 
+            Reduced computational time 
             Memory optimization 
             Quantum speedup potential
             </div>
@@ -425,22 +423,23 @@ if authenticate():
             st.markdown("""
             **Machine Learning Stack**
             - TensorFlow/Keras
-            - Custom NLP Pipeline
-            - Multi-label Classification
+            - State-of-the-art Natural Language Processing tools
+            - Knowledge of quantum algorithms
             """)
         with tech_cols[1]:
             st.markdown("""
-            **Data Processing**
-            - Abstract Syntax Trees
-            - Code Tokenization
-            - Pattern Recognition
+            **Processing capabilities**
+            - Capable of detecting many inefficient operations with just one run
+            - Pre-trained model guarantess fast processing time
+            - Accepts many programming languages
             """)
         with tech_cols[2]:
             st.markdown("""
-            **Performance Metrics**
-            - Confidence Scoring
-            - Pattern Matching
-            - Optimization Suggestions
+            **Who trusted us**
+            - Name Surname, MEng Chemical Engineering: ""
+            - Name Surname, PhD Computational Chemistry: ""
+            - Name Surname, PhD Computational Chemistry: ""
+            - Name Surname, MD: ""
             """)
 
     # DEMO PAGE
