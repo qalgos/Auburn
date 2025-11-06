@@ -23,7 +23,7 @@ with col2:
     with logo_col:
         st.image(logo, width=140)
     with name_col:
-        st.markdown('<h1 class="main-header" style="margin: 0; line-height: 140px;">Auburn</h1>', unsafe_allow_html=True)
+        st.markdown('<h1 class="main-header" style="margin: -40; line-height: 140px;">Auburn</h1>', unsafe_allow_html=True)
 with col3:
     # Empty column for right spacing
     pass
