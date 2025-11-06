@@ -17,6 +17,7 @@ logo = Image.open("image0.jpeg")
 col1, col2, col3 = st.columns([1, 8, 1])
 with col1:
     # Empty column for left spacing
+    pass
 with col2:
     logo_col, name_col = st.columns([140, 400])  # Adjust second value as needed
     with logo_col:
