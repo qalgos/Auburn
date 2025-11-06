@@ -45,7 +45,7 @@ st.markdown(f"""
 
 <div class="header-container">
     <img src="data:image/png;base64,{logo_base64}" class="header-logo">
-    <h1 class="header-title">NAME</h1>
+    <h1 class="header-title">Auburn</h1>
 </div>
 """, unsafe_allow_html=True)
 
@@ -445,12 +445,7 @@ if authenticate():
 
     # DEMO PAGE
     else:
-        # Create columns for logo and title
-        col1, col2 = st.columns([1, 4])
-        with col1:
-            st.image(logo, width=80)  # Adjust width as needed
-        with col2:
-            st.markdown('<h1 class="main-header">Auburn</h1>', unsafe_allow_html=True)
+
             st.subheader("Detect inefficiencies in pharma/biotech codebases")
         
         # Quick stats in sidebar
