@@ -339,7 +339,12 @@ if authenticate():
 
     # ABOUT PAGE
     if page == "About":
-        st.markdown('<h1 class="main-header">Auburn</h1>', unsafe_allow_html=True)
+        # Create columns for logo and title
+        col1, col2 = st.columns([1, 4])
+        with col1:
+            st.image(logo, width=80)  # Adjust width as needed
+        with col2:
+            st.markdown('<h1 class="main-header">Auburn</h1>', unsafe_allow_html=True, unsafe_allow_html=True)
         
         col1, col2 = st.columns([2, 1])
         
