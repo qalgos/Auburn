@@ -446,7 +446,7 @@ if authenticate():
     # DEMO PAGE
     else:
 
-            st.subheader("Detect inefficiencies in pharma/biotech codebases")
+        st.subheader("Detect inefficiencies in pharma/biotech codebases")
         
         # Quick stats in sidebar
         with st.sidebar:
