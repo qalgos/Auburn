@@ -13,14 +13,42 @@ from PIL import Image
 
 # Load your logo
 logo = Image.open("image0.jpeg")
-# Create columns for logo and title
-col1, col2 = st.columns([1, 20])  # col2 takes most space but we'll only use col1
-with col1:
-    logo_col, name_col = st.columns([140, 300])  # Fixed pixel-based columns
-    with logo_col:
-        st.image(logo, width=140)
-    with name_col:
-        st.markdown('<h1 class="main-header" style="margin: 0; padding-top: 10px;">Auburn</h1>', unsafe_allow_html=True)
+
+import base64
+
+def get_base64_of_image(image_path):
+    with open(image_path, "rb") as img_file:
+        return base64.b64encode(img_file.read()).decode()
+
+logo_base64 = get_base64_of_image("your_logo.png")
+
+st.markdown(f"""
+<style>
+    .header-container {{
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        gap: 15px;
+        margin-bottom: 2rem;
+    }}
+    .header-logo {{
+        width: 140px;
+        height: auto;
+    }}
+    .header-title {{
+        margin: 0;
+        color: #000000;
+        font-size: 2.5rem;
+        font-weight: 700;
+    }}
+</style>
+
+<div class="header-container">
+    <img src="data:image/png;base64,{logo_base64}" class="header-logo">
+    <h1 class="header-title">NAME</h1>
+</div>
+""", unsafe_allow_html=True)
+
 st.set_page_config(
     page_title="Auburn",
     page_icon= logo,
