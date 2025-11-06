@@ -19,7 +19,7 @@ with col1:
     # Horizontal layout within col1
     logo_col, name_col = st.columns([1, 3])
     with logo_col:
-        st.image(logo, width=100)  # Adjust width as needed
+        st.image(logo, width=60)  # Adjust width as needed
     with name_col:
         st.markdown('<h1 class="main-header" style="margin: 0; padding: 0;">Auburn</h1>', unsafe_allow_html=True)
 with col2:
