@@ -25,13 +25,13 @@ with col2:
         st.markdown('<h1 class="main-header" style="margin: 0; line-height: 140px;">Auburn</h1>', unsafe_allow_html=True)
 with col3:
     # Empty column for right spacing
-    
-    st.set_page_config(
-        page_title="Auburn",
-        page_icon= logo,
-        layout="wide",
-        initial_sidebar_state="expanded"
-    )
+    pass
+st.set_page_config(
+    page_title="Auburn",
+    page_icon= logo,
+    layout="wide",
+    initial_sidebar_state="expanded"
+)
 
 def authenticate():
     """Enhanced authentication with better UI"""
