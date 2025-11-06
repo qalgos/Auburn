@@ -14,11 +14,17 @@ from PIL import Image
 # Load your logo
 logo = Image.open("image0.jpeg")
 # Create columns for logo and title
-col1, col2 = st.columns([1, 4])
+col1, col2 = st.columns([3, 7])  # col1 for logo+name, col2 for other content if needed
 with col1:
-    st.image(logo, width=140)  # Adjust width as needed
-    st.markdown('<h1 class="main-header">Auburn</h1>', unsafe_allow_html=True)
+    # Horizontal layout within col1
+    logo_col, name_col = st.columns([1, 3])
+    with logo_col:
+        st.image(logo, width=100)  # Adjust width as needed
+    with name_col:
+        st.markdown('<h1 class="main-header" style="margin: 0; padding: 0;">Auburn</h1>', unsafe_allow_html=True)
 with col2:
+    # You can put other content here, or leave empty
+    pass
     
     st.set_page_config(
         page_title="Auburn",
