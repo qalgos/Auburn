@@ -9,14 +9,23 @@ import base64
 import time
 import re
 import os
+from PIL import Image
 
-# Page configuration - MUST be first Streamlit command
-st.set_page_config(
-    page_title="Auburn",
-    page_icon="🧬",
-    layout="wide",
-    initial_sidebar_state="expanded"
-)
+# Load your logo
+logo = Image.open("image0.jpeg")
+# Create columns for logo and title
+col1, col2 = st.columns([1, 4])
+with col1:
+    st.image(logo, width=80)  # Adjust width as needed
+with col2:
+    st.markdown('<h1 class="main-header">Code Efficiency Analyzer</h1>', unsafe_allow_html=True)
+
+    st.set_page_config(
+        page_title="Auburn",
+        page_icon="🧬",
+        layout="wide",
+        initial_sidebar_state="expanded"
+    )
 
 def authenticate():
     """Enhanced authentication with better UI"""
