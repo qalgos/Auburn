@@ -19,7 +19,7 @@ with col1:
     st.image(logo, width=140)  # Adjust width as needed
 with col2:
     st.markdown('<h1 class="main-header">Auburn</h1>', unsafe_allow_html=True)
-   st.set_page_config(
+    st.set_page_config(
         page_title="Auburn",
         page_icon= logo,
         layout="wide",
