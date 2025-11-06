@@ -344,7 +344,7 @@ if authenticate():
         with col1:
             st.image(logo, width=80)  # Adjust width as needed
         with col2:
-            st.markdown('<h1 class="main-header">Auburn</h1>', unsafe_allow_html=True, unsafe_allow_html=True)
+            st.markdown('<h1 class="main-header">Auburn</h1>', unsafe_allow_html=True)
         
         col1, col2 = st.columns([2, 1])
         
@@ -420,8 +420,13 @@ if authenticate():
 
     # DEMO PAGE
     else:
-        st.markdown('<h1 class="main-header">Auburn</h1>', unsafe_allow_html=True)
-        st.subheader("Detect inefficiencies in pharma/biotech codebases")
+        # Create columns for logo and title
+        col1, col2 = st.columns([1, 4])
+        with col1:
+            st.image(logo, width=80)  # Adjust width as needed
+        with col2:
+            st.markdown('<h1 class="main-header">Auburn</h1>', unsafe_allow_html=True)
+            st.subheader("Detect inefficiencies in pharma/biotech codebases")
         
         # Quick stats in sidebar
         with st.sidebar:
