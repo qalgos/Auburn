@@ -491,8 +491,7 @@ if authenticate():
             st.markdown(f"**Example Loaded:** {st.session_state.get('selected_example', 'Selected Code')}")
             st.code(st.session_state.example_code, language='python')
             
-            if st.button("Analyze This Example", type="primary", use_container_width=True):
-                st.session_state.analyze_clicked = True
+           
         
         st.markdown("---")
         
