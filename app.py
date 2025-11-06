@@ -418,7 +418,7 @@ if authenticate():
         st.markdown("---")
         st.subheader("How it works?")
         
-        tech_cols = st.columns(3)
+        tech_cols = st.columns(1)
         with tech_cols[0]:
             st.markdown("""
             **Machine Learning Stack**
@@ -433,14 +433,14 @@ if authenticate():
             - Pre-trained model guarantess fast processing time
             - Accepts many programming languages
             """)
-        with tech_cols[2]:
-            st.markdown("""
+     
+        st.markdown("""
             **Who trusted us**
             - Name Surname, MEng Chemical Engineering: ""
             - Name Surname, PhD Computational Chemistry: ""
             - Name Surname, PhD Computational Chemistry: ""
             - Name Surname, MD: ""
-            """)
+            """)  
 
     # DEMO PAGE
     else:
