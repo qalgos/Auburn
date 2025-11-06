@@ -448,7 +448,7 @@ if authenticate():
 
         #st.subheader("Detect inefficiencies in pharma/biotech codebases")
         st.text(
-            "Auburn AI detects inefficient code implementation and screens for the classical and quantum speedups available in your code.")
+            "Auburn AI detects inefficient code implementation and screens for classical and quantum speedups available in your code.")
         # Quick stats in sidebar
         with st.sidebar:
             st.info("""
