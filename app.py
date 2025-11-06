@@ -18,7 +18,7 @@ col1, col2 = st.columns([1, 4])
 with col1:
     st.image(logo, width=80)  # Adjust width as needed
 with col2:
-    st.markdown('<h1 class="main-header">Code Efficiency Analyzer</h1>', unsafe_allow_html=True)
+   
 
     st.set_page_config(
         page_title="Auburn",
