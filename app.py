@@ -433,15 +433,16 @@ if authenticate():
             - Pre-trained model guarantess fast processing time
             - Accepts many programming languages
             """)
+            
         st.markdown("---")
         st.subheader("See who trusted us")
-         st.markdown("""
-            **Reviews**
-            - Name Surname, MEng Chemical Engineering: ""
-            - Name Surname, PhD Computational Chemistry: ""
-            - Name Surname, PhD Computational Chemistry: ""
-            - Name Surname, MD: ""
-            """)
+        st.markdown("""
+        **Reviews**
+        - Name Surname, MEng Chemical Engineering: ""
+        - Name Surname, PhD Computational Chemistry: ""
+        - Name Surname, PhD Computational Chemistry: ""
+        - Name Surname, MD: ""
+        """)
 
     # DEMO PAGE
     else:
