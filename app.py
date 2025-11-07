@@ -213,7 +213,7 @@ if authenticate():
     page = st.sidebar.radio("Go to", ["Demo", "About"], index=0)
     
     st.sidebar.markdown("---")
-    st.sidebar.title("Auburn AI")
+    
 
     # Load resources with caching - FIXED VERSION
     @st.cache_resource
@@ -383,11 +383,7 @@ her2_positive = find_patients_with_biomarker(oncology_patients, "HER2", 2.0)"""
     else:
         st.text("Auburn AI detects inefficient code implementation and screens for optimization opportunities.")
 
-        # Quick stats in sidebar
-        with st.sidebar:
-            st.info("""
-            Safe Reliable Smart
-            """)
+    
             
            
 
