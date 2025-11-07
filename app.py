@@ -353,10 +353,10 @@ her2_positive = find_patients_with_biomarker(oncology_patients, "HER2", 2.0)"""
             
             features = [
                 (" AI-Powered Analysis", "Deep learning models trained to recognise inefficiencies"),
-                (" Performance Optimization", "Identifies bottlenecks in sorting, searching, and matrix operations"),
+                (" Performance Optimization", "Identifies bottlenecks in sorting, searching, and matrix operations. Evaluates quantum speedup potential of the codebase."),
                 (" Domain-Specific", "Optimized for pharma/biotech computational workflows"),
-                (" Private and Secure", "Scan your codebase without worrying about leaks"),
-                (" Detailed Reporting", "Comprehensive analysis with improvement suggestions")
+                (" Private and Secure", "Scan your codebase without worrying about leaks. Optimize your codebase fully in-house, learn if your business can benefit from quantum computers!  "),
+                (" Detailed Reporting", "Comprehensive analysis with improvement suggestions.")
             ]
             
             for feature, description in features:
