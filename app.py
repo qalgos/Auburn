@@ -326,24 +326,7 @@ def sort_compounds_by_weight(compounds):
         compounds[i], compounds[min_idx] = compounds[min_idx], compounds[i]
     return compounds""", 
         
-    " Search for Drug Interactions (Nested for loops)": """def find_drug_interactions(drug_library, target_drug):
-    """
-    Search for potential drug-drug interactions
-    PATTERN: Nested for loops + condition checking
-    """
-    interactions = []
-    for drug in drug_library:
-        if drug != target_drug:
-            # Check cytochrome P450 interactions
-            for enzyme in ["CYP3A4", "CYP2D6", "CYP2C9"]:
-                if (target_drug.inhibits(enzyme) and drug.metabolized_by(enzyme)):
-                    interactions.append((target_drug.name, drug.name, enzyme))
-                    break
-    return interactions
-
-# Usage
-fda_drugs = load_fda_approved_drugs()
-warfarin_interactions = find_drug_interactions(fda_drugs, warfarin)"""
+   
     }
 
     # ABOUT PAGE
