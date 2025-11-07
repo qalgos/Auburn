@@ -191,7 +191,7 @@ st.markdown("""
         background-color: #E0D6FF;
     }
     .auth-container {
-        background: linear-gradient(135deg, #F0E6FF 0%, #F8F8FF 100%);
+        
         padding: 2rem;
         border-radius: 15px;
         color: #000000;
