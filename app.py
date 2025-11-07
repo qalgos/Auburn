@@ -381,7 +381,7 @@ her2_positive = find_patients_with_biomarker(oncology_patients, "HER2", 2.0)"""
 
     # DEMO PAGE
     else:
-        st.text("Auburn AI detects inefficient code implementation, suggests improvements and screens for quantum speedup opportunities.")
+        st.text("Auburn AI detects inefficient code implementation and suggests classical and quantum improvements.")
 
     
             
