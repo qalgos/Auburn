@@ -360,7 +360,7 @@ her2_positive = find_patients_with_biomarker(oncology_patients, "HER2", 2.0)"""
             ]
             
             for feature, description in features:
-                with st.expander(f"**{feature}**"):
+                with st.expander(f"{feature}"):
                     st.write(description)
         
         with col2:
