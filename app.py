@@ -426,7 +426,7 @@ her2_positive = find_patients_with_biomarker(oncology_patients, "HER2", 2.0)"""
             "Paste or write your code here:", 
             height=250,
             value=st.session_state.get('analysis_code', ''),
-            placeholder="""# Paste your code here or use an example above\n\ndef your_function():\n    # Your code here\n    return result""",
+            placeholder="""# Write your code here or use an example above\n\ndef your_function():\n    # Your code here\n    return result""",
             help="Auburn v0.1 will detect inefficient patterns in sorting, searching, and matrix operations"
         )
         
