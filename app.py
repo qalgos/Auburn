@@ -281,13 +281,19 @@ if authenticate():
     @st.cache_resource
     def load_components():
         try:
+            model = tf.keras.models.load_model("model.h5")
             with open('tokenizer.pkl', 'rb') as f:
                 tokenizer = pickle.load(f)
             with open('mlb.pkl', 'rb') as f:
                 mlb = pickle.load(f)
             with open('metadata.pkl', 'rb') as f:
                 metadata = pickle.load(f)
-            return tokenizer, mlb, metadata
+
+            max_len = metadata['max_len']  # ⬅️ CRITICAL: Get this from metadata
+            fundamental_operations = metadata['fundamental_operations']
+        
+            return model, tokenizer, mlb, max_len, fundamental_operations
+           
         except Exception as e:
             st.error(f"Error loading components: {e}")
             return None, None, None
@@ -560,17 +566,32 @@ if authenticate():
                             st.error("❌ Required model files not found. Please ensure all model files are available.")
                             st.stop()
                         
+                        # In your analysis section, replace this:
                         processed_code = preprocess_code(code_input)
                         sequence = tokenizer.texts_to_sequences([processed_code])
                         padded_sequence = pad_sequences(sequence, padding='post')
                         
-                        predictions = model.predict(padded_sequence, verbose=0)
-                        binary_predictions = (predictions > 0.5).astype(int)
-                        predicted_labels = mlb.inverse_transform(binary_predictions)
+                        # With this EXACT prediction logic:
+                        def predict_operations(code_snippet, model, tokenizer, mlb, max_len, threshold=0.5):
+                            """Make predictions - SAME AS TKINTER APP"""
+                            processed_code = preprocess_code(code_snippet)
+                            sequence = tokenizer.texts_to_sequences([processed_code])
+                            padded_sequence = pad_sequences(sequence, maxlen=max_len, padding='post')
+                            
+                            predictions = model.predict(padded_sequence, verbose=0)
+                            binary_predictions = (predictions > threshold).astype(int)
+                            predicted_labels = mlb.inverse_transform(binary_predictions)
+                            
+                            confidence_scores = {}
+                            for i, label in enumerate(mlb.classes_):
+                                confidence_scores[label] = float(predictions[0][i])
+                            
+                            return predicted_labels[0], confidence_scores
                         
-                        confidence_scores = {}
-                        for i, label in enumerate(mlb.classes_):
-                            confidence_scores[label] = float(predictions[0][i])
+                        # Then use it like this:
+                        predicted_labels, confidence_scores = predict_operations(
+                            code_input, model, tokenizer, mlb, max_len
+                        )
                         
                         # Display results
                         st.subheader("📊 Analysis Results")
