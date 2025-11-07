@@ -680,80 +680,75 @@ if authenticate():
                     del st.session_state.selected_example
                 st.rerun()
         
-        # Analysis execution
-        if analyze_clicked or st.session_state.get('analyze_clicked', False):
-            if 'analyze_clicked' in st.session_state:
-                del st.session_state.analyze_clicked
+     # Analysis execution
+if analyze_clicked and code_input.strip():
+    with st.spinner("🔍 Analyzing code patterns..."):
+        try:
+            # Use the EXACT same prediction logic as Tkinter app
+            processed_code = preprocess_code(code_input)
+            sequence = tokenizer.texts_to_sequences([processed_code])
+            padded_sequence = pad_sequences(sequence, maxlen=max_len, padding='post')  # ADDED maxlen
+            
+            predictions = model.predict(padded_sequence, verbose=0)
+            binary_predictions = (predictions > 0.5).astype(int)
+            predicted_labels = mlb.inverse_transform(binary_predictions)
+            
+            confidence_scores = {}
+            for i, label in enumerate(mlb.classes_):
+                confidence_scores[label] = float(predictions[0][i])
+            
+            # Display results - CONSISTENT with Tkinter app
+            st.subheader("📊 Analysis Results")
+            
+            if predicted_labels[0]:
+                st.markdown('<div class="danger-box">', unsafe_allow_html=True)
+                st.error("🚨 Inefficiencies Detected")
+                st.markdown('</div>', unsafe_allow_html=True)
                 
-            if code_input.strip():
-                with st.spinner("🔍 Analyzing code patterns..."):
-                    try:
-                        model = load_model()
-                        tokenizer, mlb, metadata = load_components()
-                        
-                        if model is None or tokenizer is None:
-                            st.error("❌ Required model files not found. Please ensure all model files are available.")
-                            st.stop()
-                        
-                        processed_code = preprocess_code(code_input)
-                        sequence = tokenizer.texts_to_sequences([processed_code])
-                        padded_sequence = pad_sequences(sequence, padding='post')
-                        
-                        predictions = model.predict(padded_sequence, verbose=0)
-                        binary_predictions = (predictions > 0.5).astype(int)
-                        predicted_labels = mlb.inverse_transform(binary_predictions)
-                        
-                        confidence_scores = {}
-                        for i, label in enumerate(mlb.classes_):
-                            confidence_scores[label] = float(predictions[0][i])
-                        
-                        # Display results
-                        st.subheader("📊 Analysis Results")
-                        
-                        if predicted_labels[0]:
-                            st.markdown('<div class="danger-box">', unsafe_allow_html=True)
-                            st.error("🚨 Inefficiencies Detected")
-                            st.markdown('</div>', unsafe_allow_html=True)
-                            
-                            for label in predicted_labels[0]:
-                                confidence = confidence_scores.get(label, 0) * 100
-                                with st.container():
-                                    col_a, col_b = st.columns([3, 1])
-                                    with col_a:
-                                        st.write(f"**{label}**")
-                                    with col_b:
-                                        st.write(f"`{confidence:.1f}%`")
-                                
-                                if label in metadata.get('fundamental_operations', {}):
-                                    info = metadata['fundamental_operations'][label]
-                                    with st.expander(f"📖 Details & Recommendations for {label}"):
-                                        st.write(f"**Description**: {info.get('description', 'N/A')}")
-                                        st.write(f"**Quantum Speedup**: {info.get('quantum_speedup', 'N/A')}")
-                                        st.write(f"**Optimization**: {info.get('optimization_notes', 'N/A')}")
-                        else:
-                            st.markdown('<div class="success-box">', unsafe_allow_html=True)
-                            st.success("✅ No inefficiencies detected!")
-                            st.write("The code appears to use efficient implementations.")
-                            st.markdown('</div>', unsafe_allow_html=True)
-                            
-                        # Detailed confidence scores
-                        with st.expander("🔍 Detailed Confidence Scores"):
-                            st.write("All detected patterns with confidence levels:")
-                            for label, confidence in sorted(confidence_scores.items(), key=lambda x: x[1], reverse=True):
-                                progress_value = confidence
-                                st.write(f"**{label}**")
-                                st.progress(progress_value, text=f"{confidence:.1%} confidence")
-                                
-                    except Exception as e:
-                        st.error(f"❌ Error analyzing code: {str(e)}")
-                        st.info("""
-                        **Troubleshooting tips:**
-                        - Ensure all model files (model.h5, tokenizer.pkl, mlb.pkl, metadata.pkl) are present
-                        - Check that the code is valid Python syntax
-                        - Try using one of the example codes above
-                        """)
+                for label in predicted_labels[0]:
+                    confidence = confidence_scores.get(label, 0) * 100
+                    with st.container():
+                        col_a, col_b = st.columns([3, 1])
+                        with col_a:
+                            # CONSISTENT label formatting with Tkinter app
+                            st.write(f"**{label.replace('_', ' ').title()}**")
+                        with col_b:
+                            st.write(f"`{confidence:.1f}%`")
+                    
+                    # Use operations_info from loaded metadata (same as Tkinter)
+                    if label in operations_info:
+                        info = operations_info[label]
+                        with st.expander(f"📖 Details & Recommendations for {label.replace('_', ' ').title()}"):
+                            st.write(f"**Description**: {info.get('description', 'N/A')}")
+                            st.write(f"**Quantum Speedup**: {info.get('quantum_speedup', 'N/A')}")
+                            st.write(f"**Classical Efficiency**: {info.get('classical_efficiency', 'N/A')}")  # ADDED this field
+                            st.write(f"**Optimization**: {info.get('optimization_notes', 'N/A')}")
             else:
-                st.warning("⚠️ Please enter some code to analyze")
+                st.markdown('<div class="success-box">', unsafe_allow_html=True)
+                st.success("✅ No inefficiencies detected!")
+                st.write("The code appears to use efficient implementations.")
+                st.markdown('</div>', unsafe_allow_html=True)
+                
+            # Detailed confidence scores
+            with st.expander("🔍 Detailed Confidence Scores"):
+                st.write("All detected patterns with confidence levels:")
+                for label, confidence in sorted(confidence_scores.items(), key=lambda x: x[1], reverse=True):
+                    progress_value = confidence
+                    # CONSISTENT label formatting
+                    st.write(f"**{label.replace('_', ' ').title()}**")
+                    st.progress(progress_value, text=f"{confidence:.1%} confidence")
+                    
+        except Exception as e:
+            st.error(f"❌ Error analyzing code: {str(e)}")
+            st.info("""
+            **Troubleshooting tips:**
+            - Ensure all model files (model.h5, tokenizer.pkl, mlb.pkl, metadata.pkl) are present
+            - Check that the code is valid Python syntax
+            - Try using one of the example codes above
+            """)
+else:
+    if analyze_clicked:  # Only show warning if button was clicked but no code
+        st.warning("⚠️ Please enter some code to analyze")
     
     # Footer
     st.markdown("---")
