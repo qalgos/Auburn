@@ -370,13 +370,12 @@ her2_positive = find_patients_with_biomarker(oncology_patients, "HER2", 2.0)"""
     
             """)
             
-            st.subheader("📈 Impact")
+            st.subheader("Impact")
             st.markdown("""
             <div class="success-box">
-            • Performance improvement
-            • Reduced computational time 
-            • Memory optimization 
-            • Better code practices
+            • Reduces computational time 
+            • Optimizes memory usage 
+            • Detects operations with quantum speedups
             </div>
             """, unsafe_allow_html=True)
 
