@@ -57,16 +57,7 @@ def authenticate():
         st.session_state.authenticated = False
     
     if not st.session_state.authenticated:
-        st.markdown("""
-            <style>
-            .auth-container {
-                
-                padding: 2rem;
-                border-radius: 15px;
-                color: white;
-            }
-            </style>
-        """, unsafe_allow_html=True)
+     
         
         col1, col2, col3 = st.columns([1, 2, 1])
         with col2:
@@ -399,13 +390,10 @@ her2_positive = find_patients_with_biomarker(oncology_patients, "HER2", 2.0)"""
         # Quick stats in sidebar
         with st.sidebar:
             st.info("""
-            **Auburn**
             Safe Reliable Smart
             """)
             
-            if st.button("🔄 Clear Session", use_container_width=True):
-                st.session_state.clear()
-                st.rerun()
+           
 
         # Check if model loaded successfully
         if model is None:
@@ -447,7 +435,7 @@ her2_positive = find_patients_with_biomarker(oncology_patients, "HER2", 2.0)"""
             height=250,
             value=st.session_state.get('analysis_code', ''),
             placeholder="""# Paste your code here or use an example above\n\ndef your_function():\n    # Your code here\n    return result""",
-            help="Auburn will detect inefficient patterns in sorting, searching, and matrix operations"
+            help="Auburn v0.1 will detect inefficient patterns in sorting, searching, and matrix operations"
         )
         
         col1, col2 = st.columns([1, 1])
@@ -530,6 +518,6 @@ her2_positive = find_patients_with_biomarker(oncology_patients, "HER2", 2.0)"""
     with col1:
         st.markdown("**Auburn** • Safe Reliable Smart")
     with col2:
-        st.markdown("Detects inefficient patterns in scientific computing")
+        st.markdown("Speedup your code with classical optimization and unveil its quantum potential.")
     with col3:
         st.markdown("v2.0 • Professional Edition")
