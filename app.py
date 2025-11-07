@@ -564,7 +564,7 @@ if authenticate():
                         padded_sequence = pad_sequences(sequence, padding='post')
                         
                         predictions = model.predict(padded_sequence, verbose=0)
-                        binary_predictions = (predictions > threshold).astype(int)
+                        binary_predictions = (predictions > 0.5).astype(int)
                         predicted_labels = mlb.inverse_transform(binary_predictions)
                         
                         confidence_scores = {}
