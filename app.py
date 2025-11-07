@@ -286,224 +286,315 @@ if authenticate():
                 mlb = pickle.load(f)
             with open('metadata.pkl', 'rb') as f:
                 metadata = pickle.load(f)
-            return tokenizer, mlb, metadata
+            max_len = metadata['max_len']
+            fundamental_operations = metadata['fundamental_operations']
+        
+            return tokenizer, mlb, max_len, fundamental_operations
+           
         except Exception as e:
             st.error(f"Error loading components: {e}")
             return None, None, None
     
-    def preprocess_code(code):
-        # Keep your existing preprocessing logic
-         
-        # Convert to lowercase first for consistent matching
-        code = code.lower()
-        
-        code = re.sub(r'\s+', ' ', code)
-   
-        
-        # Normalize numbers
-        code = re.sub(r'\b\d+\b', ' num ', code)
-        
-        # Clean up spaces
-        code = re.sub(r'\s+', ' ', code).strip()
+        def preprocess_code(code):
+    # Convert to lowercase first for consistent matching
+    code = code.lower()
     
-        
-        return code
+    # Normalize whitespace
+    code = re.sub(r'\s+', ' ', code)
+    
+    # Normalize numbers
+    code = re.sub(r'\b\d+\b', ' num ', code)
+    
+    # Clean up spaces
+    code = re.sub(r'\s+', ' ', code).strip()
+    
+    return code
 
-    # Example codes database
-    EXAMPLE_CODES = {
-        "🧬 Drug Compound Sorting (bubble sort mistake)": """#drug compounds by IC50 value
-    compounds = load_compound_library()
+# PREDICTION FUNCTION - EXACTLY THE SAME AS TKINTER APP
+def predict_operations(code_snippet, model, tokenizer, mlb, max_len, threshold=0.5):
+    """Make predictions - SAME AS TKINTER APP"""
+    processed_code = preprocess_code(code_snippet)
+    sequence = tokenizer.texts_to_sequences([processed_code])
+    padded_sequence = pad_sequences(sequence, maxlen=max_len, padding='post')
+    
+    predictions = model.predict(padded_sequence, verbose=0)
+    binary_predictions = (predictions > threshold).astype(int)
+    predicted_labels = mlb.inverse_transform(binary_predictions)
+    
+    confidence_scores = {}
+    for i, label in enumerate(mlb.classes_):
+        confidence_scores[label] = float(predictions[0][i])
+    
+    return predicted_labels[0], confidence_scores
+
+# Example codes database
+EXAMPLE_CODES = {
+    "🧬 Drug Compound Sorting (bubble sort mistake)": """# Sort drug compounds by IC50 value
+compounds = load_compound_library()
+for i in range(len(compounds)):
+    for j in range(len(compounds)-1):
+        if compounds[j].ic50 > compounds[j+1].ic50:
+            compounds[j], compounds[j+1] = compounds[j+1], compounds[j]""",
+
+    "🔍 Patient Record Search (inefficient for a large database of patients)": """# Find patient records by ID
+def find_patient_by_id(patients, target_id):
+    for patient in patients:
+        if patient.id == target_id:
+            return patient
+    return None""",
+
+    "🧪 Matrix Multiplication (not vectorized)": """# Manual matrix multiplication for dose-response modeling
+def manual_matrix_multiply(A, B):
+    rows_A, cols_A = len(A), len(A[0])
+    rows_B, cols_B = len(B), len(B[0])
+    result = [[0 for _ in range(cols_B)] for _ in range(rows_A)]
+    for i in range(rows_A):
+        for j in range(cols_B):
+            for k in range(cols_A):
+                result[i][j] += A[i][k] * B[k][j]
+    return result""",
+
+    "📊 Clinical Trial Filtering": """# Linear filtering of clinical trial data
+def find_eligible_trials(trials, min_age, max_age, condition):
+    eligible = []
+    for trial in trials:
+        if (trial.min_age <= min_age and 
+            trial.max_age >= max_age and 
+            condition in trial.conditions):
+            eligible.append(trial)
+    return eligible""",
+
+    "⚗️ Molecular Weight Sorting": """# Selection sort for compounds by molecular weight
+def sort_compounds_by_weight(compounds):
     for i in range(len(compounds)):
-        for j in range(len(compounds)-1):
-            if compounds[j].ic50 > compounds[j+1].ic50:
-                compounds[j], compounds[j+1] = compounds[j+1], compounds[j]""",
-    
-        "🔍 Patient Record Search (inefficient for a large database of patients)": """#for patient records by ID
-    def find_patient_by_id(patients, target_id):
-        for patient in patients:
-            if patient.id == target_id:
-                return patient
-        return None""",
-    
-        "🧪Matrix Multiplication (not vectorized)": """# matrix multiplication for dose-response modeling
-    def manual_matrix_multiply(A, B):
-        rows_A, cols_A = len(A), len(A[0])
-        rows_B, cols_B = len(B), len(B[0])
-        result = [[0 for _ in range(cols_B)] for _ in range(rows_A)]
-        for i in range(rows_A):
-            for j in range(cols_B):
-                for k in range(cols_A):
-                    result[i][j] += A[i][k] * B[k][j]
-        return result""",
-    
-        "📊 Clinical Trial Filtering": """# Linear filtering of clinical trial data
-    def find_eligible_trials(trials, min_age, max_age, condition):
-        eligible = []
-        for trial in trials:
-            if (trial.min_age <= min_age and 
-                trial.max_age >= max_age and 
-                condition in trial.conditions):
-                eligible.append(trial)
-        return eligible""",
-    
-        "⚗️ Molecular Weight Sorting": """# Selection sort for compounds by molecular weight
-    def sort_compounds_by_weight(compounds):
-        for i in range(len(compounds)):
-            min_idx = i
-            for j in range(i+1, len(compounds)):
-                if compounds[j].molecular_weight < compounds[min_idx].molecular_weight:
-                    min_idx = j
+        min_idx = i
+        for j in range(i+1, len(compounds)):
+            if compounds[j].molecular_weight < compounds[min_idx].molecular_weight:
+                min_idx = j
             compounds[i], compounds[min_idx] = compounds[min_idx], compounds[i]
-        return compounds""",
-    
-        "🧫 Manual Statistical Calculations": """# Manual covariance calculation for gene expression
-    gene_data = load_gene_expression_dataset()
-    cov_matrix = []
-    for i in range(len(gene_data[0])):
-        row = []
-        for j in range(len(gene_data[0])):
-            cov = 0
-            for k in range(len(gene_data)):
-                cov += (gene_data[k][i] - mean_i) * (gene_data[k][j] - mean_j)
-            row.append(cov / (len(gene_data) - 1))
-        cov_matrix.append(row)""",
-    
-        "💊 Drug Interaction Search": """# Nested loop search for drug interactions
-    def find_drug_interactions(drug, drug_library):
-        interactions = []
-        for other_drug in drug_library:
-            if drug != other_drug:
-                affinity = calculate_binding_affinity(drug, other_drug)
-                if affinity < 10:  # Strong binding
-                    interactions.append(other_drug)
-        return interactions"""
-    }
-    
+    return compounds"""
+}
 
-    # ABOUT PAGE
-    if page == "About":
-        col1, col2 = st.columns([2, 1])
-        
-        with col1:
-            st.subheader("Overview")
-            st.markdown("""
-            <div class="feature-card">
-            Auburn is an advanced AI-powered tool designedspecifically for 
-            the pharmaceutical and biotechnology industries. It automatically detects inefficient 
-            code patterns and suggests improvements. It also evaluates quantum speedup potential, and quantifies how much your business can benefit from the adoption of quantum computers.
-            </div>
-            """, unsafe_allow_html=True)
-            
-            st.subheader("Key Features")
-            
-            features = [
-                ("🧠 AI-Powered Analysis", "Deep learning models trained to recognise inefficiencies in many programming languages"),
-                ("⚡ Performance Optimization", "This demo identifies bottlenecks in sorting, searching, and matrix operations"),
-                ("🧬 Domain-Specific", "Optimized for pharma/biotech computational workflows"),
-                ("🔒 Private and Secure", "You can scan your codebase without worrying about leaks"),
-                ("📊 Detailed Reporting", "Comprehensive analysis with improvement suggestions and quantum potential evaluation.")
-            ]
-            
-            for feature, description in features:
-                with st.expander(f"**{feature}**"):
-                    st.write(description)
-        
-        with col2:
-            st.subheader("Supported operations")
-            st.markdown("""
-            - **Sorting**
-            - **Database Search**  
-            - **Matrix Operations**
-            - **Nested Loops**
-            - **Suboptimal Data Structures**
-            - **Redundant Calculations**
-            """)
-            
-            st.subheader("📈 Impact")
-            st.markdown("""
-            <div class="success-box">
-            Average performance improvement
-            Reduced computational time 
-            Memory optimization 
-            Quantum speedup potential
-            </div>
-            """, unsafe_allow_html=True)
-        
-        st.markdown("---")
-        st.subheader("How it works?")
-        
-        tech_cols = st.columns(2)
-        with tech_cols[0]:
-            st.markdown("""
-            **Machine Learning Stack**
-            - TensorFlow/Keras
-            - State-of-the-art Natural Language Processing tools
-            - Knowledge of quantum algorithms
-            """)
-        with tech_cols[1]:
-            st.markdown("""
-            **Processing capabilities**
-            - Capable of detecting many inefficient operations with just one run
-            - Pre-trained model guarantess fast processing time
-            - Accepts many programming languages
-            """)
-            
-        st.markdown("---")
-        st.subheader("See who trusted us")
+# Load model once at startup
+model, tokenizer, mlb, max_len, operations_info = load_model_and_components()
+
+# ABOUT PAGE
+if page == "About":
+    col1, col2 = st.columns([2, 1])
+    
+    with col1:
+        st.subheader("Overview")
         st.markdown("""
-        **Reviews**
-        - Name Surname, MEng Chemical Engineering: ""
-        - Name Surname, PhD Computational Chemistry: ""
-        - Name Surname, PhD Computational Chemistry: ""
-        - Name Surname, MD: ""
+        <div class="feature-card">
+        Auburn is an advanced AI-powered tool designed specifically for 
+        the pharmaceutical and biotechnology industries. It automatically detects inefficient 
+        code patterns and suggests improvements. It also evaluates quantum speedup potential, and quantifies how much your business can benefit from the adoption of quantum computers.
+        </div>
+        """, unsafe_allow_html=True)
+        
+        st.subheader("Key Features")
+        
+        features = [
+            ("🧠 AI-Powered Analysis", "Deep learning models trained to recognise inefficiencies in many programming languages"),
+            ("⚡ Performance Optimization", "This demo identifies bottlenecks in sorting, searching, and matrix operations"),
+            ("🧬 Domain-Specific", "Optimized for pharma/biotech computational workflows"),
+            ("🔒 Private and Secure", "You can scan your codebase without worrying about leaks"),
+            ("📊 Detailed Reporting", "Comprehensive analysis with improvement suggestions and quantum potential evaluation.")
+        ]
+        
+        for feature, description in features:
+            with st.expander(f"**{feature}**"):
+                st.write(description)
+    
+    with col2:
+        st.subheader("Supported operations")
+        st.markdown("""
+        - **Sorting**
+        - **Database Search**  
+        - **Matrix Operations**
+        - **Nested Loops**
+        - **Suboptimal Data Structures**
+        - **Redundant Calculations**
         """)
+        
+        st.subheader("📈 Impact")
+        st.markdown("""
+        <div class="success-box">
+        Average performance improvement
+        Reduced computational time 
+        Memory optimization 
+        Quantum speedup potential
+        </div>
+        """, unsafe_allow_html=True)
+    
+    st.markdown("---")
+    st.subheader("How it works?")
+    
+    tech_cols = st.columns(2)
+    with tech_cols[0]:
+        st.markdown("""
+        **Machine Learning Stack**
+        - TensorFlow/Keras
+        - State-of-the-art Natural Language Processing tools
+        - Knowledge of quantum algorithms
+        """)
+    with tech_cols[1]:
+        st.markdown("""
+        **Processing capabilities**
+        - Capable of detecting many inefficient operations with just one run
+        - Pre-trained model guarantess fast processing time
+        - Accepts many programming languages
+        """)
+        
+    st.markdown("---")
+    st.subheader("See who trusted us")
+    st.markdown("""
+    **Reviews**
+    - Name Surname, MEng Chemical Engineering: ""
+    - Name Surname, PhD Computational Chemistry: ""
+    - Name Surname, PhD Computational Chemistry: ""
+    - Name Surname, MD: ""
+    """)
 
-    # DEMO PAGE
-    else:
-
-        #st.subheader("Detect inefficiencies in pharma/biotech codebases")
-        st.text(
-            "Auburn AI detects inefficient code implementation and screens for classical and quantum speedups available in your code.")
-        # Quick stats in sidebar
-        with st.sidebar:
-            st.info("""
-            **Capabilities**
-            - 5+ inefficiency patterns
-            - Real-time analysis
-            - Confidence scoring
-            - Optimization suggestions
-            - Evaluating quantum speedup potential 
-            """)
-            
-            if st.button("🔄 Clear Session", use_container_width=True):
-                for key in list(st.session_state.keys()):
-                    del st.session_state[key]
-                st.rerun()
+# DEMO PAGE
+else:
+    st.markdown('<h1 class="main-header">🧬 Auburn AI - Pharmaceutical Code Analyzer</h1>', unsafe_allow_html=True)
+    
+    st.text("Auburn AI detects inefficient code implementation and screens for classical and quantum speedups available in your code.")
+    
+    # Quick stats in sidebar
+    with st.sidebar:
+        st.info("""
+        **Capabilities**
+        - 5+ inefficiency patterns
+        - Real-time analysis
+        - Confidence scoring
+        - Optimization suggestions
+        - Evaluating quantum speedup potential 
+        """)
         
-        # Example Gallery Section
-        st.subheader("Example Code Gallery")
-        st.write("Click on examples to load them into the analyzer:")
-        
-        # Create columns for examples
-        cols = st.columns(2)
-        example_titles = list(EXAMPLE_CODES.keys())
-        
-        for i, title in enumerate(example_titles):
-            with cols[i % 2]:
-                if st.button(
-                    title, 
-                    use_container_width=True, 
-                    key=f"btn_{title}",
-                    help=f"Load {title} example"
-                ):
-                    st.session_state.example_code = EXAMPLE_CODES[title]
-                    st.session_state.selected_example = title
-                    st.session_state.analysis_code = EXAMPLE_CODES[title]
-        
-        # Display selected example
-        if 'example_code' in st.session_state:
-            st.markdown(f"**Example Loaded:** {st.session_state.get('selected_example', 'Selected Code')}")
-            st.code(st.session_state.example_code, language='python')
+        if st.button("🔄 Clear Session", use_container_width=True):
+            st.rerun()
+    
+    # Check if model loaded successfully
+    if model is None:
+        st.error("❌ Model failed to load. Please check if all model files are available on your Desktop.")
+        st.stop()
+    
+    # Example Gallery Section
+    st.subheader("Example Code Gallery")
+    st.write("Click on examples to load them into the analyzer:")
+    
+    # Create columns for examples
+    cols = st.columns(2)
+    example_titles = list(EXAMPLE_CODES.keys())
+    
+    for i, title in enumerate(example_titles):
+        with cols[i % 2]:
+            if st.button(
+                title, 
+                use_container_width=True, 
+                key=f"btn_{title}",
+                help=f"Load {title} example"
+            ):
+                st.session_state.analysis_code = EXAMPLE_CODES[title]
+                st.session_state.selected_example = title
+    
+    # Display selected example
+    if 'selected_example' in st.session_state:
+        st.markdown(f"**Example Loaded:** {st.session_state.selected_example}")
+        st.code(st.session_state.analysis_code, language='python')
+    
+    st.markdown("---")
+    
+    # Main Analysis Section
+    st.subheader("Code Analysis")
+    
+    # Initialize session state
+    if 'analysis_code' not in st.session_state:
+        st.session_state.analysis_code = ""
+    
+    # Code input area
+    code_input = st.text_area(
+        "Paste or modify your Python code here:", 
+        height=250,
+        value=st.session_state.get('analysis_code', ''),
+        placeholder="""# Paste your code here or use an example above\n\ndef your_function():\n    # Your code here\n    return result""",
+        help="Auburn will detect inefficient patterns in sorting, searching, and matrix operations"
+    )
+    
+    col1, col2 = st.columns([1, 1])
+    
+    with col1:
+        analyze_clicked = st.button(
+            "🚀 Analyze Code", 
+            type="primary", 
+            use_container_width=True,
+            disabled=not code_input.strip()
+        )
+    
+    with col2:
+        if st.button("🗑️ Clear Code", use_container_width=True):
+            st.session_state.analysis_code = ""
+            if 'selected_example' in st.session_state:
+                del st.session_state.selected_example
+            st.rerun()
+    
+    # Analysis execution
+    if analyze_clicked and code_input.strip():
+        with st.spinner("🔍 Analyzing code patterns..."):
+            try:
+                # USE THE SAME PREDICTION FUNCTION AS TKINTER APP
+                predicted_labels, confidence_scores = predict_operations(
+                    code_input, model, tokenizer, mlb, max_len
+                )
+                
+                # Display results
+                st.subheader("📊 Analysis Results")
+                
+                if predicted_labels:
+                    st.markdown('<div class="danger-box">', unsafe_allow_html=True)
+                    st.error("🚨 Inefficiencies Detected")
+                    st.markdown('</div>', unsafe_allow_html=True)
+                    
+                    for label in predicted_labels:
+                        confidence = confidence_scores.get(label, 0) * 100
+                        with st.container():
+                            col_a, col_b = st.columns([3, 1])
+                            with col_a:
+                                st.write(f"**{label.replace('_', ' ').title()}**")
+                            with col_b:
+                                st.write(f"`{confidence:.1f}%`")
+                        
+                        if label in operations_info:
+                            info = operations_info[label]
+                            with st.expander(f"📖 Details & Recommendations for {label.replace('_', ' ').title()}"):
+                                st.write(f"**Description**: {info.get('description', 'N/A')}")
+                                st.write(f"**Quantum Speedup**: {info.get('quantum_speedup', 'N/A')}")
+                                st.write(f"**Classical Efficiency**: {info.get('classical_efficiency', 'N/A')}")
+                                st.write(f"**Optimization**: {info.get('optimization_notes', 'N/A')}")
+                else:
+                    st.markdown('<div class="success-box">', unsafe_allow_html=True)
+                    st.success("✅ No inefficiencies detected!")
+                    st.write("The code appears to use efficient implementations.")
+                    st.markdown('</div>', unsafe_allow_html=True)
+                    
+                # Detailed confidence scores
+                with st.expander("🔍 Detailed Confidence Scores"):
+                    st.write("All detected patterns with confidence levels:")
+                    for label, confidence in sorted(confidence_scores.items(), key=lambda x: x[1], reverse=True):
+                        progress_value = confidence
+                        st.write(f"**{label.replace('_', ' ').title()}**")
+                        st.progress(progress_value, text=f"{confidence:.1%} confidence")
+                        
+            except Exception as e:
+                st.error(f"❌ Error analyzing code: {str(e)}")
+                st.info("""
+                **Troubleshooting tips:**
+                - Ensure the code is valid Python syntax
+                - Try using one of the example codes above
+                - Check that the model files are properly loaded
+                """)
             
            
         
