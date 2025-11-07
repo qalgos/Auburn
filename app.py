@@ -257,7 +257,7 @@ if authenticate():
         code = re.sub(r'\s+', ' ', code).strip()
         return code
 
-    def predict_operations(code_snippet, threshold=0.5):
+    def predict_operations(code_snippet, threshold=0.7):
         """EXACT same prediction logic as Tkinter app"""
         processed_code = preprocess_code(code_snippet)
         sequence = tokenizer.texts_to_sequences([processed_code])
@@ -434,7 +434,7 @@ def sort_compounds_by_weight(compounds):
         
         with col1:
             analyze_clicked = st.button(
-                "🚀 Analyze Code", 
+                "Analyze Code", 
                 type="primary", 
                 use_container_width=True,
                 disabled=not code_input.strip()
@@ -459,7 +459,7 @@ def sort_compounds_by_weight(compounds):
                     
                     if predicted_labels:
                         st.markdown('<div class="danger-box">', unsafe_allow_html=True)
-                        st.error("🚨 Inefficiencies Detected")
+                        st.error("Inefficiencies Detected")
                         st.markdown('</div>', unsafe_allow_html=True)
                         
                         for label in predicted_labels:
