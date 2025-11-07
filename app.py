@@ -300,15 +300,21 @@ def manual_matrix_multiply(A, B):
                 result[i][j] += A[i][k] * B[k][j]
     return result""",
 
-        "📊 Clinical Trial Filtering": """# Linear filtering of clinical trial data
-def find_eligible_trials(trials, min_age, max_age, condition):
-    eligible = []
-    for trial in trials:
-        if (trial.min_age <= min_age and 
-            trial.max_age >= max_age and 
-            condition in trial.conditions):
-            eligible.append(trial)
-    return eligible""",
+        "📊 Distance matrix between protein 3D structures (Triple nested loops)": """
+def calculate_protein_distance_matrix(protein_structures):
+    num_proteins = len(protein_structures)
+    distance_matrix = [[0.0 for _ in range(num_proteins)] for _ in range(num_proteins)]
+    
+    for i in range(num_proteins):
+        for j in range(num_proteins):
+            total_distance = 0.0
+            for k in range(len(protein_structures[i].coordinates)):
+                diff = (protein_structures[i].coordinates[k] - 
+                       protein_structures[j].coordinates[k])
+                total_distance += diff.x**2 + diff.y**2 + diff.z**2
+            distance_matrix[i][j] = total_distance ** 0.5
+    
+    return distance_matrix""",
 
         "⚗️ Molecular Weight Sorting": """# Selection sort for compounds
 def sort_compounds_by_weight(compounds):
@@ -318,7 +324,26 @@ def sort_compounds_by_weight(compounds):
             if compounds[j].molecular_weight < compounds[min_idx].molecular_weight:
                 min_idx = j
         compounds[i], compounds[min_idx] = compounds[min_idx], compounds[i]
-    return compounds"""
+    return compounds""", 
+        
+    " Search for Drug Interactions (Nested for loops)": """def find_drug_interactions(drug_library, target_drug):
+    """
+    Search for potential drug-drug interactions
+    PATTERN: Nested for loops + condition checking
+    """
+    interactions = []
+    for drug in drug_library:
+        if drug != target_drug:
+            # Check cytochrome P450 interactions
+            for enzyme in ["CYP3A4", "CYP2D6", "CYP2C9"]:
+                if (target_drug.inhibits(enzyme) and drug.metabolized_by(enzyme)):
+                    interactions.append((target_drug.name, drug.name, enzyme))
+                    break
+    return interactions
+
+# Usage
+fda_drugs = load_fda_approved_drugs()
+warfarin_interactions = find_drug_interactions(fda_drugs, warfarin)"""
     }
 
     # ABOUT PAGE
@@ -338,11 +363,11 @@ def sort_compounds_by_weight(compounds):
             st.subheader("Key Features")
             
             features = [
-                ("🧠 AI-Powered Analysis", "Deep learning models trained to recognise inefficiencies"),
-                ("⚡ Performance Optimization", "Identifies bottlenecks in sorting, searching, and matrix operations"),
-                ("🧬 Domain-Specific", "Optimized for pharma/biotech computational workflows"),
-                ("🔒 Private and Secure", "Scan your codebase without worrying about leaks"),
-                ("📊 Detailed Reporting", "Comprehensive analysis with improvement suggestions")
+                (" AI-Powered Analysis", "Deep learning models trained to recognise inefficiencies"),
+                (" Performance Optimization", "Identifies bottlenecks in sorting, searching, and matrix operations"),
+                (" Domain-Specific", "Optimized for pharma/biotech computational workflows"),
+                (" Private and Secure", "Scan your codebase without worrying about leaks"),
+                (" Detailed Reporting", "Comprehensive analysis with improvement suggestions")
             ]
             
             for feature, description in features:
@@ -441,7 +466,7 @@ def sort_compounds_by_weight(compounds):
             )
         
         with col2:
-            if st.button("🗑️ Clear Code", use_container_width=True):
+            if st.button(" Clear ", use_container_width=True):
                 st.session_state.analysis_code = ""
                 if 'selected_example' in st.session_state:
                     del st.session_state.selected_example
@@ -455,7 +480,7 @@ def sort_compounds_by_weight(compounds):
                     predicted_labels, confidence_scores = predict_operations(code_input)
                     
                     # Display results
-                    st.subheader("📊 Analysis Results")
+                    st.subheader("Analysis Results")
                     
                     if predicted_labels:
                         st.markdown('<div class="danger-box">', unsafe_allow_html=True)
@@ -482,7 +507,7 @@ def sort_compounds_by_weight(compounds):
                                     st.write(f"**Optimization**: {info.get('optimization_notes', 'N/A')}")
                     else:
                         st.markdown('<div class="success-box">', unsafe_allow_html=True)
-                        st.success("✅ No inefficiencies detected!")
+                        st.success("No inefficiencies detected!")
                         st.write("The code appears to use efficient implementations.")
                         st.markdown('</div>', unsafe_allow_html=True)
                         
