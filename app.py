@@ -60,7 +60,7 @@ def authenticate():
         st.markdown("""
             <style>
             .auth-container {
-                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                
                 padding: 2rem;
                 border-radius: 15px;
                 color: white;
@@ -495,7 +495,7 @@ her2_positive = find_patients_with_biomarker(oncology_patients, "HER2", 2.0)"""
                             # Use operations_info from loaded metadata
                             if label in operations_info:
                                 info = operations_info[label]
-                                with st.expander(f"📖 Details & Recommendations for {label.replace('_', ' ').title()}"):
+                                with st.expander(f"Details & Recommendations"):
                                     st.write(f"**Description**: {info.get('description', 'N/A')}")
                                     st.write(f"**Quantum Speedup**: {info.get('quantum_speedup', 'N/A')}")
                                     st.write(f"**Classical Efficiency**: {info.get('classical_efficiency', 'N/A')}")
@@ -507,7 +507,7 @@ her2_positive = find_patients_with_biomarker(oncology_patients, "HER2", 2.0)"""
                         st.markdown('</div>', unsafe_allow_html=True)
                         
                     # Detailed confidence scores
-                    with st.expander("🔍 Detailed Confidence Scores"):
+                    with st.expander("Detailed Confidence Scores"):
                         st.write("All detected patterns with confidence levels:")
                         for label, confidence in sorted(confidence_scores.items(), key=lambda x: x[1], reverse=True):
                             progress_value = confidence
@@ -528,7 +528,7 @@ her2_positive = find_patients_with_biomarker(oncology_patients, "HER2", 2.0)"""
     st.markdown("---")
     col1, col2, col3 = st.columns([2, 1, 1])
     with col1:
-        st.markdown("**Auburn** • Built with Streamlit & TensorFlow")
+        st.markdown("**Auburn** • Safe Reliable Smart")
     with col2:
         st.markdown("Detects inefficient patterns in scientific computing")
     with col3:
