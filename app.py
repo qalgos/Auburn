@@ -293,6 +293,20 @@ if authenticate():
     
     def preprocess_code(code):
         # Keep your existing preprocessing logic
+         
+        # Convert to lowercase first for consistent matching
+        code = code.lower()
+        
+        code = re.sub(r'\s+', ' ', code)
+   
+        
+        # Normalize numbers
+        code = re.sub(r'\b\d+\b', ' num ', code)
+        
+        # Clean up spaces
+        code = re.sub(r'\s+', ' ', code).strip()
+    
+        
         return code
 
     # Example codes database
