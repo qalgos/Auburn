@@ -330,21 +330,17 @@ def sort_compounds_by_weight(compounds):
         compounds[i], compounds[min_idx] = compounds[min_idx], compounds[i]
     return compounds""", 
 
-         "🧬 Search for Drug Interactions (Nested for loops)": """
-         def find_drug_interactions(drug_library, target_drug):
-    interactions = []
-    for drug in drug_library:
-        if drug != target_drug:
-            # Check cytochrome P450 interactions
-            for enzyme in ["CYP3A4", "CYP2D6", "CYP2C9"]:
-                if (target_drug.inhibits(enzyme) and drug.metabolized_by(enzyme)):
-                    interactions.append((target_drug.name, drug.name, enzyme))
-                    break
-    return interactions
+         "🧬 Search for Patient Biomarkers (Linear)": """
+    
+def find_patients_with_biomarker(patients, target_biomarker, threshold):
+    matching_patients = []
+    for patient in patients:
+        if patient.biomarkers.get(target_biomarker, 0) > threshold:
+            matching_patients.append(patient)
+    return matching_patients
 
-# Usage
-fda_drugs = load_fda_approved_drugs()
-warfarin_interactions = find_drug_interactions(fda_drugs, warfarin)"""
+oncology_patients = load_cancer_patients()
+her2_positive = find_patients_with_biomarker(oncology_patients, "HER2", 2.0)"""
         
    
     }
