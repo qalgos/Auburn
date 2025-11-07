@@ -561,7 +561,7 @@ if authenticate():
                         
                         processed_code = preprocess_code(code_input)
                         sequence = tokenizer.texts_to_sequences([processed_code])
-                        padded_sequence = pad_sequences(sequence, maxlen=max_len, padding='post')
+                        padded_sequence = pad_sequences(sequence, padding='post')
                         
                         predictions = model.predict(padded_sequence, verbose=0)
                         binary_predictions = (predictions > threshold).astype(int)
