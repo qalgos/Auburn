@@ -559,19 +559,14 @@ if authenticate():
                             st.error("❌ Required model files not found. Please ensure all model files are available.")
                             st.stop()
                         
-                        # Preprocess and predict
-                        processed_code = preprocess_code(code_input)
+                        processed_code = preprocess_code(code_snippet)
                         sequence = tokenizer.texts_to_sequences([processed_code])
-                        padded_sequence = pad_sequences(sequence, maxlen=metadata['max_len'], padding='post')
+                        padded_sequence = pad_sequences(sequence, maxlen=max_len, padding='post')
                         
-                        # Keras prediction
                         predictions = model.predict(padded_sequence, verbose=0)
-                        
-                        # Get results
-                        binary_predictions = (predictions > 0.5).astype(int)
+                        binary_predictions = (predictions > threshold).astype(int)
                         predicted_labels = mlb.inverse_transform(binary_predictions)
                         
-                        # Get confidence scores
                         confidence_scores = {}
                         for i, label in enumerate(mlb.classes_):
                             confidence_scores[label] = float(predictions[0][i])
