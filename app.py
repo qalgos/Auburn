@@ -62,7 +62,6 @@ def authenticate():
         col1, col2, col3 = st.columns([1, 2, 1])
         with col2:
             with st.container():
-                st.markdown('<div class="auth-container">', unsafe_allow_html=True)
                 st.title("🔒 Secure Access")
                 st.write("Authentication required to access Auburn")
                 
