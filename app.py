@@ -282,14 +282,14 @@ for i in range(len(compounds)):
         if compounds[j].ic50 > compounds[j+1].ic50:
             compounds[j], compounds[j+1] = compounds[j+1], compounds[j]""",
 
-        "🔍 Patient Record Search (linear search)": """# Find patient records by ID
+        "🧬 Patient Record Search (linear search)": """# Find patient records by ID
 def find_patient_by_id(patients, target_id):
     for patient in patients:
         if patient.id == target_id:
             return patient
     return None""",
 
-        "🔍 Inefficient Matrix Multiplication ": """#matrix multiplication
+        "🧬 Inefficient Matrix Multiplication ": """#matrix multiplication
 def manual_matrix_multiply(A, B):
     rows_A, cols_A = len(A), len(A[0])
     rows_B, cols_B = len(B), len(B[0])
