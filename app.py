@@ -378,9 +378,8 @@ her2_positive = find_patients_with_biomarker(oncology_patients, "HER2", 2.0)"""
             st.markdown("""
             - **Inefficient Sorting**
             - **Inefficient Search**  
-            - **Inefficient Matrix Operations**
-            - **Nested Loops**
-            - **Manual Implementations**
+            - **Inefficient Matrix Multiplication**
+    
             """)
             
             st.subheader("📈 Impact")
@@ -400,11 +399,8 @@ her2_positive = find_patients_with_biomarker(oncology_patients, "HER2", 2.0)"""
         # Quick stats in sidebar
         with st.sidebar:
             st.info("""
-            **Capabilities**
-            - 3+ inefficiency patterns
-            - Real-time analysis
-            - Confidence scoring
-            - Optimization suggestions
+            **Auburn**
+            Safe Reliable Smart
             """)
             
             if st.button("🔄 Clear Session", use_container_width=True):
