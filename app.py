@@ -294,8 +294,8 @@ if authenticate():
         except Exception as e:
             st.error(f"Error loading components: {e}")
             return None, None, None
-    
-        def preprocess_code(code):
+    # PREPROCESSING - EXACTLY THE SAME AS TKINTER APP
+def preprocess_code(code):
     # Convert to lowercase first for consistent matching
     code = code.lower()
     
