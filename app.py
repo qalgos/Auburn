@@ -289,7 +289,7 @@ def find_patient_by_id(patients, target_id):
             return patient
     return None""",
 
-        "🧪 Matrix Multiplication (manual)": """# Manual matrix multiplication
+        "🔍 Inefficient Matrix Multiplication ": """#matrix multiplication
 def manual_matrix_multiply(A, B):
     rows_A, cols_A = len(A), len(A[0])
     rows_B, cols_B = len(B), len(B[0])
@@ -300,7 +300,7 @@ def manual_matrix_multiply(A, B):
                 result[i][j] += A[i][k] * B[k][j]
     return result""",
 
-        "📊 Distance matrix between protein 3D structures (Triple nested loops)": """
+        "🧬 Protein 3D structures (Triple nested loops)": """
 def calculate_protein_distance_matrix(protein_structures):
     num_proteins = len(protein_structures)
     distance_matrix = [[0.0 for _ in range(num_proteins)] for _ in range(num_proteins)]
@@ -316,7 +316,7 @@ def calculate_protein_distance_matrix(protein_structures):
     
     return distance_matrix""",
 
-        "⚗️ Molecular Weight Sorting": """# Selection sort for compounds
+        "🧬 Molecular Weight Sorting": """# Selection sort for compounds
 def sort_compounds_by_weight(compounds):
     for i in range(len(compounds)):
         min_idx = i
@@ -326,7 +326,7 @@ def sort_compounds_by_weight(compounds):
         compounds[i], compounds[min_idx] = compounds[min_idx], compounds[i]
     return compounds""", 
 
-         " Search for Drug Interactions (Nested for loops)": """
+         "🧬 Search for Drug Interactions (Nested for loops)": """
          def find_drug_interactions(drug_library, target_drug):
     interactions = []
     for drug in drug_library:
