@@ -519,4 +519,4 @@ her2_positive = find_patients_with_biomarker(oncology_patients, "HER2", 2.0)"""
     with col2:
         st.markdown("Speedup your code with classical optimization and unveil its quantum potential.")
     with col3:
-        st.markdown("v2.0 • Professional Edition")
+        st.markdown("v0.1 • demo ")
