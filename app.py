@@ -300,21 +300,25 @@ def manual_matrix_multiply(A, B):
                 result[i][j] += A[i][k] * B[k][j]
     return result""",
 
-        "🧬 Protein 3D structures (Triple nested loops)": """
-def calculate_protein_distance_matrix(protein_structures):
-    num_proteins = len(protein_structures)
-    distance_matrix = [[0.0 for _ in range(num_proteins)] for _ in range(num_proteins)]
+        "🧬 Estimate pharmacokinetic parameters (Matrix multiplication)": """
+def estimate_pk_parameters(dose_matrix, transfer_matrix):
+    num_patients = len(dose_matrix)
+    num_compartments = len(transfer_matrix[0])
+    concentration_matrix = [[0.0 for _ in range(num_compartments)] for _ in range(num_patients)]
     
-    for i in range(num_proteins):
-        for j in range(num_proteins):
-            total_distance = 0.0
-            for k in range(len(protein_structures[i].coordinates)):
-                diff = (protein_structures[i].coordinates[k] - 
-                       protein_structures[j].coordinates[k])
-                total_distance += diff.x**2 + diff.y**2 + diff.z**2
-            distance_matrix[i][j] = total_distance ** 0.5
+    for i in range(num_patients):
+        for j in range(num_compartments):
+            concentration = 0.0
+            for k in range(len(dose_matrix[0])):
+                # Multiply dose by transfer coefficients between compartments
+                concentration += dose_matrix[i][k] * transfer_matrix[k][j]
+            concentration_matrix[i][j] = concentration
     
-    return distance_matrix""",
+    return concentration_matrix
+
+patient_doses = load_dosing_regimens()
+compartment_transfer = load_pk_parameters()
+tissue_concentrations = estimate_pk_parameters(patient_doses, compartment_transfer)""",
 
         "🧬 Molecular Weight Sorting": """# Selection sort for compounds
 def sort_compounds_by_weight(compounds):
