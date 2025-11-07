@@ -559,7 +559,7 @@ if authenticate():
                             st.error("❌ Required model files not found. Please ensure all model files are available.")
                             st.stop()
                         
-                        processed_code = preprocess_code(code_snippet)
+                        processed_code = preprocess_code(code)
                         sequence = tokenizer.texts_to_sequences([processed_code])
                         padded_sequence = pad_sequences(sequence, maxlen=max_len, padding='post')
                         
