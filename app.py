@@ -62,8 +62,8 @@ def authenticate():
         col1, col2, col3 = st.columns([1, 2, 1])
         with col2:
             with st.container():
-                st.title("🔒 Secure Access")
-                st.write("Authentication required to access Auburn")
+                st.title("🔒 Authentication required")
+                st.write("")
                 
                 with st.form("auth_form"):
                     password = st.text_input(
