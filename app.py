@@ -69,7 +69,7 @@ def authenticate():
                 with st.form("auth_form"):
                     password = st.text_input(
                         "Enter access password:", 
-                        type="password",
+                        type="AuburntoYC",
                         help="Contact administrator if you've forgotten the password"
                     )
                     submit = st.form_submit_button("Login", use_container_width=True)
