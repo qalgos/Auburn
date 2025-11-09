@@ -68,7 +68,7 @@ def authenticate():
                 with st.form("auth_form"):
                     password = st.text_input(
                         "Enter access password:", 
-                        type="password",
+                        type="AuburntoYC",
                         help="Contact administrator if you've forgotten the password"
                     )
                     submit = st.form_submit_button("Login", use_container_width=True)
@@ -480,6 +480,7 @@ her2_positive = find_patients_with_biomarker(oncology_patients, "HER2", 2.0)"""
                                     st.write(f"**Quantum Speedup**: {info.get('quantum_speedup', 'N/A')}")
                                     st.write(f"**Classical Efficiency**: {info.get('classical_efficiency', 'N/A')}")
                                     st.write(f"**Optimization**: {info.get('optimization_notes', 'N/A')}")
+                                    st.write(f"Implementing the recommended classical improvements can significantly reduce the computational time. Depending on the size of the data being processed the time saved can range anywhere from seconds to hours or even days.")
                     else:
                         st.markdown('<div class="success-box">', unsafe_allow_html=True)
                         st.success("No inefficiencies detected!")
