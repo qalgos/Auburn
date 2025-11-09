@@ -607,7 +607,7 @@ her2_positive = find_patients_with_biomarker(oncology_patients, "HER2", 2.0)"""
             if st.button("📄 Generate PDF Report", use_container_width=True, type="primary"):
                 st.markdown("""
                 <div style="
-                    background: linear-gradient(135deg, #fffbeb, #fef3c7);
+                    background: white;
                     border: 2px solid #f59e0b;
                     border-radius: 12px;
                     padding: 2rem;
