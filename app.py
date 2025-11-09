@@ -742,9 +742,9 @@ her2_positive = find_patients_with_biomarker(oncology_patients, "HER2", 2.0)"""
                 use_container_width=True,
                 disabled=not code_input.strip()
             )
-              if st.button("📄 Generate PDF Report", use_container_width=True, type="primary"):
-                    with st.spinner("🔄 Creating professional report..."):
-                        try:
+        if st.button("📄 Generate PDF Report", use_container_width=True, type="primary"):
+            with st.spinner("🔄 Creating professional report..."):
+                try:
                             pdf_data = create_analysis_pdf(
                                 code_input, 
                                 predicted_labels, 
@@ -752,12 +752,12 @@ her2_positive = find_patients_with_biomarker(oncology_patients, "HER2", 2.0)"""
                                 operations_info
                             )
                             
-                            # Create download link
-                            filename = f"Auburn_AI_Analysis_Report_{datetime.now().strftime('%Y%m%d_%H%M%S')}.pdf"
-                            download_link = get_download_link(pdf_data, filename)
-                            
-                            st.markdown(download_link, unsafe_allow_html=True)
-                            st.success("✅ Report generated successfully!")
+                    # Create download link
+                    filename = f"Auburn_AI_Analysis_Report_{datetime.now().strftime('%Y%m%d_%H%M%S')}.pdf"
+                    download_link = get_download_link(pdf_data, filename)
+                    
+                    st.markdown(download_link, unsafe_allow_html=True)
+                    st.success("✅ Report generated successfully!")
         with col2:
             if st.button(" Clear ", use_container_width=True):
                 st.session_state.analysis_code = ""
