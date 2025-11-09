@@ -930,7 +930,7 @@ her2_positive = find_patients_with_biomarker(oncology_patients, "HER2", 2.0)"""
                         
                
         elif analyze_clicked and not code_input.strip():
-        st.warning("⚠️ Please enter some code to analyze")
+            st.warning("⚠️ Please enter some code to analyze")
     
     # Footer
     st.markdown("---")
