@@ -928,13 +928,7 @@ her2_positive = find_patients_with_biomarker(oncology_patients, "HER2", 2.0)"""
                         st.write(f"**{label.replace('_', ' ').title()}**")
                         st.progress(progress_value, text=f"{confidence:.1%} confidence")
                         
-                except Exception as e:
-                    st.error(f"❌ Error analyzing code: {str(e)}")
-                    st.info("""
-                    **Troubleshooting tips:**
-                    - Ensure the code is valid Python syntax
-                    - Try using one of the example codes above
-                    """)
+               
         elif analyze_clicked and not code_input.strip():
         st.warning("⚠️ Please enter some code to analyze")
     
