@@ -266,21 +266,21 @@ if authenticate():
 
     # Example codes database
     EXAMPLE_CODES = {
-        "🧬 Drug Compound Sorting (bubble sort)": """# Sort drug compounds by IC50 value
+        " Drug Compound Sorting (bubble sort)": """# Sort drug compounds by IC50 value
 compounds = load_compound_library()
 for i in range(len(compounds)):
     for j in range(len(compounds)-1):
         if compounds[j].ic50 > compounds[j+1].ic50:
             compounds[j], compounds[j+1] = compounds[j+1], compounds[j]""",
 
-        "🧬 Patient Record Search (linear search)": """# Find patient records by ID
+        " Patient Record Search (linear search)": """# Find patient records by ID
 def find_patient_by_id(patients, target_id):
     for patient in patients:
         if patient.id == target_id:
             return patient
     return None""",
 
-        "🧬 Inefficient Matrix Multiplication ": """#matrix multiplication
+        " Inefficient Matrix Multiplication ": """#matrix multiplication
 def manual_matrix_multiply(A, B):
     rows_A, cols_A = len(A), len(A[0])
     rows_B, cols_B = len(B), len(B[0])
@@ -291,7 +291,7 @@ def manual_matrix_multiply(A, B):
                 result[i][j] += A[i][k] * B[k][j]
     return result""",
 
-        "🧬 Estimate pharmacokinetic parameters (Matrix multiplication)": """
+        " Estimate pharmacokinetic parameters (Matrix multiplication)": """
 def estimate_pk_parameters(dose_matrix, transfer_matrix):
     num_patients = len(dose_matrix)
     num_compartments = len(transfer_matrix[0])
@@ -311,7 +311,7 @@ patient_doses = load_dosing_regimens()
 compartment_transfer = load_pk_parameters()
 tissue_concentrations = estimate_pk_parameters(patient_doses, compartment_transfer)""",
 
-        "🧬 Molecular Weight Sorting": """# Selection sort for compounds
+        " Molecular Weight Sorting": """# Selection sort for compounds
 def sort_compounds_by_weight(compounds):
     for i in range(len(compounds)):
         min_idx = i
@@ -321,7 +321,7 @@ def sort_compounds_by_weight(compounds):
         compounds[i], compounds[min_idx] = compounds[min_idx], compounds[i]
     return compounds""", 
 
-         "🧬 Search for Patient Biomarkers (Linear)": """
+         " Search for Patient Biomarkers (Linear)": """
     
 def find_patients_with_biomarker(patients, target_biomarker, threshold):
     matching_patients = []
@@ -492,7 +492,7 @@ her2_positive = find_patients_with_biomarker(oncology_patients, "HER2", 2.0)"""
                                         border-left: 4px solid #3b82f6;
                                     ">
                                         <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
-                                            <div style="font-size: 1.2rem;">📝</div>
+                                            <div style="font-size: 1.2rem;"></div>
                                             <h4 style="margin: 0; color: #1e40af;">Description</h4>
                                         </div>
                                         <p style="margin: 0; color: #374151; line-height: 1.5;">
@@ -512,7 +512,7 @@ her2_positive = find_patients_with_biomarker(oncology_patients, "HER2", 2.0)"""
                                         border-left: 4px solid #8b5cf6;
                                     ">
                                         <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
-                                            <div style="font-size: 1.2rem;">⚛️</div>
+                                            <div style="font-size: 1.2rem;"></div>
                                             <h4 style="margin: 0; color: #7c3aed;">Quantum Speedup</h4>
                                         </div>
                                         <p style="margin: 0; color: #374151; line-height: 1.5;">
@@ -532,7 +532,7 @@ her2_positive = find_patients_with_biomarker(oncology_patients, "HER2", 2.0)"""
                                         border-left: 4px solid #22c55e;
                                     ">
                                         <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
-                                            <div style="font-size: 1.2rem;">⚡</div>
+                                            <div style="font-size: 1.2rem;"></div>
                                             <h4 style="margin: 0; color: #15803d;">Classical Efficiency</h4>
                                         </div>
                                         <p style="margin: 0; color: #374151; line-height: 1.5;">
@@ -571,7 +571,7 @@ her2_positive = find_patients_with_biomarker(oncology_patients, "HER2", 2.0)"""
                                         border-left: 4px solid #14b8a6;
                                     ">
                                         <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
-                                            <div style="font-size: 1.2rem;">💡</div>
+                                            <div style="font-size: 1.2rem;"></div>
                                             <h4 style="margin: 0; color: #0f766e;">Impact Summary</h4>
                                         </div>
                                         <p style="margin: 0; color: #374151; line-height: 1.5;">
