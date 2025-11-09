@@ -209,11 +209,7 @@ def authenticate():
 
 # Check authentication before running app
 if authenticate():
-    # Simple Permanent Navigation
-    with st.sidebar:
-        st.title("🧬 Navigation")
-        page = st.radio("Select Page", ["Demo", "About"], index=0)
-        st.markdown("---")
+    
     
     # Optional: Add quick stats or status
     st.markdown("""
@@ -230,7 +226,9 @@ if authenticate():
     </div>
     """, unsafe_allow_html=True)
     
-
+    st.sidebar.title("Navigation")
+    page = st.sidebar.radio("Go to", ["Demo", "About"], index=0)
+    st.sidebar.markdown("---")
     # Load resources with caching - FIXED VERSION
     @st.cache_resource
     def load_model_and_components():
