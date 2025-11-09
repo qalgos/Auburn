@@ -917,8 +917,8 @@ her2_positive = find_patients_with_biomarker(oncology_patients, "HER2", 2.0)"""
                             - Actionable next steps
                             """)
                         
-                    except Exception as e:
-                        st.error(f"❌ Error analyzing code: {str(e)}")
+                except Exception as e:
+                    st.error(f"❌ Error analyzing code: {str(e)}")
                     
                 # Detailed confidence scores
                 with st.expander("Detailed Confidence Scores"):
