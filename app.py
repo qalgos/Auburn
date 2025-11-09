@@ -282,43 +282,45 @@ def render_analysis_with_pdf():
                 
                 # ADD PDF GENERATION BUTTON
                 st.markdown("---")
-                st.subheader("📊 Generate Report")
+                st.subheader("Generate Report")
                 
                 col1, col2 = st.columns([1, 2])
-                
-                with col1:
-                    if st.button("📄 Generate PDF Report", use_container_width=True, type="secondary"):
-                        with st.spinner("Generating professional report..."):
-                            try:
-                                pdf_data = create_analysis_pdf(
-                                    code_input, 
-                                    predicted_labels, 
-                                    confidence_scores, 
-                                    operations_info
-                                )
-                                
-                                # Create download link
-                                filename = f"auburn_analysis_{datetime.now().strftime('%Y%m%d_%H%M')}.pdf"
-                                download_link = get_download_link(pdf_data, filename)
-                                
-                                st.markdown(download_link, unsafe_allow_html=True)
-                                st.success("✅ Report generated successfully!")
-                                
-                            except Exception as e:
-                                st.error(f"❌ Failed to generate PDF: {str(e)}")
-                
-                with col2:
-                    st.info("""
-                    **Professional Report Includes:**
-                    • Executive summary
-                    • Code analysis details  
-                    • Confidence scores
-                    • Optimization recommendations
-                    • Quantum computing insights
-                    """)
-                
-            except Exception as e:
-                st.error(f"❌ Error analyzing code: {str(e)}")
+            
+            with col1:
+                if st.button("📄 Generate PDF Report", use_container_width=True, type="primary"):
+                    with st.spinner("🔄 Creating professional report..."):
+                        try:
+                            pdf_data = create_analysis_pdf(
+                                code_input, 
+                                predicted_labels, 
+                                confidence_scores, 
+                                operations_info
+                            )
+                            
+                            # Create download link
+                            filename = f"Auburn_AI_Analysis_Report_{datetime.now().strftime('%Y%m%d_%H%M%S')}.pdf"
+                            download_link = get_download_link(pdf_data, filename)
+                            
+                            st.markdown(download_link, unsafe_allow_html=True)
+                            st.success("✅ Report generated successfully!")
+                            
+                        except Exception as e:
+                            st.error(f"❌ Failed to generate PDF: {str(e)}")
+            
+            with col2:
+                st.markdown("""
+                **📋 Professional Report Includes:**
+                - Executive summary
+                - Analyzed code snippet
+                - Detailed inefficiency analysis
+                - Confidence scores and metrics
+                - Optimization recommendations
+                - Quantum computing insights
+                - Actionable next steps
+                """)
+            
+        except Exception as e:
+            st.error(f"❌ Error analyzing code: {str(e)}")
 
 # Alternative: Add download button right after analysis results
 def add_pdf_download_section(code_input, predicted_labels, confidence_scores, operations_info):
