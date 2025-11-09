@@ -7,6 +7,9 @@ import re
 import os
 from PIL import Image
 import base64
+from fpdf import FPDF
+
+from datetime import datetime
 
 # Load your logo
 logo = Image.open("image0.jpeg")
