@@ -192,7 +192,7 @@ def create_analysis_pdf(code_snippet, predicted_labels, confidence_scores, opera
                 
                 # Optimization
                 pdf.set_font("Arial", 'B', 9)
-              ange
+              
                 pdf.cell(0, 6, "Optimization Recommendations:", ln=True)
                 pdf.set_font("Arial", size=9)
              
