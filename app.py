@@ -739,50 +739,50 @@ her2_positive = find_patients_with_biomarker(oncology_patients, "HER2", 2.0)"""
                         st.write("The code appears to use efficient implementations.")
                         st.markdown('</div>', unsafe_allow_html=True)
 
-                    st.subheader("📊 Export Report")
-            
-                    col1, col2 = st.columns([1, 2])
+                st.subheader("📊 Export Report")
+        
+                col1, col2 = st.columns([1, 2])
+                
+                with col1:
+                    if st.button("📄 Generate PDF Report", use_container_width=True, type="primary"):
+                        with st.spinner("🔄 Generating professional report..."):
+                            try:
+                                pdf_data = create_analysis_pdf(
+                                    code_input, 
+                                    predicted_labels, 
+                                    confidence_scores, 
+                                    operations_info
+                                )
+                
+                                filename = f"Auburn_AI_Report_{datetime.now().strftime('%Y%m%d_%H%M%S')}.pdf"
+                                
+                                # Use Streamlit's native download button
+                                st.success("✅ PDF report generated successfully!")
+                                st.download_button(
+                                    label="📥 Click to Download PDF Report",
+                                    data=pdf_data,
+                                    file_name=filename,
+                                    mime="application/pdf",
+                                    use_container_width=True,
+                                    type="primary"
+                                )
+                                
+                            except Exception as e:
+                                st.error(f"❌ Failed to generate PDF: {str(e)}")
+                                import traceback
+                                st.code(traceback.format_exc())  # Show detailed error
+                
+                with col2:
+                    st.info("""
+                    **📋 Professional Report Includes:**
+                    - Executive summary
+                    - Analyzed code snippet
+                    - Detailed inefficiency analysis
+                    - Confidence scores and metrics
+                    - Optimization recommendations
+                    - Quantum computing insights
+                    """)
                     
-                    with col1:
-                        if st.button("📄 Generate PDF Report", use_container_width=True, type="primary"):
-                            with st.spinner("🔄 Generating professional report..."):
-                                try:
-                                    pdf_data = create_analysis_pdf(
-                                        code_input, 
-                                        predicted_labels, 
-                                        confidence_scores, 
-                                        operations_info
-                                    )
-                    
-                                    filename = f"Auburn_AI_Report_{datetime.now().strftime('%Y%m%d_%H%M%S')}.pdf"
-                                    
-                                    # Use Streamlit's native download button
-                                    st.success("✅ PDF report generated successfully!")
-                                    st.download_button(
-                                        label="📥 Click to Download PDF Report",
-                                        data=pdf_data,
-                                        file_name=filename,
-                                        mime="application/pdf",
-                                        use_container_width=True,
-                                        type="primary"
-                                    )
-                                    
-                                except Exception as e:
-                                    st.error(f"❌ Failed to generate PDF: {str(e)}")
-                                    import traceback
-                                    st.code(traceback.format_exc())  # Show detailed error
-                    
-                    with col2:
-                        st.info("""
-                        **📋 Professional Report Includes:**
-                        - Executive summary
-                        - Analyzed code snippet
-                        - Detailed inefficiency analysis
-                        - Confidence scores and metrics
-                        - Optimization recommendations
-                        - Quantum computing insights
-                        """)
-                        
                     # Detailed confidence scores
                     with st.expander("Detailed Confidence Scores"):
                         st.write("All detected patterns with confidence levels:")
