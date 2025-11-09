@@ -473,13 +473,110 @@ her2_positive = find_patients_with_biomarker(oncology_patients, "HER2", 2.0)"""
                                     st.write(f"`{confidence:.1f}%`")
                             
                             # Use operations_info from loaded metadata
+                           # In your analysis results section, replace the details display with:
                             if label in operations_info:
                                 info = operations_info[label]
-                                with st.expander(f"Details & Recommendations"):
-                                    st.write(f"**Description**: {info.get('description', 'N/A')}")
-                                    st.write(f"**Quantum Speedup**: {info.get('quantum_speedup', 'N/A')}")
-                                    st.write(f"**Classical Efficiency**: {info.get('classical_efficiency', 'N/A')}")
-                                    st.write(f"**Optimization**: {info.get('optimization_notes', 'N/A')}")
+                                with st.expander(f"🔍 Detailed Analysis: {label.replace('_', ' ').title()}"):
+                                    
+                                    # Description with blue background
+                                    st.markdown(f"""
+                                    <div style="
+                                        background: linear-gradient(135deg, #eff6ff, #dbeafe);
+                                        border: 1px solid #bfdbfe;
+                                        border-radius: 12px;
+                                        padding: 1.25rem;
+                                        margin-bottom: 1rem;
+                                        border-left: 4px solid #3b82f6;
+                                    ">
+                                        <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                                            <div style="font-size: 1.2rem;">📝</div>
+                                            <h4 style="margin: 0; color: #1e40af;">Description</h4>
+                                        </div>
+                                        <p style="margin: 0; color: #374151; line-height: 1.5;">
+                                            {info.get('description', 'N/A')}
+                                        </p>
+                                    </div>
+                                    """, unsafe_allow_html=True)
+                                    
+                                    # Quantum Speedup with purple background
+                                    st.markdown(f"""
+                                    <div style="
+                                        background: linear-gradient(135deg, #faf5ff, #f3e8ff);
+                                        border: 1px solid #e9d5ff;
+                                        border-radius: 12px;
+                                        padding: 1.25rem;
+                                        margin-bottom: 1rem;
+                                        border-left: 4px solid #8b5cf6;
+                                    ">
+                                        <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                                            <div style="font-size: 1.2rem;">⚛️</div>
+                                            <h4 style="margin: 0; color: #7c3aed;">Quantum Speedup</h4>
+                                        </div>
+                                        <p style="margin: 0; color: #374151; line-height: 1.5;">
+                                            {info.get('quantum_speedup', 'N/A')}
+                                        </p>
+                                    </div>
+                                    """, unsafe_allow_html=True)
+                                    
+                                    # Classical Efficiency with green background
+                                    st.markdown(f"""
+                                    <div style="
+                                        background: linear-gradient(135deg, #f0fdf4, #dcfce7);
+                                        border: 1px solid #bbf7d0;
+                                        border-radius: 12px;
+                                        padding: 1.25rem;
+                                        margin-bottom: 1rem;
+                                        border-left: 4px solid #22c55e;
+                                    ">
+                                        <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                                            <div style="font-size: 1.2rem;">⚡</div>
+                                            <h4 style="margin: 0; color: #15803d;">Classical Efficiency</h4>
+                                        </div>
+                                        <p style="margin: 0; color: #374151; line-height: 1.5;">
+                                            {info.get('classical_efficiency', 'N/A')}
+                                        </p>
+                                    </div>
+                                    """, unsafe_allow_html=True)
+                                    
+                                    # Optimization with orange background
+                                    st.markdown(f"""
+                                    <div style="
+                                        background: linear-gradient(135deg, #fffbeb, #fef3c7);
+                                        border: 1px solid #fde68a;
+                                        border-radius: 12px;
+                                        padding: 1.25rem;
+                                        margin-bottom: 1rem;
+                                        border-left: 4px solid #f59e0b;
+                                    ">
+                                        <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                                            <div style="font-size: 1.2rem;">🎯</div>
+                                            <h4 style="margin: 0; color: #b45309;">Optimization</h4>
+                                        </div>
+                                        <p style="margin: 0; color: #374151; line-height: 1.5;">
+                                            {info.get('optimization_notes', 'N/A')}
+                                        </p>
+                                    </div>
+                                    """, unsafe_allow_html=True)
+                                    
+                                    # Impact Summary with teal background
+                                    st.markdown(f"""
+                                    <div style="
+                                        background: linear-gradient(135deg, #f0fdfa, #ccfbf1);
+                                        border: 1px solid #99f6e4;
+                                        border-radius: 12px;
+                                        padding: 1.25rem;
+                                        border-left: 4px solid #14b8a6;
+                                    ">
+                                        <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                                            <div style="font-size: 1.2rem;">💡</div>
+                                            <h4 style="margin: 0; color: #0f766e;">Impact Summary</h4>
+                                        </div>
+                                        <p style="margin: 0; color: #374151; line-height: 1.5;">
+                                            Implementing the recommended classical improvements can significantly reduce computational time. 
+                                            Depending on data size, time saved can range from <strong>seconds to hours or even days</strong>.
+                                        </p>
+                                    </div>
+                                    """, unsafe_allow_html=True)
                                     st.write(f"Implementing the recommended classical improvements can significantly reduce the computational time. Depending on the size of the data being processed the time saved can range anywhere from seconds to hours or even days.")
                     else:
                         st.markdown('<div class="success-box">', unsafe_allow_html=True)
