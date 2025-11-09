@@ -879,7 +879,7 @@ her2_positive = find_patients_with_biomarker(oncology_patients, "HER2", 2.0)"""
                         st.write("The code appears to use efficient implementations.")
                         st.markdown('</div>', unsafe_allow_html=True)
 
-                                st.markdown("---")
+            st.markdown("---")
             st.subheader("📊 Export Analysis Report")
             
             col1, col2 = st.columns([1, 2])
