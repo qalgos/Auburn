@@ -8,261 +8,73 @@ import os
 from PIL import Image
 import base64
 
-# Page configuration - MUST be first Streamlit command
+# Load your logo
+logo = Image.open("image0.jpeg")
+
+def get_base64_of_image(image_path):
+    with open(image_path, "rb") as img_file:
+        return base64.b64encode(img_file.read()).decode()
+
+logo_base64 = get_base64_of_image("image0.jpeg")
+
+st.markdown(f"""
+<style>
+    .header-container {{
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        gap: 15px;
+        margin-bottom: 2rem;
+    }}
+    .header-logo {{
+        width: 140px;
+        height: auto;
+    }}
+    .header-title {{
+        margin: 0;
+        color: #000000;
+        font-size: 2.5rem;
+        font-weight: 700;
+    }}
+</style>
+
+<div class="header-container">
+    <img src="data:image/png;base64,{logo_base64}" class="header-logo">
+    <h1 class="header-title">Auburn</h1>
+</div>
+""", unsafe_allow_html=True)
+
 st.set_page_config(
-    page_title="Auburn AI",
-    page_icon="🧬",
+    page_title="Auburn",
+    page_icon=logo,
     layout="wide",
     initial_sidebar_state="expanded"
 )
 
-# Custom CSS for modern design
-st.markdown("""
-<style>
-    /* Main app background */
-    .stApp {
-        background-color: #f8fafc;
-    }
-    
-    /* Sidebar styling */
-    .css-1d391kg, .css-1lcbmhc {
-        background-color: #1e293b;
-    }
-    
-    /* Sidebar text */
-    .css-1d391kg p, .css-1d391kg label, .css-1d391kg div, .css-1d391kg span {
-        color: #f1f5f9 !important;
-    }
-    
-    /* Navigation header */
-    .nav-header {
-        padding: 1.5rem 1rem;
-        border-bottom: 1px solid #334155;
-        margin-bottom: 2rem;
-    }
-    
-    .nav-title {
-        font-size: 1.5rem;
-        font-weight: 700;
-        color: #f1f5f9;
-        margin-bottom: 0.5rem;
-    }
-    
-    .nav-subtitle {
-        font-size: 0.875rem;
-        color: #94a3b8;
-    }
-    
-    /* Navigation items */
-    .nav-item {
-        padding: 0.75rem 1rem;
-        margin: 0.25rem 0;
-        border-radius: 8px;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        color: #cbd5e1;
-    }
-    
-    .nav-item:hover {
-        background-color: #334155;
-        color: #ffffff;
-    }
-    
-    .nav-item.active {
-        background-color: #3b82f6;
-        color: #ffffff;
-    }
-    
-    /* Main content area */
-    .main-header {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        padding: 2rem;
-        border-radius: 12px;
-        margin-bottom: 2rem;
-        color: white;
-    }
-    
-    .content-card {
-        background: white;
-        padding: 1.5rem;
-        border-radius: 12px;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-        border: 1px solid #e2e8f0;
-        margin-bottom: 1.5rem;
-    }
-    
-    /* Feature cards */
-    .feature-card {
-        background: white;
-        padding: 1.5rem;
-        border-radius: 12px;
-        border-left: 4px solid #3b82f6;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-        margin-bottom: 1rem;
-        transition: transform 0.2s ease;
-    }
-    
-    .feature-card:hover {
-        transform: translateY(-2px);
-    }
-    
-    /* Status boxes */
-    .success-box {
-        background: #f0fdf4;
-        border-left: 4px solid #22c55e;
-        padding: 1rem;
-        border-radius: 8px;
-        margin: 1rem 0;
-    }
-    
-    .warning-box {
-        background: #fffbeb;
-        border-left: 4px solid #f59e0b;
-        padding: 1rem;
-        border-radius: 8px;
-        margin: 1rem 0;
-    }
-    
-    .danger-box {
-        background: #fef2f2;
-        border-left: 4px solid #ef4444;
-        padding: 1rem;
-        border-radius: 8px;
-        margin: 1rem 0;
-    }
-    
-    /* Buttons */
-    .stButton button {
-        border-radius: 8px;
-        font-weight: 600;
-        transition: all 0.3s ease;
-    }
-    
-    .stButton button[kind="primary"] {
-        background-color: #3b82f6;
-        border: none;
-    }
-    
-    .stButton button[kind="primary"]:hover {
-        background-color: #2563eb;
-        transform: translateY(-1px);
-    }
-    
-    .stButton button[kind="secondary"] {
-        background-color: #f1f5f9;
-        color: #475569;
-        border: 1px solid #e2e8f0;
-    }
-    
-    /* Code input */
-    .stTextArea textarea {
-        border-radius: 8px;
-        border: 2px solid #e2e8f0;
-        font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
-    }
-    
-    .stTextArea textarea:focus {
-        border-color: #3b82f6;
-        box-shadow: 0 0 0 1px #3b82f6;
-    }
-    
-    /* Progress bars */
-    .stProgress > div > div > div {
-        background: linear-gradient(90deg, #3b82f6, #60a5fa);
-    }
-    
-    /* Expanders */
-    .streamlit-expanderHeader {
-        background-color: #f8fafc;
-        border-radius: 8px;
-        font-weight: 600;
-    }
-</style>
-""", unsafe_allow_html=True)
-
-def get_base64_of_image(image_path):
-    """Convert image to base64 for embedding"""
-    try:
-        with open(image_path, "rb") as img_file:
-            return base64.b64encode(img_file.read()).decode()
-    except:
-        return None
-
-def create_navigation():
-    """Create the persistent navigation sidebar"""
-    with st.sidebar:
-        # Navigation Header
-        st.markdown("""
-        <div class="nav-header">
-            <div class="nav-title">🧬 Auburn AI</div>
-            <div class="nav-subtitle">Code Optimization Platform</div>
-        </div>
-        """, unsafe_allow_html=True)
-        
-        # Navigation Menu
-        menu_options = {
-            "🏠 Dashboard": "dashboard",
-            "🔍 Code Analysis": "analysis", 
-            "📚 Examples": "examples",
-            "📊 Results": "results",
-            "ℹ️ About": "about"
-        }
-        
-        # Initialize session state for current page
-        if 'current_page' not in st.session_state:
-            st.session_state.current_page = "dashboard"
-        
-        # Create navigation items
-        for label, page in menu_options.items():
-            is_active = st.session_state.current_page == page
-            css_class = "nav-item active" if is_active else "nav-item"
-            
-            if st.button(label, key=page, use_container_width=True):
-                st.session_state.current_page = page
-                st.rerun()
-        
-        st.markdown("---")
-        
-        # User info section
-        st.markdown("""
-        <div style="padding: 1rem;">
-            <div style="color: #94a3b8; font-size: 0.875rem;">Logged in as</div>
-            <div style="color: #f1f5f9; font-weight: 600;">Demo User</div>
-        </div>
-        """, unsafe_allow_html=True)
-
 def authenticate():
-    """Enhanced authentication with modern UI"""
+    """Enhanced authentication with better UI"""
     if 'authenticated' not in st.session_state:
         st.session_state.authenticated = False
     
     if not st.session_state.authenticated:
-        # Center the authentication form
+     
+        
         col1, col2, col3 = st.columns([1, 2, 1])
         with col2:
-            st.markdown("""
-            <div style='text-align: center; margin-bottom: 2rem;'>
-                <h1 style='color: #1e293b; margin-bottom: 0.5rem;'>🧬</h1>
-                <h2 style='color: #1e293b; margin-bottom: 0.5rem;'>Auburn AI</h2>
-                <p style='color: #64748b;'>Secure Code Analysis Platform</p>
-            </div>
-            """, unsafe_allow_html=True)
-            
             with st.container():
-                st.markdown('<div class="content-card">', unsafe_allow_html=True)
-                st.subheader("🔒 Authentication Required")
+                st.title("🔒 Authentication required")
+                st.write("")
                 
                 with st.form("auth_form"):
                     password = st.text_input(
                         "Enter access password:", 
                         type="password",
-                        placeholder="Enter your password...",
                         help="Contact administrator if you've forgotten the password"
                     )
                     submit = st.form_submit_button("Login", use_container_width=True)
                     
                     if submit:
-                        if password == "password":  # In production, use proper authentication
+                        if password == "password":
                             st.session_state.authenticated = True
                             st.rerun()
                         else:
@@ -273,10 +85,139 @@ def authenticate():
     
     return True
 
-def load_model_and_components():
-    """Load ML model and components with caching"""
+st.markdown("""
+<style>
+    .stApp {
+        background-color: #FFFFFF;
+    }
+    .main-header {
+        font-size: 3rem;
+        color: #000000;
+        text-align: center;
+        margin-bottom: 2rem;
+        font-weight: 700;
+    }
+    h1, h2, h3, h4, h5, h6 {
+        color: #000000 !important;
+    }
+    .stMarkdown, .stText, p, div, span {
+        color: #000000 !important;
+    }
+    .feature-card {
+        background: #FFFFFF;
+        padding: 1.5rem;
+        border-radius: 10px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        border: 1px solid #F0F0F0;
+        margin-bottom: 1rem;
+    }
+    .success-box {
+        background: #FFFFFF;
+        padding: 1rem;
+        border-radius: 10px;
+        border-left: 3px solid #90EE90;
+        border: 1px solid #F0F0F0;
+    }
+    .warning-box {
+        background: #FFFFFF;
+        padding: 1rem;
+        border-radius: 10px;
+        border-left: 3px solid #FFD700;
+        border: 1px solid #F0F0F0;
+    }
+    .danger-box {
+        background: #FFFFFF;
+        padding: 1rem;
+        border-radius: 10px;
+        border-left: 3px solid #FFB6C1;
+        border: 1px solid #F0F0F0;
+    }
+    .example-card {
+        background: #FFFFFF;
+        border: 1px solid #F0F0F0;
+        border-radius: 8px;
+        padding: 1rem;
+        margin: 0.5rem 0;
+        transition: all 0.3s ease;
+    }
+    .example-card:hover {
+        background: #FAFAFA;
+        transform: translateY(-1px);
+        border-color: #E8E8E8;
+    }
+    .css-1d391kg {
+        background-color: #FFFFFF;
+    }
+    .stButton button {
+        background-color: #F8F8FF;
+        color: #000000;
+        border: 1px solid #E8E8E8;
+        border-radius: 6px;
+        padding: 0.5rem 1rem;
+        transition: all 0.3s ease;
+    }
+    .stButton button:hover {
+        background-color: #F0F0F0;
+        color: #000000;
+        border-color: #D0D0D0;
+    }
+    .stButton button[kind="primary"] {
+        background-color: #F0E6FF;
+        color: #000000;
+        border: 1px solid #E0D6FF;
+    }
+    .stButton button[kind="primary"]:hover {
+        background-color: #E8DCFF;
+        color: #000000;
+    }
+    .stTextArea textarea, .stTextInput input {
+        background-color: #FFFFFF;
+        border: 1px solid #E0E0E0;
+        border-radius: 6px;
+        color: #000000;
+    }
+    .stTextArea textarea:focus, .stTextInput input:focus {
+        border-color: #C0C0C0;
+        box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1);
+    }
+    .streamlit-expanderHeader {
+        background-color: #FFFFFF;
+        border: 1px solid #F0F0F0;
+        border-radius: 6px;
+        color: #000000;
+    }
+    .stProgress > div > div > div {
+        background-color: #E0D6FF;
+    }
+    .auth-container {
+        
+        padding: 2rem;
+        border-radius: 15px;
+        color: #000000;
+        border: 1px solid #E8E8E8;
+    }
+    .stRadio > div {
+        background-color: #FFFFFF;
+    }
+    .stCodeBlock {
+        background-color: #FAFAFA;
+        border: 1px solid #F0F0F0;
+    }
+</style>
+""", unsafe_allow_html=True)
+
+# Check authentication before running app
+if authenticate():
+    # Navigation
+    st.sidebar.title("Navigation")
+    page = st.sidebar.radio("Go to", ["Demo", "About"], index=0)
+    
+    st.sidebar.markdown("---")
+    
+
+    # Load resources with caching - FIXED VERSION
     @st.cache_resource
-    def _load_resources():
+    def load_model_and_components():
         try:
             model = tf.keras.models.load_model("model.h5")
             with open('tokenizer.pkl', 'rb') as f:
@@ -294,193 +235,51 @@ def load_model_and_components():
         except Exception as e:
             st.error(f"Error loading components: {e}")
             return None, None, None, None, None
-    
-    return _load_resources()
 
-def render_dashboard():
-    """Render the dashboard page"""
-    st.markdown("""
-    <div class="main-header">
-        <h1 style="color: white; margin-bottom: 0.5rem;">Welcome to Auburn AI</h1>
-        <p style="color: #e2e8f0; margin-bottom: 0;">Advanced Code Optimization for Pharmaceutical Research</p>
-    </div>
-    """, unsafe_allow_html=True)
-    
-    # Stats overview
-    col1, col2, col3, col4 = st.columns(4)
-    
-    with col1:
-        st.markdown("""
-        <div class="content-card" style="text-align: center;">
-            <h3 style="color: #3b82f6; margin-bottom: 0.5rem;">🔍</h3>
-            <h4 style="margin-bottom: 0.5rem;">Patterns Detected</h4>
-            <h2 style="color: #1e293b; margin: 0;">12+</h2>
-        </div>
-        """, unsafe_allow_html=True)
-    
-    with col2:
-        st.markdown("""
-        <div class="content-card" style="text-align: center;">
-            <h3 style="color: #10b981; margin-bottom: 0.5rem;">⚡</h3>
-            <h4 style="margin-bottom: 0.5rem;">Avg. Speedup</h4>
-            <h2 style="color: #1e293b; margin: 0;">5.2x</h2>
-        </div>
-        """, unsafe_allow_html=True)
-    
-    with col3:
-        st.markdown("""
-        <div class="content-card" style="text-align: center;">
-            <h3 style="color: #f59e0b; margin-bottom: 0.5rem;">🧬</h3>
-            <h4 style="margin-bottom: 0.5rem;">Pharma Optimized</h4>
-            <h2 style="color: #1e293b; margin: 0;">100%</h2>
-        </div>
-        """, unsafe_allow_html=True)
-    
-    with col4:
-        st.markdown("""
-        <div class="content-card" style="text-align: center;">
-            <h3 style="color: #ef4444; margin-bottom: 0.5rem;">🔒</h3>
-            <h4 style="margin-bottom: 0.5rem;">Secure Analysis</h4>
-            <h2 style="color: #1e293b; margin: 0;">On-Prem</h2>
-        </div>
-        """, unsafe_allow_html=True)
-    
-    # Quick actions
-    st.subheader("Quick Actions")
-    col1, col2 = st.columns(2)
-    
-    with col1:
-        if st.button("🚀 Start New Analysis", use_container_width=True, type="primary"):
-            st.session_state.current_page = "analysis"
-            st.rerun()
-    
-    with col2:
-        if st.button("📚 View Examples", use_container_width=True):
-            st.session_state.current_page = "examples"
-            st.rerun()
-    
-    # Recent activity
-    st.subheader("Recent Activity")
-    st.markdown("""
-    <div class="content-card">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-            <h4 style="margin: 0;">Analysis History</h4>
-            <span style="color: #64748b; font-size: 0.875rem;">Last 7 days</span>
-        </div>
-        <div style="color: #64748b;">
-            • Drug compound sorting analysis - 2 hours ago<br>
-            • Patient record search optimization - 1 day ago<br>
-            • Matrix multiplication efficiency - 2 days ago<br>
-            • Biomarker search patterns - 3 days ago
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
-
-def render_analysis():
-    """Render the code analysis page"""
-    st.markdown("""
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
-        <div>
-            <h1 style="color: #1e293b; margin-bottom: 0.5rem;">🔍 Code Analysis</h1>
-            <p style="color: #64748b; margin: 0;">Detect inefficiencies and optimize your pharmaceutical code</p>
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
-    
-    # Load model
+    # Load model once at startup
     model, tokenizer, mlb, max_len, operations_info = load_model_and_components()
-    
-    if model is None:
-        st.error("❌ Model failed to load. Please check if all model files are available.")
-        return
-    
-    # Code input section
-    st.markdown('<div class="content-card">', unsafe_allow_html=True)
-    st.subheader("Input Your Code")
-    
-    code_input = st.text_area(
-        "Paste your Python code below:",
-        height=300,
-        placeholder="""# Paste your pharmaceutical research code here\n\ndef analyze_compounds(compounds):\n    # Your code here\n    return results""",
-        help="Auburn AI will detect inefficient patterns in sorting, searching, and matrix operations"
-    )
-    
-    col1, col2 = st.columns([1, 1])
-    
-    with col1:
-        analyze_btn = st.button("🚀 Analyze Code", use_container_width=True, type="primary", disabled=not code_input.strip())
-    
-    with col2:
-        if st.button("🗑️ Clear", use_container_width=True):
-            st.rerun()
-    
-    st.markdown('</div>', unsafe_allow_html=True)
-    
-    # Analysis results
-    if analyze_btn and code_input.strip():
-        with st.spinner("🔍 Analyzing code patterns..."):
-            try:
-                # Preprocessing and prediction functions would go here
-                # For now, we'll show a placeholder result
-                st.markdown('<div class="content-card">', unsafe_allow_html=True)
-                st.subheader("📊 Analysis Results")
-                
-                # Simulated results
-                st.markdown("""
-                <div class="danger-box">
-                    <div style="display: flex; align-items: center; gap: 0.5rem;">
-                        <span style="font-size: 1.5rem;">⚠️</span>
-                        <div>
-                            <strong>Inefficiencies Detected</strong>
-                            <div style="color: #64748b; font-size: 0.875rem;">3 potential optimizations found</div>
-                        </div>
-                    </div>
-                </div>
-                """, unsafe_allow_html=True)
-                
-                # Results breakdown
-                results = [
-                    {"pattern": "Inefficient Sorting", "confidence": "92%", "impact": "High"},
-                    {"pattern": "Linear Search", "confidence": "85%", "impact": "Medium"},
-                    {"pattern": "Naive Matrix Multiplication", "confidence": "78%", "impact": "High"}
-                ]
-                
-                for result in results:
-                    with st.expander(f"🔍 {result['pattern']} (Confidence: {result['confidence']})"):
-                        st.write(f"**Impact Level:** {result['impact']}")
-                        st.write("**Recommendation:** Consider using optimized libraries or algorithmic improvements")
-                        st.write("**Quantum Potential:** This operation may benefit from quantum acceleration")
-                
-                st.markdown('</div>', unsafe_allow_html=True)
-                
-            except Exception as e:
-                st.error(f"❌ Error analyzing code: {str(e)}")
 
-def render_examples():
-    """Render the examples page"""
-    st.markdown("""
-    <div style="margin-bottom: 2rem;">
-        <h1 style="color: #1e293b; margin-bottom: 0.5rem;">📚 Code Examples</h1>
-        <p style="color: #64748b; margin: 0;">Explore common patterns in pharmaceutical research code</p>
-    </div>
-    """, unsafe_allow_html=True)
-    
+    def preprocess_code(code):
+        """EXACT same preprocessing as Tkinter app"""
+        code = code.lower()
+        code = re.sub(r'\s+', ' ', code)
+        code = re.sub(r'\b\d+\b', ' num ', code)
+        code = re.sub(r'\s+', ' ', code).strip()
+        return code
+
+    def predict_operations(code_snippet, threshold=0.7):
+        """EXACT same prediction logic as Tkinter app"""
+        processed_code = preprocess_code(code_snippet)
+        sequence = tokenizer.texts_to_sequences([processed_code])
+        padded_sequence = pad_sequences(sequence, maxlen=max_len, padding='post')
+        
+        predictions = model.predict(padded_sequence, verbose=0)
+        binary_predictions = (predictions > threshold).astype(int)
+        predicted_labels = mlb.inverse_transform(binary_predictions)
+        
+        confidence_scores = {}
+        for i, label in enumerate(mlb.classes_):
+            confidence_scores[label] = float(predictions[0][i])
+        
+        return predicted_labels[0], confidence_scores
+
+    # Example codes database
     EXAMPLE_CODES = {
-        "🧬 Drug Compound Sorting": """# Sort drug compounds by IC50 value using bubble sort
+        "🧬 Drug Compound Sorting (bubble sort)": """# Sort drug compounds by IC50 value
 compounds = load_compound_library()
 for i in range(len(compounds)):
     for j in range(len(compounds)-1):
         if compounds[j].ic50 > compounds[j+1].ic50:
             compounds[j], compounds[j+1] = compounds[j+1], compounds[j]""",
 
-        "🧬 Patient Record Search": """# Find patient records by ID using linear search
+        "🧬 Patient Record Search (linear search)": """# Find patient records by ID
 def find_patient_by_id(patients, target_id):
     for patient in patients:
         if patient.id == target_id:
             return patient
     return None""",
 
-        "🧬 Matrix Multiplication": """# Manual matrix multiplication for pharmacokinetic modeling
+        "🧬 Inefficient Matrix Multiplication ": """#matrix multiplication
 def manual_matrix_multiply(A, B):
     rows_A, cols_A = len(A), len(A[0])
     rows_B, cols_B = len(B), len(B[0])
@@ -489,117 +288,228 @@ def manual_matrix_multiply(A, B):
         for j in range(cols_B):
             for k in range(cols_A):
                 result[i][j] += A[i][k] * B[k][j]
-    return result"""
+    return result""",
+
+        "🧬 Estimate pharmacokinetic parameters (Matrix multiplication)": """
+def estimate_pk_parameters(dose_matrix, transfer_matrix):
+    num_patients = len(dose_matrix)
+    num_compartments = len(transfer_matrix[0])
+    concentration_matrix = [[0.0 for _ in range(num_compartments)] for _ in range(num_patients)]
+    
+    for i in range(num_patients):
+        for j in range(num_compartments):
+            concentration = 0.0
+            for k in range(len(dose_matrix[0])):
+                # Multiply dose by transfer coefficients between compartments
+                concentration += dose_matrix[i][k] * transfer_matrix[k][j]
+            concentration_matrix[i][j] = concentration
+    
+    return concentration_matrix
+
+patient_doses = load_dosing_regimens()
+compartment_transfer = load_pk_parameters()
+tissue_concentrations = estimate_pk_parameters(patient_doses, compartment_transfer)""",
+
+        "🧬 Molecular Weight Sorting": """# Selection sort for compounds
+def sort_compounds_by_weight(compounds):
+    for i in range(len(compounds)):
+        min_idx = i
+        for j in range(i+1, len(compounds)):
+            if compounds[j].molecular_weight < compounds[min_idx].molecular_weight:
+                min_idx = j
+        compounds[i], compounds[min_idx] = compounds[min_idx], compounds[i]
+    return compounds""", 
+
+         "🧬 Search for Patient Biomarkers (Linear)": """
+    
+def find_patients_with_biomarker(patients, target_biomarker, threshold):
+    matching_patients = []
+    for patient in patients:
+        if patient.biomarkers.get(target_biomarker, 0) > threshold:
+            matching_patients.append(patient)
+    return matching_patients
+
+oncology_patients = load_cancer_patients()
+her2_positive = find_patients_with_biomarker(oncology_patients, "HER2", 2.0)"""
+        
+   
     }
-    
-    # Display examples in a grid
-    cols = st.columns(2)
-    for i, (title, code) in enumerate(EXAMPLE_CODES.items()):
-        with cols[i % 2]:
-            st.markdown(f'<div class="content-card">', unsafe_allow_html=True)
-            st.subheader(title)
-            st.code(code, language='python')
-            if st.button(f"Use This Example", key=f"example_{i}", use_container_width=True):
-                st.session_state.current_page = "analysis"
-                # You could set the code in session state here
-                st.rerun()
-            st.markdown('</div>', unsafe_allow_html=True)
 
-def render_about():
-    """Render the about page"""
-    st.markdown("""
-    <div style="margin-bottom: 2rem;">
-        <h1 style="color: #1e293b; margin-bottom: 0.5rem;">ℹ️ About Auburn AI</h1>
-        <p style="color: #64748b; margin: 0;">Advanced code optimization for the pharmaceutical industry</p>
-    </div>
-    """, unsafe_allow_html=True)
-    
-    col1, col2 = st.columns([2, 1])
-    
-    with col1:
-        st.markdown("""
-        <div class="content-card">
-            <h3>Overview</h3>
-            <p>Auburn AI is an advanced tool designed specifically for pharmaceutical and 
-            biotechnology research. It automatically detects inefficient code patterns and 
-            suggests classical and quantum improvements.</p>
-        </div>
-        """, unsafe_allow_html=True)
+    # ABOUT PAGE
+    if page == "About":
+        col1, col2 = st.columns([2, 1])
         
-        st.markdown("""
-        <div class="content-card">
-            <h3>Key Features</h3>
+        with col1:
+            st.subheader("Overview")
+            st.markdown("""
             <div class="feature-card">
-                <strong>Domain-Specific Analysis</strong>
-                <p style="margin: 0.5rem 0 0 0; color: #64748b;">Deep learning models optimized for pharma/biotech computational workflows</p>
+            Auburn is an advanced AI-powered tool designed specifically for 
+            the pharmaceutical and biotechnology industries. It automatically detects inefficient 
+            code patterns and suggests improvements.
             </div>
-            <div class="feature-card">
-                <strong>Private and Secure</strong>
-                <p style="margin: 0.5rem 0 0 0; color: #64748b;">Your proprietary code never leaves your infrastructure</p>
-            </div>
-            <div class="feature-card">
-                <strong>Quantum Readiness</strong>
-                <p style="margin: 0.5rem 0 0 0; color: #64748b;">Identify operations with potential quantum speedups</p>
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
-    
-    with col2:
-        st.markdown("""
-        <div class="content-card">
-            <h3>Supported Operations</h3>
-            <ul style="color: #64748b;">
-                <li>Inefficient Sorting Algorithms</li>
-                <li>Linear Search Patterns</li>
-                <li>Matrix Operations</li>
-                <li>Nested Loops</li>
-                <li>Data Structure Inefficiencies</li>
-            </ul>
-        </div>
-        """, unsafe_allow_html=True)
+            """, unsafe_allow_html=True)
+            
+            st.subheader("Key Features")
+            
+            features = [
+                (" Domain-Specific AI-Powered Analysis ", "Deep learning models optimized for pharma/biotech computational workflows, trained to recognise inefficiencies."),
+                (" Private and Secure ", "Scan your codebase without worrying about leaks. Optimize your codebase fully in-house, without your proprietary code ever leaving your company.  "),
+                (" Detailed Reporting ", "Comprehensive analysis with improvement suggestions. Learn if your business can benefit from quantum computers!")
+            ]
+            
+            for feature, description in features:
+                with st.expander(f"{feature}"):
+                    st.write(description)
         
-        st.markdown("""
-        <div class="content-card">
-            <h3>Impact</h3>
+        with col2:
+            st.subheader("Supported Operations")
+            st.markdown("""
+            - **Inefficient Sorting**
+            - **Inefficient Search**  
+            - **Inefficient Matrix Multiplication**
+    
+            """)
+            
+            st.subheader("Impact")
+            st.markdown("""
             <div class="success-box">
-                • Reduces computational time by 3-10x<br><br>
-                • Optimizes memory usage<br><br>
-                • Identifies quantum opportunities<br><br>
-                • Improves research throughput
+            • Reduces computational time <br>
+            • Optimizes memory usage <br>
+            • Detects operations with quantum speedups <br>
             </div>
-        </div>
-        """, unsafe_allow_html=True)
+            """, unsafe_allow_html=True)
 
-def main():
-    """Main application function"""
-    # Authentication
-    if not authenticate():
-        return
-    
-    # Create navigation
-    create_navigation()
-    
-    # Route to appropriate page
-    if st.session_state.current_page == "dashboard":
-        render_dashboard()
-    elif st.session_state.current_page == "analysis":
-        render_analysis()
-    elif st.session_state.current_page == "examples":
-        render_examples()
-    elif st.session_state.current_page == "about":
-        render_about()
+    # DEMO PAGE
     else:
-        render_dashboard()
+        st.text("Auburn AI detects inefficient code implementation and suggests classical and quantum improvements.")
+
+    
+            
+           
+
+        # Check if model loaded successfully
+        if model is None:
+            st.error("❌ Model failed to load. Please check if all model files are available.")
+            st.stop()
+
+        # Example Gallery Section
+        st.subheader("Example Code Gallery")
+        st.write("Click on examples to load them into the analyzer:")
+        
+        # Create columns for examples
+        cols = st.columns(2)
+        example_titles = list(EXAMPLE_CODES.keys())
+        
+        for i, title in enumerate(example_titles):
+            with cols[i % 2]:
+                if st.button(
+                    title, 
+                    use_container_width=True, 
+                    key=f"btn_{title}",
+                    help=f"Load {title} example"
+                ):
+                    st.session_state.analysis_code = EXAMPLE_CODES[title]
+                    st.session_state.selected_example = title
+
+        # Display selected example
+        if 'selected_example' in st.session_state:
+            st.markdown(f"**Example Loaded:** {st.session_state.selected_example}")
+            st.code(st.session_state.analysis_code, language='python')
+        
+        st.markdown("---")
+        
+        # Main Analysis Section
+        st.subheader("Code Analysis")
+        
+        # Code input area
+        code_input = st.text_area(
+            "Paste or write your code here:", 
+            height=250,
+            value=st.session_state.get('analysis_code', ''),
+            placeholder="""# Write your code here or use an example above\n\ndef your_function():\n    # Your code here\n    return result""",
+            help="Auburn v0.1 will detect inefficient patterns in sorting, searching, and matrix operations"
+        )
+        
+        col1, col2 = st.columns([1, 1])
+        
+        with col1:
+            analyze_clicked = st.button(
+                "Analyze Code", 
+                type="primary", 
+                use_container_width=True,
+                disabled=not code_input.strip()
+            )
+        
+        with col2:
+            if st.button(" Clear ", use_container_width=True):
+                st.session_state.analysis_code = ""
+                if 'selected_example' in st.session_state:
+                    del st.session_state.selected_example
+                st.rerun()
+        
+        # Analysis execution - CLEANED AND CORRECTED
+        if analyze_clicked and code_input.strip():
+            with st.spinner("🔍 Analyzing code patterns..."):
+                try:
+                    # Use the EXACT same prediction logic as Tkinter app
+                    predicted_labels, confidence_scores = predict_operations(code_input)
+                    
+                    # Display results
+                    st.subheader("Analysis Results")
+                    
+                    if predicted_labels:
+                        st.markdown('<div class="danger-box">', unsafe_allow_html=True)
+                        st.error("Inefficiencies Detected")
+                        st.markdown('</div>', unsafe_allow_html=True)
+                        
+                        for label in predicted_labels:
+                            confidence = confidence_scores.get(label, 0) * 100
+                            with st.container():
+                                col_a, col_b = st.columns([3, 1])
+                                with col_a:
+                                    # Consistent label formatting with Tkinter app
+                                    st.write(f"**{label.replace('_', ' ').title()}**")
+                                with col_b:
+                                    st.write(f"`{confidence:.1f}%`")
+                            
+                            # Use operations_info from loaded metadata
+                            if label in operations_info:
+                                info = operations_info[label]
+                                with st.expander(f"Details & Recommendations"):
+                                    st.write(f"**Description**: {info.get('description', 'N/A')}")
+                                    st.write(f"**Quantum Speedup**: {info.get('quantum_speedup', 'N/A')}")
+                                    st.write(f"**Classical Efficiency**: {info.get('classical_efficiency', 'N/A')}")
+                                    st.write(f"**Optimization**: {info.get('optimization_notes', 'N/A')}")
+                    else:
+                        st.markdown('<div class="success-box">', unsafe_allow_html=True)
+                        st.success("No inefficiencies detected!")
+                        st.write("The code appears to use efficient implementations.")
+                        st.markdown('</div>', unsafe_allow_html=True)
+                        
+                    # Detailed confidence scores
+                    with st.expander("Detailed Confidence Scores"):
+                        st.write("All detected patterns with confidence levels:")
+                        for label, confidence in sorted(confidence_scores.items(), key=lambda x: x[1], reverse=True):
+                            progress_value = confidence
+                            st.write(f"**{label.replace('_', ' ').title()}**")
+                            st.progress(progress_value, text=f"{confidence:.1%} confidence")
+                            
+                except Exception as e:
+                    st.error(f"❌ Error analyzing code: {str(e)}")
+                    st.info("""
+                    **Troubleshooting tips:**
+                    - Ensure the code is valid Python syntax
+                    - Try using one of the example codes above
+                    """)
+        elif analyze_clicked and not code_input.strip():
+            st.warning("⚠️ Please enter some code to analyze")
     
     # Footer
     st.markdown("---")
     col1, col2, col3 = st.columns([2, 1, 1])
     with col1:
-        st.markdown("**Auburn AI** • Safe • Reliable • Smart")
+        st.markdown("**Auburn** • Safe Reliable Smart")
     with col2:
-        st.markdown("v0.1 • Demo")
+        st.markdown("Speedup your code with classical optimization and unveil its quantum potential.")
     with col3:
-        st.markdown("Optimizing pharmaceutical research")
-
-if __name__ == "__main__":
-    main()
+        st.markdown("v0.1 • demo ")
