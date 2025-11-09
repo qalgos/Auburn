@@ -114,7 +114,8 @@ def create_analysis_pdf(code_snippet, predicted_labels, confidence_scores, opera
     pdf.set_font("Arial", size=10)
     pdf.set_text_color(0, 0, 0)
     
-    if predicted_labels:
+    # FIX: Check if predicted_labels exists and is not empty
+    if predicted_labels and len(predicted_labels) > 0:
         summary_text = f"Analysis detected {len(predicted_labels)} potential inefficiencies in your code."
         pdf.multi_cell(0, 6, summary_text)
     else:
@@ -143,8 +144,8 @@ def create_analysis_pdf(code_snippet, predicted_labels, confidence_scores, opera
     pdf.cell(0, 6, "", ln=True, fill=True)
     pdf.ln(5)
     
-    # Detected Issues Section
-    if predicted_labels:
+    # Detected Issues Section - FIX: Added proper check for predicted_labels
+    if predicted_labels and len(predicted_labels) > 0:
         pdf.set_font("Arial", 'B', 14)
         pdf.set_text_color(239, 68, 68)  # Red for issues
         pdf.cell(0, 10, "Detected Inefficiencies", ln=True)
@@ -162,8 +163,8 @@ def create_analysis_pdf(code_snippet, predicted_labels, confidence_scores, opera
             pdf.set_text_color(100, 100, 100)
             pdf.cell(0, 6, f"Confidence: {confidence:.1f}%", ln=True)
             
-            # Detailed analysis for each operation
-            if label in operations_info:
+            # Detailed analysis for each operation - FIX: Added check for operations_info
+            if operations_info and label in operations_info:
                 info = operations_info[label]
                 
                 # Description
@@ -197,6 +198,11 @@ def create_analysis_pdf(code_snippet, predicted_labels, confidence_scores, opera
                 pdf.set_font("Arial", size=9)
                 pdf.set_text_color(0, 0, 0)
                 pdf.multi_cell(0, 5, info.get('optimization_notes', 'N/A'))
+            else:
+                # If no operations info available, show generic message
+                pdf.set_font("Arial", 'I', 9)
+                pdf.set_text_color(100, 100, 100)
+                pdf.multi_cell(0, 5, "No detailed analysis available for this pattern.")
             
             pdf.ln(3)
     
@@ -241,77 +247,7 @@ def get_download_link(pdf_data, filename):
     b64 = base64.b64encode(pdf_data).decode()
     return f'<a href="data:application/octet-stream;base64,{b64}" download="{filename}">📥 Download PDF Report</a>'
 
-# Integration into your existing analysis section:
-def render_analysis_with_pdf():
-    """Your existing analysis function enhanced with PDF download"""
-    
-    # ... your existing analysis code ...
-    
-    if analyze_clicked and code_input.strip():
-        with st.spinner("🔍 Analyzing code patterns..."):
-            try:
-                predicted_labels, confidence_scores = predict_operations(code_input)
-                
-                # Display results (your existing code)
-                st.subheader("Analysis Results")
-                
-                if predicted_labels:
-                    st.markdown('<div class="danger-box">', unsafe_allow_html=True)
-                    st.error("Inefficiencies Detected")
-                    st.markdown('</div>', unsafe_allow_html=True)
-                    
-                    for label in predicted_labels:
-                        confidence = confidence_scores.get(label, 0) * 100
-                        with st.container():
-                            col_a, col_b = st.columns([3, 1])
-                            with col_a:
-                                st.write(f"**{label.replace('_', ' ').title()}**")
-                            with col_b:
-                                st.write(f"`{confidence:.1f}%`")
-                        
-                        if label in operations_info:
-                            # Your existing detailed analysis display...
-                            pass
-                
-                # ADD PDF GENERATION BUTTON
-                st.markdown("---")
-                st.subheader("📊 Generate Report")
-                
-                col1, col2 = st.columns([1, 2])
-                
-                with col1:
-                    if st.button("📄 Generate PDF Report", use_container_width=True, type="secondary"):
-                        with st.spinner("Generating professional report..."):
-                            try:
-                                pdf_data = create_analysis_pdf(
-                                    code_input, 
-                                    predicted_labels, 
-                                    confidence_scores, 
-                                    operations_info
-                                )
-                                
-                                # Create download link
-                                filename = f"auburn_analysis_{datetime.now().strftime('%Y%m%d_%H%M')}.pdf"
-                                download_link = get_download_link(pdf_data, filename)
-                                
-                                st.markdown(download_link, unsafe_allow_html=True)
-                                st.success("✅ Report generated successfully!")
-                                
-                            except Exception as e:
-                                st.error(f"❌ Failed to generate PDF: {str(e)}")
-                
-                with col2:
-                    st.info("""
-                    **Professional Report Includes:**
-                    • Executive summary
-                    • Code analysis details  
-                    • Confidence scores
-                    • Optimization recommendations
-                    • Quantum computing insights
-                    """)
-                
-            except Exception as e:
-                st.error(f"❌ Error analyzing code: {str(e)}")
+
 
 # Alternative: Add download button right after analysis results
 def add_pdf_download_section(code_input, predicted_labels, confidence_scores, operations_info):
