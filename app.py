@@ -462,69 +462,81 @@ her2_positive = find_patients_with_biomarker(oncology_patients, "HER2", 2.0)"""
                         st.error("Inefficiencies Detected")
                         st.markdown('</div>', unsafe_allow_html=True)
                         
-                        if label in operations_info:
-                            info = operations_info[label]
-                            with st.expander(f"🔍 Detailed Analysis: {label.replace('_', ' ').title()}"):
-                                
-                                # Description with blue background
-                                st.markdown(f"""
-                                <div style="
-                                    background: linear-gradient(135deg, #eff6ff, #dbeafe);
-                                    border: 1px solid #bfdbfe;
-                                    border-radius: 12px;
-                                    padding: 1.25rem;
-                                    margin-bottom: 1rem;
-                                    border-left: 4px solid #3b82f6;
-                                ">
-                                    <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
-                                        <div style="font-size: 1.2rem;">📝</div>
-                                        <h4 style="margin: 0; color: #1e40af;">Description</h4>
+                        for label in predicted_labels:
+                            confidence = confidence_scores.get(label, 0) * 100
+                            with st.container():
+                                col_a, col_b = st.columns([3, 1])
+                                with col_a:
+                                    # Consistent label formatting with Tkinter app
+                                    st.write(f"**{label.replace('_', ' ').title()}**")
+                                with col_b:
+                                    st.write(f"`{confidence:.1f}%`")
+                            
+                            # Use operations_info from loaded metadata
+                            # In your analysis results section, replace the details display with:
+                            if label in operations_info:
+                                info = operations_info[label]
+                                with st.expander(f"🔍 Detailed Analysis: {label.replace('_', ' ').title()}"):
+                                    
+                                    # Description with blue background
+                                    st.markdown(f"""
+                                    <div style="
+                                        background: linear-gradient(135deg, #eff6ff, #dbeafe);
+                                        border: 1px solid #bfdbfe;
+                                        border-radius: 12px;
+                                        padding: 1.25rem;
+                                        margin-bottom: 1rem;
+                                        border-left: 4px solid #3b82f6;
+                                    ">
+                                        <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                                            <div style="font-size: 1.2rem;">📝</div>
+                                            <h4 style="margin: 0; color: #1e40af;">Description</h4>
+                                        </div>
+                                        <p style="margin: 0; color: #374151; line-height: 1.5;">
+                                            {info.get('description', 'N/A')}
+                                        </p>
                                     </div>
-                                    <p style="margin: 0; color: #374151; line-height: 1.5;">
-                                        {info.get('description', 'N/A')}
-                                    </p>
-                                </div>
-                                """, unsafe_allow_html=True)
-                                
-                                # Quantum Speedup with purple background
-                                st.markdown(f"""
-                                <div style="
-                                    background: linear-gradient(135deg, #faf5ff, #f3e8ff);
-                                    border: 1px solid #e9d5ff;
-                                    border-radius: 12px;
-                                    padding: 1.25rem;
-                                    margin-bottom: 1rem;
-                                    border-left: 4px solid #8b5cf6;
-                                ">
-                                    <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
-                                        <div style="font-size: 1.2rem;">⚛️</div>
-                                        <h4 style="margin: 0; color: #7c3aed;">Quantum Speedup</h4>
+                                    """, unsafe_allow_html=True)
+                                    
+                                    # Quantum Speedup with purple background
+                                    st.markdown(f"""
+                                    <div style="
+                                        background: linear-gradient(135deg, #faf5ff, #f3e8ff);
+                                        border: 1px solid #e9d5ff;
+                                        border-radius: 12px;
+                                        padding: 1.25rem;
+                                        margin-bottom: 1rem;
+                                        border-left: 4px solid #8b5cf6;
+                                    ">
+                                        <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                                            <div style="font-size: 1.2rem;">⚛️</div>
+                                            <h4 style="margin: 0; color: #7c3aed;">Quantum Speedup</h4>
+                                        </div>
+                                        <p style="margin: 0; color: #374151; line-height: 1.5;">
+                                            {info.get('quantum_speedup', 'N/A')}
+                                        </p>
                                     </div>
-                                    <p style="margin: 0; color: #374151; line-height: 1.5;">
-                                        {info.get('quantum_speedup', 'N/A')}
-                                    </p>
-                                </div>
-                                """, unsafe_allow_html=True)
-                                
-                                # Classical Efficiency with green background
-                                st.markdown(f"""
-                                <div style="
-                                    background: linear-gradient(135deg, #f0fdf4, #dcfce7);
-                                    border: 1px solid #bbf7d0;
-                                    border-radius: 12px;
-                                    padding: 1.25rem;
-                                    margin-bottom: 1rem;
-                                    border-left: 4px solid #22c55e;
-                                ">
-                                    <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
-                                        <div style="font-size: 1.2rem;">⚡</div>
-                                        <h4 style="margin: 0; color: #15803d;">Classical Efficiency</h4>
+                                    """, unsafe_allow_html=True)
+                                    
+                                    # Classical Efficiency with green background
+                                    st.markdown(f"""
+                                    <div style="
+                                        background: linear-gradient(135deg, #f0fdf4, #dcfce7);
+                                        border: 1px solid #bbf7d0;
+                                        border-radius: 12px;
+                                        padding: 1.25rem;
+                                        margin-bottom: 1rem;
+                                        border-left: 4px solid #22c55e;
+                                    ">
+                                        <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                                            <div style="font-size: 1.2rem;">⚡</div>
+                                            <h4 style="margin: 0; color: #15803d;">Classical Efficiency</h4>
+                                        </div>
+                                        <p style="margin: 0; color: #374151; line-height: 1.5;">
+                                            {info.get('classical_efficiency', 'N/A')}
+                                        </p>
                                     </div>
-                                    <p style="margin: 0; color: #374151; line-height: 1.5;">
-                                        {info.get('classical_efficiency', 'N/A')}
-                                    </p>
-                                </div>
-                                """, unsafe_allow_html=True)
+                                    """, unsafe_allow_html=True)
                                     
                                     # Optimization with orange background
                                     st.markdown(f"""
