@@ -242,11 +242,6 @@ def create_analysis_pdf(code_snippet, predicted_labels, confidence_scores, opera
     
     return pdf.output(dest='S').encode('latin1')
 
-def get_download_link(pdf_data, filename):
-    """Generate a download link for the PDF"""
-    b64 = base64.b64encode(pdf_data).decode()
-    return f'<a href="data:application/octet-stream;base64,{b64}" download="{filename}">📥 Download PDF Report</a>'
-
 
 
 # Alternative: Add download button right after analysis results
@@ -278,7 +273,16 @@ def add_pdf_download_section(code_input, predicted_labels, confidence_scores, op
                     )
                     
                     filename = f"Auburn_AI_Analysis_Report_{datetime.now().strftime('%Y%m%d_%H%M%S')}.pdf"
-                    download_link = get_download_link(pdf_data, filename)
+             
+                    st.success("✅ PDF report generated successfully!")
+                    st.download_button(
+                                label="📥 Click to Download PDF Report",
+                                data=pdf_data,
+                                file_name=filename,
+                                mime="application/pdf",
+                                use_container_width=True,
+                                type="primary"
+                            )
                     
                     st.markdown("""
                     <div style="
