@@ -209,9 +209,7 @@ def authenticate():
 
 # Check authentication before running app
 if authenticate():
-   
-    
-        # Top Navigation Bar
+       # Top Navigation Bar
     st.markdown("""
     <style>
     .nav-container {
@@ -241,7 +239,6 @@ if authenticate():
     }
     </style>
     """, unsafe_allow_html=True)
-    
     # Initialize session state for page
     if 'page' not in st.session_state:
         st.session_state.page = "Demo"
