@@ -675,7 +675,7 @@ her2_positive = find_patients_with_biomarker(oncology_patients, "HER2", 2.0)"""
             </div>
             """, unsafe_allow_html=True)
 
-    # DEMO PAGE
+    #    # DEMO PAGE
     else:
         st.text("Auburn AI detects inefficient code implementation and suggests classical and quantum improvements.")
 
@@ -769,196 +769,131 @@ her2_positive = find_patients_with_biomarker(oncology_patients, "HER2", 2.0)"""
                                     st.write(f"`{confidence:.1f}%`")
                             
                             # Use operations_info from loaded metadata
-                            # In your analysis results section, replace the details display with:
-                            if label in operations_info:
-                                info = operations_info[label]
-                                with st.expander(f"🔍 Detailed Analysis: {label.replace('_', ' ').title()}"):
-                                    
-                                    # Description with blue background
-                                    st.markdown(f"""
-                                    <div style="
-                                        background: linear-gradient(135deg, #eff6ff, #dbeafe);
-                                        border: 1px solid #bfdbfe;
-                                        border-radius: 12px;
-                                        padding: 1.25rem;
-                                        margin-bottom: 1rem;
-                                        border-left: 4px solid #3b82f6;
-                                    ">
-                                        <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
-                                            <div style="font-size: 1.2rem;">📝</div>
-                                            <h4 style="margin: 0; color: #1e40af;">Description</h4>
-                                        </div>
-                                        <p style="margin: 0; color: #374151; line-height: 1.5;">
-                                            {info.get('description', 'N/A')}
-                                        </p>
-                                    </div>
-                                    """, unsafe_allow_html=True)
-                                    
-                                    # Quantum Speedup with purple background
-                                    st.markdown(f"""
-                                    <div style="
-                                        background: linear-gradient(135deg, #faf5ff, #f3e8ff);
-                                        border: 1px solid #e9d5ff;
-                                        border-radius: 12px;
-                                        padding: 1.25rem;
-                                        margin-bottom: 1rem;
-                                        border-left: 4px solid #8b5cf6;
-                                    ">
-                                        <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
-                                            <div style="font-size: 1.2rem;">⚛️</div>
-                                            <h4 style="margin: 0; color: #7c3aed;">Quantum Speedup</h4>
-                                        </div>
-                                        <p style="margin: 0; color: #374151; line-height: 1.5;">
-                                            {info.get('quantum_speedup', 'N/A')}
-                                        </p>
-                                    </div>
-                                    """, unsafe_allow_html=True)
-                                    
-                                    # Classical Efficiency with green background
-                                    st.markdown(f"""
-                                    <div style="
-                                        background: linear-gradient(135deg, #f0fdf4, #dcfce7);
-                                        border: 1px solid #bbf7d0;
-                                        border-radius: 12px;
-                                        padding: 1.25rem;
-                                        margin-bottom: 1rem;
-                                        border-left: 4px solid #22c55e;
-                                    ">
-                                        <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
-                                            <div style="font-size: 1.2rem;">⚡</div>
-                                            <h4 style="margin: 0; color: #15803d;">Classical Efficiency</h4>
-                                        </div>
-                                        <p style="margin: 0; color: #374151; line-height: 1.5;">
-                                            {info.get('classical_efficiency', 'N/A')}
-                                        </p>
-                                    </div>
-                                    """, unsafe_allow_html=True)
-                                    
-                                    # Optimization with orange background
-                                    st.markdown(f"""
-                                    <div style="
-                                        background: linear-gradient(135deg, #fffbeb, #fef3c7);
-                                        border: 1px solid #fde68a;
-                                        border-radius: 12px;
-                                        padding: 1.25rem;
-                                        margin-bottom: 1rem;
-                                        border-left: 4px solid #f59e0b;
-                                    ">
-                                        <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
-                                            <div style="font-size: 1.2rem;">🎯</div>
-                                            <h4 style="margin: 0; color: #b45309;">Optimization</h4>
-                                        </div>
-                                        <p style="margin: 0; color: #374151; line-height: 1.5;">
-                                            {info.get('optimization_notes', 'N/A')}
-                                        </p>
-                                    </div>
-                                    """, unsafe_allow_html=True)
-                                    
-                                    # Impact Summary with teal background
-                                    st.markdown(f"""
-                                    <div style="
-                                        background: linear-gradient(135deg, #f0fdfa, #ccfbf1);
-                                        border: 1px solid #99f6e4;
-                                        border-radius: 12px;
-                                        padding: 1.25rem;
-                                        border-left: 4px solid #14b8a6;
-                                    ">
-                                        <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
-                                            <div style="font-size: 1.2rem;">💡</div>
-                                            <h4 style="margin: 0; color: #0f766e;">Impact Summary</h4>
-                                        </div>
-                                        <p style="margin: 0; color: #374151; line-height: 1.5;">
-                                            Implementing the recommended classical improvements can significantly reduce computational time. 
-                                            Depending on data size, time saved can range from <strong>seconds to hours or even days</strong>.
-                                        </p>
-                                    </div>
-                                    """, unsafe_allow_html=True)
+                           # In your analysis results section, replace the details display with:
+if label in operations_info:
+    info = operations_info[label]
+    with st.expander(f"🔍 Detailed Analysis: {label.replace('_', ' ').title()}"):
+        
+        # Description with blue background
+        st.markdown(f"""
+        <div style="
+            background: linear-gradient(135deg, #eff6ff, #dbeafe);
+            border: 1px solid #bfdbfe;
+            border-radius: 12px;
+            padding: 1.25rem;
+            margin-bottom: 1rem;
+            border-left: 4px solid #3b82f6;
+        ">
+            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                <div style="font-size: 1.2rem;">📝</div>
+                <h4 style="margin: 0; color: #1e40af;">Description</h4>
+            </div>
+            <p style="margin: 0; color: #374151; line-height: 1.5;">
+                {info.get('description', 'N/A')}
+            </p>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        # Quantum Speedup with purple background
+        st.markdown(f"""
+        <div style="
+            background: linear-gradient(135deg, #faf5ff, #f3e8ff);
+            border: 1px solid #e9d5ff;
+            border-radius: 12px;
+            padding: 1.25rem;
+            margin-bottom: 1rem;
+            border-left: 4px solid #8b5cf6;
+        ">
+            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                <div style="font-size: 1.2rem;">⚛️</div>
+                <h4 style="margin: 0; color: #7c3aed;">Quantum Speedup</h4>
+            </div>
+            <p style="margin: 0; color: #374151; line-height: 1.5;">
+                {info.get('quantum_speedup', 'N/A')}
+            </p>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        # Classical Efficiency with green background
+        st.markdown(f"""
+        <div style="
+            background: linear-gradient(135deg, #f0fdf4, #dcfce7);
+            border: 1px solid #bbf7d0;
+            border-radius: 12px;
+            padding: 1.25rem;
+            margin-bottom: 1rem;
+            border-left: 4px solid #22c55e;
+        ">
+            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                <div style="font-size: 1.2rem;">⚡</div>
+                <h4 style="margin: 0; color: #15803d;">Classical Efficiency</h4>
+            </div>
+            <p style="margin: 0; color: #374151; line-height: 1.5;">
+                {info.get('classical_efficiency', 'N/A')}
+            </p>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        # Optimization with orange background
+        st.markdown(f"""
+        <div style="
+            background: linear-gradient(135deg, #fffbeb, #fef3c7);
+            border: 1px solid #fde68a;
+            border-radius: 12px;
+            padding: 1.25rem;
+            margin-bottom: 1rem;
+            border-left: 4px solid #f59e0b;
+        ">
+            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                <div style="font-size: 1.2rem;">🎯</div>
+                <h4 style="margin: 0; color: #b45309;">Optimization</h4>
+            </div>
+            <p style="margin: 0; color: #374151; line-height: 1.5;">
+                {info.get('optimization_notes', 'N/A')}
+            </p>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        # Impact Summary with teal background
+        st.markdown(f"""
+        <div style="
+            background: linear-gradient(135deg, #f0fdfa, #ccfbf1);
+            border: 1px solid #99f6e4;
+            border-radius: 12px;
+            padding: 1.25rem;
+            border-left: 4px solid #14b8a6;
+        ">
+            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                <div style="font-size: 1.2rem;">💡</div>
+                <h4 style="margin: 0; color: #0f766e;">Impact Summary</h4>
+            </div>
+            <p style="margin: 0; color: #374151; line-height: 1.5;">
+                Implementing the recommended classical improvements can significantly reduce computational time. 
+                Depending on data size, time saved can range from <strong>seconds to hours or even days</strong>.
+            </p>
+        </div>
+        """, unsafe_allow_html=True)
                     else:
                         st.markdown('<div class="success-box">', unsafe_allow_html=True)
                         st.success("No inefficiencies detected!")
                         st.write("The code appears to use efficient implementations.")
                         st.markdown('</div>', unsafe_allow_html=True)
-
-                    # In your DEMO PAGE section where you show analysis results, after displaying the results:
-if analyze_clicked and code_input.strip():
-    with st.spinner("🔍 Analyzing code patterns..."):
-        try:
-            predicted_labels, confidence_scores = predict_operations(code_input)
-            
-            # Display results (your existing code)
-            st.subheader("Analysis Results")
-            
-            if predicted_labels:
-                st.markdown('<div class="danger-box">', unsafe_allow_html=True)
-                st.error("Inefficiencies Detected")
-                st.markdown('</div>', unsafe_allow_html=True)
-                
-                for label in predicted_labels:
-                    confidence = confidence_scores.get(label, 0) * 100
-                    with st.container():
-                        col_a, col_b = st.columns([3, 1])
-                        with col_a:
+                        
+                    # Detailed confidence scores
+                    with st.expander("Detailed Confidence Scores"):
+                        st.write("All detected patterns with confidence levels:")
+                        for label, confidence in sorted(confidence_scores.items(), key=lambda x: x[1], reverse=True):
+                            progress_value = confidence
                             st.write(f"**{label.replace('_', ' ').title()}**")
-                        with col_b:
-                            st.write(f"`{confidence:.1f}%`")
-                    
-                    if label in operations_info:
-                        info = operations_info[label]
-                        with st.expander(f"🔍 Detailed Analysis: {label.replace('_', ' ').title()}"):
-                            # Your colored analysis boxes here...
-                            pass
-            
-            # ==================== ADD PDF DOWNLOAD SECTION HERE ====================
-            st.markdown("---")
-            st.subheader("📊 Export Analysis Report")
-            
-            col1, col2 = st.columns([1, 2])
-            
-            with col1:
-                if st.button("📄 Generate PDF Report", use_container_width=True, type="primary"):
-                    with st.spinner("🔄 Creating professional report..."):
-                        try:
-                            pdf_data = create_analysis_pdf(
-                                code_input, 
-                                predicted_labels, 
-                                confidence_scores, 
-                                operations_info
-                            )
+                            st.progress(progress_value, text=f"{confidence:.1%} confidence")
                             
-                            # Create download link
-                            filename = f"Auburn_AI_Analysis_Report_{datetime.now().strftime('%Y%m%d_%H%M%S')}.pdf"
-                            download_link = get_download_link(pdf_data, filename)
-                            
-                            st.markdown(download_link, unsafe_allow_html=True)
-                            st.success("✅ Report generated successfully!")
-                            
-                        except Exception as e:
-                            st.error(f"❌ Failed to generate PDF: {str(e)}")
-            
-            with col2:
-                st.markdown("""
-                **📋 Professional Report Includes:**
-                - Executive summary
-                - Analyzed code snippet
-                - Detailed inefficiency analysis
-                - Confidence scores and metrics
-                - Optimization recommendations
-                - Quantum computing insights
-                - Actionable next steps
-                """)
-            
                 except Exception as e:
                     st.error(f"❌ Error analyzing code: {str(e)}")
-                    
-                # Detailed confidence scores
-                with st.expander("Detailed Confidence Scores"):
-                    st.write("All detected patterns with confidence levels:")
-                    for label, confidence in sorted(confidence_scores.items(), key=lambda x: x[1], reverse=True):
-                        progress_value = confidence
-                        st.write(f"**{label.replace('_', ' ').title()}**")
-                        st.progress(progress_value, text=f"{confidence:.1%} confidence")
-                        
-               
+                    st.info("""
+                    **Troubleshooting tips:**
+                    - Ensure the code is valid Python syntax
+                    - Try using one of the example codes above
+                    """)
         elif analyze_clicked and not code_input.strip():
             st.warning("⚠️ Please enter some code to analyze")
     
