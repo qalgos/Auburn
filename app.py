@@ -214,7 +214,7 @@ if authenticate():
         # Navigation Header
         st.markdown("""
         <div style="padding: 1rem 0; border-bottom: 1px solid #e2e8f0; margin-bottom: 1rem;">
-            <h2 style="margin: 0; color: #1e293b; font-size: 1.5rem;">🧬 Auburn AI</h2>
+            <h2 style="margin: 0; color: #1e293b; font-size: 1.5rem;">Auburn</h2>
             <p style="margin: 0.25rem 0 0 0; color: #64748b; font-size: 0.875rem;">Navigation</p>
         </div>
         """, unsafe_allow_html=True)
@@ -232,7 +232,57 @@ if authenticate():
         
         # Visual separator
         st.markdown("---")
+        # Top Navigation Bar
+    st.markdown("""
+    <style>
+    .nav-container {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        padding: 1rem 2rem;
+        border-radius: 12px;
+        margin-bottom: 2rem;
+    }
+    .nav-button {
+        background: rgba(255,255,255,0.2);
+        border: 2px solid rgba(255,255,255,0.3);
+        color: white;
+        padding: 0.75rem 1.5rem;
+        border-radius: 8px;
+        margin: 0 0.5rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-weight: 600;
+    }
+    .nav-button:hover {
+        background: rgba(255,255,255,0.3);
+        transform: translateY(-2px);
+    }
+    .nav-button.active {
+        background: rgba(255,255,255,0.4);
+        border-color: white;
+    }
+    </style>
+    """, unsafe_allow_html=True)
     
+    # Initialize session state for page
+    if 'page' not in st.session_state:
+        st.session_state.page = "Demo"
+    
+    # Navigation Bar
+    col1, col2, col3, col4 = st.columns([2, 1, 1, 1])
+    with col1:
+        st.markdown("<h1 style='color: white; margin: 0;'>🧬 Auburn AI</h1>", unsafe_allow_html=True)
+    
+    with col2:
+        if st.button("🏠 Demo", use_container_width=True, type="primary" if st.session_state.page == "Demo" else "secondary"):
+            st.session_state.page = "Demo"
+            st.rerun()
+    
+    with col3:
+        if st.button("ℹ️ About", use_container_width=True, type="primary" if st.session_state.page == "About" else "secondary"):
+            st.session_state.page = "About"
+            st.rerun()
+    
+    st.markdown("---")
     
     # Load resources with caching - FIXED VERSION
     @st.cache_resource
@@ -400,7 +450,7 @@ her2_positive = find_patients_with_biomarker(oncology_patients, "HER2", 2.0)"""
 
     #    # DEMO PAGE
     else:
-        st.text("Auburn AI detects inefficient code implementation and suggests classical and quantum improvements.")
+        st.text("Auburn detects inefficient code implementation and suggests classical and quantum improvements.")
 
     
             
