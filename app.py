@@ -69,13 +69,13 @@ def authenticate():
                 with st.form("auth_form"):
                     password = st.text_input(
                         "Enter access password:", 
-                        type="AuburntoYC",
+                        type="password",
                         help="Contact administrator if you've forgotten the password"
                     )
                     submit = st.form_submit_button("Login", use_container_width=True)
                     
                     if submit:
-                        if password == "password":
+                        if password == "AuburntoYC":
                             st.session_state.authenticated = True
                             st.rerun()
                         else:
