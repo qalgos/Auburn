@@ -604,34 +604,34 @@ her2_positive = find_patients_with_biomarker(oncology_patients, "HER2", 2.0)"""
 
                       # ==================== PDF BUTTON - PUT THIS RIGHT HERE ====================
                   
-            if st.button("📄 Generate PDF Report", use_container_width=True, type="primary"):
-                st.markdown("""
-                <div style="
-                    background: white;
-                    border: 2px solid #f59e0b;
-                    border-radius: 12px;
-                    padding: 2rem;
-                    text-align: center;
-                    margin: 1rem 0;
-                ">
-                    <div style="font-size: 3rem; margin-bottom: 1rem;">🚧</div>
-                    <h3 style="color: #b45309; margin-bottom: 1rem;">We're Working On It!</h3>
-                    <p style="color: #78350f; margin-bottom: 0;">
-                        The PDF report feature is coming soon. Our team is working hard to bring you 
-                        professional, downloadable analysis reports with detailed insights and recommendations.
-                    </p>
-                </div>
-                """, unsafe_allow_html=True)
+        if st.button("📄 Generate PDF Report", use_container_width=True, type="primary"):
+            st.markdown("""
+            <div style="
+                background: white;
+                border: 2px solid #f59e0b;
+                border-radius: 12px;
+                padding: 2rem;
+                text-align: center;
+                margin: 1rem 0;
+            ">
+                <div style="font-size: 3rem; margin-bottom: 1rem;">🚧</div>
+                <h3 style="color: #b45309; margin-bottom: 1rem;">We're Working On It!</h3>
+                <p style="color: #78350f; margin-bottom: 0;">
+                    The PDF report feature is coming soon. Our team is working hard to bring you 
+                    professional, downloadable analysis reports with detailed insights and recommendations.
+                </p>
+            </div>
+            """, unsafe_allow_html=True)
 
-                # Show estimated timeline (optional)
-                st.markdown("""
-                <div style="text-align: center; color: #64748b; font-size: 0.9rem;">
-                    <em>Expected launch: Q4 2025</em>
-                </div>
-                """, unsafe_allow_html=True)
-            
-            elif analyze_clicked and not code_input.strip():
-                st.warning("⚠️ Please enter some code to analyze")
+            # Show estimated timeline (optional)
+            st.markdown("""
+            <div style="text-align: center; color: #64748b; font-size: 0.9rem;">
+                <em>Expected launch: Q4 2025</em>
+            </div>
+            """, unsafe_allow_html=True)
+        
+        elif analyze_clicked and not code_input.strip():
+            st.warning("⚠️ Please enter some code to analyze")
     
     # Footer
     st.markdown("---")
