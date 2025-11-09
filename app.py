@@ -209,24 +209,29 @@ def authenticate():
 
 # Check authentication before running app
 if authenticate():
-    st.sidebar.title("Navigation")
-    page = st.sidebar.radio("Go to", ["Demo", "About"], index=0)
-    st.sidebar.markdown("---")
-    
-    # Optional: Add quick stats or status
-    st.markdown("""
-    <div style="background: #f8fafc; padding: 1rem; border-radius: 8px; border: 1px solid #e2e8f0;">
-        <p style="margin: 0 0 0.5rem 0; color: #475569; font-size: 0.875rem; font-weight: 600;">App Status</p>
-        <div style="display: flex; align-items: center; margin-bottom: 0.25rem;">
-            <div style="width: 8px; height: 8px; background: #10b981; border-radius: 50%; margin-right: 0.5rem;"></div>
-            <span style="color: #64748b; font-size: 0.75rem;">System Online</span>
+    # Clean Permanent Navigation
+    with st.sidebar:
+        # Navigation Header
+        st.markdown("""
+        <div style="padding: 1rem 0; border-bottom: 1px solid #e2e8f0; margin-bottom: 1rem;">
+            <h2 style="margin: 0; color: #1e293b; font-size: 1.5rem;">🧬 Auburn AI</h2>
+            <p style="margin: 0.25rem 0 0 0; color: #64748b; font-size: 0.875rem;">Navigation</p>
         </div>
-        <div style="display: flex; align-items: center;">
-            <div style="width: 8px; height: 8px; background: #3b82f6; border-radius: 50%; margin-right: 0.5rem;"></div>
-            <span style="color: #64748b; font-size: 0.75rem;">v0.1 Ready</span>
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
+        """, unsafe_allow_html=True)
+        
+        # Navigation Options
+        st.markdown("<div style='margin-bottom: 1rem;'>", unsafe_allow_html=True)
+        page = st.radio(
+            "Go to",
+            ["Demo", "About"],
+            index=0,
+            key="nav_radio",
+            label_visibility="collapsed"
+        )
+        st.markdown("</div>", unsafe_allow_html=True)
+        
+        # Visual separator
+        st.markdown("---")
     
     
     # Load resources with caching - FIXED VERSION
