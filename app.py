@@ -819,6 +819,22 @@ her2_positive = find_patients_with_biomarker(oncology_patients, "HER2", 2.0)"""
                         st.success("No inefficiencies detected!")
                         st.write("The code appears to use efficient implementations.")
                         st.markdown('</div>', unsafe_allow_html=True)
+                        
+                    # Detailed confidence scores
+                    with st.expander("Detailed Confidence Scores"):
+                        st.write("All detected patterns with confidence levels:")
+                        for label, confidence in sorted(confidence_scores.items(), key=lambda x: x[1], reverse=True):
+                            progress_value = confidence
+                            st.write(f"**{label.replace('_', ' ').title()}**")
+                            st.progress(progress_value, text=f"{confidence:.1%} confidence")
+                            
+                except Exception as e:
+                    st.error(f"❌ Error analyzing code: {str(e)}")
+                    st.info("""
+                    **Troubleshooting tips:**
+                    - Ensure the code is valid Python syntax
+                    - Try using one of the example codes above
+                    """)
 
                       # ==================== PDF BUTTON - PUT THIS RIGHT HERE ====================
                   
@@ -840,22 +856,6 @@ her2_positive = find_patients_with_biomarker(oncology_patients, "HER2", 2.0)"""
                 
                             except Exception as e:
                                 st.error(f"❌ Failed to generate PDF: {str(e)}")
-                        
-                    # Detailed confidence scores
-                    with st.expander("Detailed Confidence Scores"):
-                        st.write("All detected patterns with confidence levels:")
-                        for label, confidence in sorted(confidence_scores.items(), key=lambda x: x[1], reverse=True):
-                            progress_value = confidence
-                            st.write(f"**{label.replace('_', ' ').title()}**")
-                            st.progress(progress_value, text=f"{confidence:.1%} confidence")
-                            
-                except Exception as e:
-                    st.error(f"❌ Error analyzing code: {str(e)}")
-                    st.info("""
-                    **Troubleshooting tips:**
-                    - Ensure the code is valid Python syntax
-                    - Try using one of the example codes above
-                    """)
         elif analyze_clicked and not code_input.strip():
             st.warning("⚠️ Please enter some code to analyze")
     
