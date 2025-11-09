@@ -751,33 +751,7 @@ her2_positive = find_patients_with_biomarker(oncology_patients, "HER2", 2.0)"""
                     
                     # PDF Report Button
                     st.markdown("---")
-                    if st.button("📄 Generate PDF Report", use_container_width=True, type="primary"):
-                        with st.spinner("🔄 Generating professional report..."):
-                            try:
-                                pdf_data = create_analysis_pdf(
-                                    code_input, 
-                                    predicted_labels, 
-                                    confidence_scores, 
-                                    operations_info
-                                )
-                
-                                filename = f"Auburn_AI_Report_{datetime.now().strftime('%Y%m%d_%H%M%S')}.pdf"
-                                
-                                # Use Streamlit's native download button
-                                st.success("✅ PDF report generated successfully!")
-                                st.download_button(
-                                    label="📥 Click to Download PDF Report",
-                                    data=pdf_data,
-                                    file_name=filename,
-                                    mime="application/pdf",
-                                    use_container_width=True,
-                                    type="primary"
-                                )
-                                
-                            except Exception as e:
-                                st.error(f"❌ Failed to generate PDF: {str(e)}")
-                                import traceback
-                                st.code(traceback.format_exc())  # Show detailed error
+                    
                             
                 except Exception as e:
                     st.error(f"❌ Error analyzing code: {str(e)}")
