@@ -52,126 +52,126 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-  st.markdown("""
-                        <style>
-                            .stApp {
-                                background-color: #FFFFFF;
-                            }
-                            .main-header {
-                                font-size: 3rem;
-                                color: #000000;
-                                text-align: center;
-                                margin-bottom: 2rem;
-                                font-weight: 700;
-                            }
-                            h1, h2, h3, h4, h5, h6 {
-                                color: #000000 !important;
-                            }
-                            .stMarkdown, .stText, p, div, span {
-                                color: #000000 !important;
-                            }
-                            .feature-card {
-                                background: #FFFFFF;
-                                padding: 1.5rem;
-                                border-radius: 10px;
-                                box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-                                border: 1px solid #F0F0F0;
-                                margin-bottom: 1rem;
-                            }
-                            .success-box {
-                                background: #FFFFFF;
-                                padding: 1rem;
-                                border-radius: 10px;
-                                border-left: 3px solid #90EE90;
-                                border: 1px solid #F0F0F0;
-                            }
-                            .warning-box {
-                                background: #FFFFFF;
-                                padding: 1rem;
-                                border-radius: 10px;
-                                border-left: 3px solid #FFD700;
-                                border: 1px solid #F0F0F0;
-                            }
-                            .danger-box {
-                                background: #FFFFFF;
-                                padding: 1rem;
-                                border-radius: 10px;
-                                border-left: 3px solid #FFB6C1;
-                                border: 1px solid #F0F0F0;
-                            }
-                            .example-card {
-                                background: #FFFFFF;
-                                border: 1px solid #F0F0F0;
-                                border-radius: 8px;
-                                padding: 1rem;
-                                margin: 0.5rem 0;
-                                transition: all 0.3s ease;
-                            }
-                            .example-card:hover {
-                                background: #FAFAFA;
-                                transform: translateY(-1px);
-                                border-color: #E8E8E8;
-                            }
-                            .css-1d391kg {
-                                background-color: #FFFFFF;
-                            }
-                            .stButton button {
-                                background-color: #F8F8FF;
-                                color: #000000;
-                                border: 1px solid #E8E8E8;
-                                border-radius: 6px;
-                                padding: 0.5rem 1rem;
-                                transition: all 0.3s ease;
-                            }
-                            .stButton button:hover {
-                                background-color: #F0F0F0;
-                                color: #000000;
-                                border-color: #D0D0D0;
-                            }
-                            .stButton button[kind="primary"] {
-                                background-color: #F0E6FF;
-                                color: #000000;
-                                border: 1px solid #E0D6FF;
-                            }
-                            .stButton button[kind="primary"]:hover {
-                                background-color: #E8DCFF;
-                                color: #000000;
-                            }
-                            .stTextArea textarea, .stTextInput input {
-                                background-color: #FFFFFF;
-                                border: 1px solid #E0E0E0;
-                                border-radius: 6px;
-                                color: #000000;
-                            }
-                            .stTextArea textarea:focus, .stTextInput input:focus {
-                                border-color: #C0C0C0;
-                                box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1);
-                            }
-                            .streamlit-expanderHeader {
-                                background-color: #FFFFFF;
-                                border: 1px solid #F0F0F0;
-                                border-radius: 6px;
-                                color: #000000;
-                            }
-                            .stProgress > div > div > div {
-                                background-color: #E0D6FF;
-                            }
-                            .auth-container {
-                                
-                                padding: 2rem;
-                                border-radius: 15px;
-                                color: #000000;
-                                border: 1px solid #E8E8E8;
-                            }
-                            .stRadio > div {
-                                background-color: #FFFFFF;
-                            }
-                            .stCodeBlock {
-                                background-color: #FAFAFA;
-                                border: 1px solid #F0F0F0;
-                            }
-                        </style>
-                        """, unsafe_allow_html=True)
+st.markdown("""
+<style>
+.stApp {
+    background-color: #FFFFFF;
+}
+.main-header {
+    font-size: 3rem;
+    color: #000000;
+    text-align: center;
+    margin-bottom: 2rem;
+    font-weight: 700;
+}
+h1, h2, h3, h4, h5, h6 {
+    color: #000000 !important;
+}
+.stMarkdown, .stText, p, div, span {
+    color: #000000 !important;
+}
+.feature-card {
+    background: #FFFFFF;
+    padding: 1.5rem;
+    border-radius: 10px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    border: 1px solid #F0F0F0;
+    margin-bottom: 1rem;
+}
+.success-box {
+    background: #FFFFFF;
+    padding: 1rem;
+    border-radius: 10px;
+    border-left: 3px solid #90EE90;
+    border: 1px solid #F0F0F0;
+}
+.warning-box {
+    background: #FFFFFF;
+    padding: 1rem;
+    border-radius: 10px;
+    border-left: 3px solid #FFD700;
+    border: 1px solid #F0F0F0;
+}
+.danger-box {
+    background: #FFFFFF;
+    padding: 1rem;
+    border-radius: 10px;
+    border-left: 3px solid #FFB6C1;
+    border: 1px solid #F0F0F0;
+}
+.example-card {
+    background: #FFFFFF;
+    border: 1px solid #F0F0F0;
+    border-radius: 8px;
+    padding: 1rem;
+    margin: 0.5rem 0;
+    transition: all 0.3s ease;
+}
+.example-card:hover {
+    background: #FAFAFA;
+    transform: translateY(-1px);
+    border-color: #E8E8E8;
+}
+.css-1d391kg {
+    background-color: #FFFFFF;
+}
+.stButton button {
+    background-color: #F8F8FF;
+    color: #000000;
+    border: 1px solid #E8E8E8;
+    border-radius: 6px;
+    padding: 0.5rem 1rem;
+    transition: all 0.3s ease;
+}
+.stButton button:hover {
+    background-color: #F0F0F0;
+    color: #000000;
+    border-color: #D0D0D0;
+}
+.stButton button[kind="primary"] {
+    background-color: #F0E6FF;
+    color: #000000;
+    border: 1px solid #E0D6FF;
+}
+.stButton button[kind="primary"]:hover {
+    background-color: #E8DCFF;
+    color: #000000;
+}
+.stTextArea textarea, .stTextInput input {
+    background-color: #FFFFFF;
+    border: 1px solid #E0E0E0;
+    border-radius: 6px;
+    color: #000000;
+}
+.stTextArea textarea:focus, .stTextInput input:focus {
+    border-color: #C0C0C0;
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1);
+}
+.streamlit-expanderHeader {
+    background-color: #FFFFFF;
+    border: 1px solid #F0F0F0;
+    border-radius: 6px;
+    color: #000000;
+}
+.stProgress > div > div > div {
+    background-color: #E0D6FF;
+}
+.auth-container {
+    
+    padding: 2rem;
+    border-radius: 15px;
+    color: #000000;
+    border: 1px solid #E8E8E8;
+}
+.stRadio > div {
+    background-color: #FFFFFF;
+}
+.stCodeBlock {
+    background-color: #FAFAFA;
+    border: 1px solid #F0F0F0;
+}
+</style>
+""", unsafe_allow_html=True)
 def authenticate():
     """Enhanced authentication with better UI"""
     if 'authenticated' not in st.session_state:
