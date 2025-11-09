@@ -52,6 +52,126 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
+  st.markdown("""
+                        <style>
+                            .stApp {
+                                background-color: #FFFFFF;
+                            }
+                            .main-header {
+                                font-size: 3rem;
+                                color: #000000;
+                                text-align: center;
+                                margin-bottom: 2rem;
+                                font-weight: 700;
+                            }
+                            h1, h2, h3, h4, h5, h6 {
+                                color: #000000 !important;
+                            }
+                            .stMarkdown, .stText, p, div, span {
+                                color: #000000 !important;
+                            }
+                            .feature-card {
+                                background: #FFFFFF;
+                                padding: 1.5rem;
+                                border-radius: 10px;
+                                box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+                                border: 1px solid #F0F0F0;
+                                margin-bottom: 1rem;
+                            }
+                            .success-box {
+                                background: #FFFFFF;
+                                padding: 1rem;
+                                border-radius: 10px;
+                                border-left: 3px solid #90EE90;
+                                border: 1px solid #F0F0F0;
+                            }
+                            .warning-box {
+                                background: #FFFFFF;
+                                padding: 1rem;
+                                border-radius: 10px;
+                                border-left: 3px solid #FFD700;
+                                border: 1px solid #F0F0F0;
+                            }
+                            .danger-box {
+                                background: #FFFFFF;
+                                padding: 1rem;
+                                border-radius: 10px;
+                                border-left: 3px solid #FFB6C1;
+                                border: 1px solid #F0F0F0;
+                            }
+                            .example-card {
+                                background: #FFFFFF;
+                                border: 1px solid #F0F0F0;
+                                border-radius: 8px;
+                                padding: 1rem;
+                                margin: 0.5rem 0;
+                                transition: all 0.3s ease;
+                            }
+                            .example-card:hover {
+                                background: #FAFAFA;
+                                transform: translateY(-1px);
+                                border-color: #E8E8E8;
+                            }
+                            .css-1d391kg {
+                                background-color: #FFFFFF;
+                            }
+                            .stButton button {
+                                background-color: #F8F8FF;
+                                color: #000000;
+                                border: 1px solid #E8E8E8;
+                                border-radius: 6px;
+                                padding: 0.5rem 1rem;
+                                transition: all 0.3s ease;
+                            }
+                            .stButton button:hover {
+                                background-color: #F0F0F0;
+                                color: #000000;
+                                border-color: #D0D0D0;
+                            }
+                            .stButton button[kind="primary"] {
+                                background-color: #F0E6FF;
+                                color: #000000;
+                                border: 1px solid #E0D6FF;
+                            }
+                            .stButton button[kind="primary"]:hover {
+                                background-color: #E8DCFF;
+                                color: #000000;
+                            }
+                            .stTextArea textarea, .stTextInput input {
+                                background-color: #FFFFFF;
+                                border: 1px solid #E0E0E0;
+                                border-radius: 6px;
+                                color: #000000;
+                            }
+                            .stTextArea textarea:focus, .stTextInput input:focus {
+                                border-color: #C0C0C0;
+                                box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1);
+                            }
+                            .streamlit-expanderHeader {
+                                background-color: #FFFFFF;
+                                border: 1px solid #F0F0F0;
+                                border-radius: 6px;
+                                color: #000000;
+                            }
+                            .stProgress > div > div > div {
+                                background-color: #E0D6FF;
+                            }
+                            .auth-container {
+                                
+                                padding: 2rem;
+                                border-radius: 15px;
+                                color: #000000;
+                                border: 1px solid #E8E8E8;
+                            }
+                            .stRadio > div {
+                                background-color: #FFFFFF;
+                            }
+                            .stCodeBlock {
+                                background-color: #FAFAFA;
+                                border: 1px solid #F0F0F0;
+                            }
+                        </style>
+                        """, unsafe_allow_html=True)
 def authenticate():
     """Enhanced authentication with better UI"""
     if 'authenticated' not in st.session_state:
@@ -85,361 +205,7 @@ def authenticate():
             st.stop()
     
     return True
-def create_analysis_pdf(code_snippet, predicted_labels, confidence_scores, operations_info):
-    """Generate a professional PDF report"""
-    
-    pdf = FPDF()
-    pdf.add_page()
-    
-    # Set up fonts
-    pdf.set_font("Arial", size=12)
-    
-    # Header with gradient-like effect (using colors)
-  
-    pdf.cell(0, 15, "Auburn AI - Code Analysis Report", ln=True, align='C', fill=True)
-    pdf.ln(5)
-    
-    # Report metadata
 
-    pdf.set_font("Arial", 'B', 10)
-    pdf.cell(0, 8, f"Generated on: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}", ln=True)
-    pdf.cell(0, 8, f"Analysis ID: {hash(code_snippet) % 10000:04d}", ln=True)
-    pdf.ln(5)
-    
-    # Executive Summary
-    pdf.set_font("Arial", 'B', 14)
-   
-    pdf.cell(0, 10, "Executive Summary", ln=True)
-    pdf.set_font("Arial", size=10)
-    
-    
-    # FIX: Check if predicted_labels exists and is not empty
-    if predicted_labels and len(predicted_labels) > 0:
-        summary_text = f"Analysis detected {len(predicted_labels)} potential inefficiencies in your code."
-        pdf.multi_cell(0, 6, summary_text)
-    else:
-        pdf.multi_cell(0, 6, "No significant inefficiencies detected. Code appears well-optimized.")
-    pdf.ln(5)
-    
-    # Code Snippet Section
-    pdf.set_font("Arial", 'B', 12)
-
-    pdf.cell(0, 8, "Analyzed Code", ln=True)
-    pdf.set_font("Arial", size=9)
-
-    
-    # Code with background
-  
-    pdf.cell(0, 6, "", ln=True, fill=True)
-    
-    # Split code into lines and add to PDF
-    code_lines = code_snippet.split('\n')
-    for line in code_lines[:20]:  # Limit to first 20 lines
-        pdf.cell(0, 4, line, ln=True)
-    
-    if len(code_lines) > 20:
-        pdf.cell(0, 4, "... (code truncated for report)", ln=True)
-    
-    pdf.cell(0, 6, "", ln=True, fill=True)
-    pdf.ln(5)
-    
-    # Detected Issues Section - FIX: Added proper check for predicted_labels
-    if predicted_labels and len(predicted_labels) > 0:
-        pdf.set_font("Arial", 'B', 14)
-
-        pdf.cell(0, 10, "Detected Inefficiencies", ln=True)
-        
-        for i, label in enumerate(predicted_labels, 1):
-            confidence = confidence_scores.get(label, 0) * 100
-            
-            # Issue header
-            pdf.set_font("Arial", 'B', 11)
-         
-            pdf.cell(0, 8, f"{i}. {label.replace('_', ' ').title()}", ln=True)
-            
-            # Confidence level
-            pdf.set_font("Arial", 'I', 9)
-     
-            pdf.cell(0, 6, f"Confidence: {confidence:.1f}%", ln=True)
-            
-            # Detailed analysis for each operation - FIX: Added check for operations_info
-            if operations_info and label in operations_info:
-                info = operations_info[label]
-                
-                # Description
-                pdf.set_font("Arial", 'B', 9)
-             
-                pdf.cell(0, 6, "Description:", ln=True)
-                pdf.set_font("Arial", size=9)
-          
-                pdf.multi_cell(0, 5, info.get('description', 'N/A'))
-                
-                # Quantum Speedup
-                pdf.set_font("Arial", 'B', 9)
-        
-                pdf.cell(0, 6, "Quantum Speedup:", ln=True)
-                pdf.set_font("Arial", size=9)
-       
-                pdf.multi_cell(0, 5, info.get('quantum_speedup', 'N/A'))
-                
-                # Classical Efficiency
-                pdf.set_font("Arial", 'B', 9)
-           
-                pdf.cell(0, 6, "Classical Efficiency:", ln=True)
-                pdf.set_font("Arial", size=9)
-                
-                pdf.multi_cell(0, 5, info.get('classical_efficiency', 'N/A'))
-                
-                # Optimization
-                pdf.set_font("Arial", 'B', 9)
-              
-                pdf.cell(0, 6, "Optimization Recommendations:", ln=True)
-                pdf.set_font("Arial", size=9)
-             
-                pdf.multi_cell(0, 5, info.get('optimization_notes', 'N/A'))
-            else:
-                # If no operations info available, show generic message
-                pdf.set_font("Arial", 'I', 9)
-  
-                pdf.multi_cell(0, 5, "No detailed analysis available for this pattern.")
-            
-            pdf.ln(3)
-    
-    else:
-        pdf.set_font("Arial", 'B', 12)
-     
-        pdf.cell(0, 10, "✓ No Inefficiencies Detected", ln=True)
-        pdf.set_font("Arial", size=10)
-       
-        pdf.multi_cell(0, 6, "Your code appears to be well-optimized. No significant performance issues were found.")
-    
-    # Recommendations Section
-    pdf.ln(5)
-    pdf.set_font("Arial", 'B', 14)
-  
-    pdf.cell(0, 10, "Overall Recommendations", ln=True)
-    pdf.set_font("Arial", size=10)
-
-    
-    recommendations = [
-        "Implement suggested classical optimizations for immediate performance gains",
-        "Consider quantum-ready algorithms for future scalability",
-        "Regularly profile and optimize computational hotspots",
-        "Use appropriate data structures for your specific use case"
-    ]
-    
-    for rec in recommendations:
-        pdf.cell(5)  # Indent
-        pdf.cell(0, 6, f"• {rec}", ln=True)
-    
-    # Footer
-    pdf.ln(10)
-    pdf.set_font("Arial", 'I', 8)
-
-    pdf.cell(0, 5, "Generated by Auburn AI - Advanced Code Optimization for Pharmaceutical Research", ln=True, align='C')
-    pdf.cell(0, 5, "Confidential Report - For authorized use only", ln=True, align='C')
-    
-    return pdf.output(dest='S').encode('latin1')
-
-
-
-# Alternative: Add download button right after analysis results
-def add_pdf_download_section(code_input, predicted_labels, confidence_scores, operations_info):
-    """Add PDF download section to your analysis results"""
-    
-    st.markdown("---")
-    
-    # PDF Generation Section
-    st.markdown("""
-    <div class="content-card">
-        <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
-            <div style="font-size: 1.5rem;"></div>
-            <h3 style="margin: 0; color: #1e293b;">Export Analysis Report</h3>
-        </div>
-    """, unsafe_allow_html=True)
-    
-    col1, col2 = st.columns([1, 1])
-    
-    with col1:
-        if st.button(" Generate Comprehensive PDF Report", use_container_width=True, type="primary"):
-            with st.spinner(" Creating professional report..."):
-                try:
-                    pdf_data = create_analysis_pdf(
-                        code_input, 
-                        predicted_labels, 
-                        confidence_scores, 
-                        operations_info
-                    )
-                    
-                    filename = f"Auburn_AI_Analysis_Report_{datetime.now().strftime('%Y%m%d_%H%M%S')}.pdf"
-             
-                    st.success(" PDF report generated successfully!")
-                    st.download_button(
-                                label=" Click to Download PDF Report",
-                                data=pdf_data,
-                                file_name=filename,
-                                mime="application/pdf",
-                                use_container_width=True,
-                                type="primary"
-                            )
-                    
-                    st.markdown("""
-                    <div style="
-                        background: #f0fdf4;
-                        border: 1px solid #bbf7d0;
-                        border-radius: 8px;
-                        padding: 1rem;
-                        margin-top: 1rem;
-                    ">
-                        <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
-                           
-                            <strong>Report Generated Successfully!</strong>
-                        </div>
-                    </div>
-                    """, unsafe_allow_html=True)
-                    
-                    st.markdown(download_link, unsafe_allow_html=True)
-                    
-                except Exception as e:
-                    st.error(f" Failed to generate PDF: {str(e)}")
-    
-    with col2:
-        st.markdown("""
-        **Report Features:**
-        - Professional formatting
-        - Detailed analysis breakdown  
-        - Confidence metrics
-        - Optimization strategies
-        - Quantum computing potential
-        - Executive summary
-        - Code snippets
-        """)
-    
-    st.markdown("</div>", unsafe_allow_html=True)
-
-# Usage in your main analysis function:
-# After displaying analysis results, call:
-# add_pdf_download_section(code_input, predicted_labels, confidence_scores, operations_info)
-st.markdown("""
-<style>
-    .stApp {
-        background-color: #FFFFFF;
-    }
-    .main-header {
-        font-size: 3rem;
-        color: #000000;
-        text-align: center;
-        margin-bottom: 2rem;
-        font-weight: 700;
-    }
-    h1, h2, h3, h4, h5, h6 {
-        color: #000000 !important;
-    }
-    .stMarkdown, .stText, p, div, span {
-        color: #000000 !important;
-    }
-    .feature-card {
-        background: #FFFFFF;
-        padding: 1.5rem;
-        border-radius: 10px;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-        border: 1px solid #F0F0F0;
-        margin-bottom: 1rem;
-    }
-    .success-box {
-        background: #FFFFFF;
-        padding: 1rem;
-        border-radius: 10px;
-        border-left: 3px solid #90EE90;
-        border: 1px solid #F0F0F0;
-    }
-    .warning-box {
-        background: #FFFFFF;
-        padding: 1rem;
-        border-radius: 10px;
-        border-left: 3px solid #FFD700;
-        border: 1px solid #F0F0F0;
-    }
-    .danger-box {
-        background: #FFFFFF;
-        padding: 1rem;
-        border-radius: 10px;
-        border-left: 3px solid #FFB6C1;
-        border: 1px solid #F0F0F0;
-    }
-    .example-card {
-        background: #FFFFFF;
-        border: 1px solid #F0F0F0;
-        border-radius: 8px;
-        padding: 1rem;
-        margin: 0.5rem 0;
-        transition: all 0.3s ease;
-    }
-    .example-card:hover {
-        background: #FAFAFA;
-        transform: translateY(-1px);
-        border-color: #E8E8E8;
-    }
-    .css-1d391kg {
-        background-color: #FFFFFF;
-    }
-    .stButton button {
-        background-color: #F8F8FF;
-        color: #000000;
-        border: 1px solid #E8E8E8;
-        border-radius: 6px;
-        padding: 0.5rem 1rem;
-        transition: all 0.3s ease;
-    }
-    .stButton button:hover {
-        background-color: #F0F0F0;
-        color: #000000;
-        border-color: #D0D0D0;
-    }
-    .stButton button[kind="primary"] {
-        background-color: #F0E6FF;
-        color: #000000;
-        border: 1px solid #E0D6FF;
-    }
-    .stButton button[kind="primary"]:hover {
-        background-color: #E8DCFF;
-        color: #000000;
-    }
-    .stTextArea textarea, .stTextInput input {
-        background-color: #FFFFFF;
-        border: 1px solid #E0E0E0;
-        border-radius: 6px;
-        color: #000000;
-    }
-    .stTextArea textarea:focus, .stTextInput input:focus {
-        border-color: #C0C0C0;
-        box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1);
-    }
-    .streamlit-expanderHeader {
-        background-color: #FFFFFF;
-        border: 1px solid #F0F0F0;
-        border-radius: 6px;
-        color: #000000;
-    }
-    .stProgress > div > div > div {
-        background-color: #E0D6FF;
-    }
-    .auth-container {
-        
-        padding: 2rem;
-        border-radius: 15px;
-        color: #000000;
-        border: 1px solid #E8E8E8;
-    }
-    .stRadio > div {
-        background-color: #FFFFFF;
-    }
-    .stCodeBlock {
-        background-color: #FAFAFA;
-        border: 1px solid #F0F0F0;
-    }
-</style>
-""", unsafe_allow_html=True)
 
 # Check authentication before running app
 if authenticate():
@@ -839,6 +605,242 @@ her2_positive = find_patients_with_biomarker(oncology_patients, "HER2", 2.0)"""
                       # ==================== PDF BUTTON - PUT THIS RIGHT HERE ====================
                   
                 if st.button("📄 Generate PDF Report", use_container_width=True, type="primary"):
+                    def create_analysis_pdf(code_snippet, predicted_labels, confidence_scores, operations_info):
+                        """Generate a professional PDF report"""
+                        
+                        pdf = FPDF()
+                        pdf.add_page()
+                        
+                        # Set up fonts
+                        pdf.set_font("Arial", size=12)
+                        
+                        # Header with gradient-like effect (using colors)
+                      
+                        pdf.cell(0, 15, "Auburn AI - Code Analysis Report", ln=True, align='C', fill=True)
+                        pdf.ln(5)
+                        
+                        # Report metadata
+                    
+                        pdf.set_font("Arial", 'B', 10)
+                        pdf.cell(0, 8, f"Generated on: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}", ln=True)
+                        pdf.cell(0, 8, f"Analysis ID: {hash(code_snippet) % 10000:04d}", ln=True)
+                        pdf.ln(5)
+                        
+                        # Executive Summary
+                        pdf.set_font("Arial", 'B', 14)
+                       
+                        pdf.cell(0, 10, "Executive Summary", ln=True)
+                        pdf.set_font("Arial", size=10)
+                        
+                        
+                        # FIX: Check if predicted_labels exists and is not empty
+                        if predicted_labels and len(predicted_labels) > 0:
+                            summary_text = f"Analysis detected {len(predicted_labels)} potential inefficiencies in your code."
+                            pdf.multi_cell(0, 6, summary_text)
+                        else:
+                            pdf.multi_cell(0, 6, "No significant inefficiencies detected. Code appears well-optimized.")
+                        pdf.ln(5)
+                        
+                        # Code Snippet Section
+                        pdf.set_font("Arial", 'B', 12)
+                    
+                        pdf.cell(0, 8, "Analyzed Code", ln=True)
+                        pdf.set_font("Arial", size=9)
+                    
+                        
+                        # Code with background
+                      
+                        pdf.cell(0, 6, "", ln=True, fill=True)
+                        
+                        # Split code into lines and add to PDF
+                        code_lines = code_snippet.split('\n')
+                        for line in code_lines[:20]:  # Limit to first 20 lines
+                            pdf.cell(0, 4, line, ln=True)
+                        
+                        if len(code_lines) > 20:
+                            pdf.cell(0, 4, "... (code truncated for report)", ln=True)
+                        
+                        pdf.cell(0, 6, "", ln=True, fill=True)
+                        pdf.ln(5)
+                        
+                        # Detected Issues Section - FIX: Added proper check for predicted_labels
+                        if predicted_labels and len(predicted_labels) > 0:
+                            pdf.set_font("Arial", 'B', 14)
+                    
+                            pdf.cell(0, 10, "Detected Inefficiencies", ln=True)
+                            
+                            for i, label in enumerate(predicted_labels, 1):
+                                confidence = confidence_scores.get(label, 0) * 100
+                                
+                                # Issue header
+                                pdf.set_font("Arial", 'B', 11)
+                             
+                                pdf.cell(0, 8, f"{i}. {label.replace('_', ' ').title()}", ln=True)
+                                
+                                # Confidence level
+                                pdf.set_font("Arial", 'I', 9)
+                         
+                                pdf.cell(0, 6, f"Confidence: {confidence:.1f}%", ln=True)
+                                
+                                # Detailed analysis for each operation - FIX: Added check for operations_info
+                                if operations_info and label in operations_info:
+                                    info = operations_info[label]
+                                    
+                                    # Description
+                                    pdf.set_font("Arial", 'B', 9)
+                                 
+                                    pdf.cell(0, 6, "Description:", ln=True)
+                                    pdf.set_font("Arial", size=9)
+                              
+                                    pdf.multi_cell(0, 5, info.get('description', 'N/A'))
+                                    
+                                    # Quantum Speedup
+                                    pdf.set_font("Arial", 'B', 9)
+                            
+                                    pdf.cell(0, 6, "Quantum Speedup:", ln=True)
+                                    pdf.set_font("Arial", size=9)
+                           
+                                    pdf.multi_cell(0, 5, info.get('quantum_speedup', 'N/A'))
+                                    
+                                    # Classical Efficiency
+                                    pdf.set_font("Arial", 'B', 9)
+                               
+                                    pdf.cell(0, 6, "Classical Efficiency:", ln=True)
+                                    pdf.set_font("Arial", size=9)
+                                    
+                                    pdf.multi_cell(0, 5, info.get('classical_efficiency', 'N/A'))
+                                    
+                                    # Optimization
+                                    pdf.set_font("Arial", 'B', 9)
+                                  
+                                    pdf.cell(0, 6, "Optimization Recommendations:", ln=True)
+                                    pdf.set_font("Arial", size=9)
+                                 
+                                    pdf.multi_cell(0, 5, info.get('optimization_notes', 'N/A'))
+                                else:
+                                    # If no operations info available, show generic message
+                                    pdf.set_font("Arial", 'I', 9)
+                      
+                                    pdf.multi_cell(0, 5, "No detailed analysis available for this pattern.")
+                                
+                                pdf.ln(3)
+                        
+                        else:
+                            pdf.set_font("Arial", 'B', 12)
+                         
+                            pdf.cell(0, 10, "✓ No Inefficiencies Detected", ln=True)
+                            pdf.set_font("Arial", size=10)
+                           
+                            pdf.multi_cell(0, 6, "Your code appears to be well-optimized. No significant performance issues were found.")
+                        
+                        # Recommendations Section
+                        pdf.ln(5)
+                        pdf.set_font("Arial", 'B', 14)
+                      
+                        pdf.cell(0, 10, "Overall Recommendations", ln=True)
+                        pdf.set_font("Arial", size=10)
+                    
+                        
+                        recommendations = [
+                            "Implement suggested classical optimizations for immediate performance gains",
+                            "Consider quantum-ready algorithms for future scalability",
+                            "Regularly profile and optimize computational hotspots",
+                            "Use appropriate data structures for your specific use case"
+                        ]
+                        
+                        for rec in recommendations:
+                            pdf.cell(5)  # Indent
+                            pdf.cell(0, 6, f"• {rec}", ln=True)
+                        
+                        # Footer
+                        pdf.ln(10)
+                        pdf.set_font("Arial", 'I', 8)
+                    
+                        pdf.cell(0, 5, "Generated by Auburn AI - Advanced Code Optimization for Pharmaceutical Research", ln=True, align='C')
+                        pdf.cell(0, 5, "Confidential Report - For authorized use only", ln=True, align='C')
+                        
+                        return pdf.output(dest='S').encode('latin1')
+
+
+
+                    # Alternative: Add download button right after analysis results
+                    def add_pdf_download_section(code_input, predicted_labels, confidence_scores, operations_info):
+                        """Add PDF download section to your analysis results"""
+                        
+                        st.markdown("---")
+                        
+                        # PDF Generation Section
+                        st.markdown("""
+                        <div class="content-card">
+                            <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+                                <div style="font-size: 1.5rem;"></div>
+                                <h3 style="margin: 0; color: #1e293b;">Export Analysis Report</h3>
+                            </div>
+                        """, unsafe_allow_html=True)
+                        
+                        col1, col2 = st.columns([1, 1])
+                        
+                        with col1:
+                            if st.button(" Generate Comprehensive PDF Report", use_container_width=True, type="primary"):
+                                with st.spinner(" Creating professional report..."):
+                                    try:
+                                        pdf_data = create_analysis_pdf(
+                                            code_input, 
+                                            predicted_labels, 
+                                            confidence_scores, 
+                                            operations_info
+                                        )
+                                        
+                                        filename = f"Auburn_AI_Analysis_Report_{datetime.now().strftime('%Y%m%d_%H%M%S')}.pdf"
+                                 
+                                        st.success(" PDF report generated successfully!")
+                                        st.download_button(
+                                                    label=" Click to Download PDF Report",
+                                                    data=pdf_data,
+                                                    file_name=filename,
+                                                    mime="application/pdf",
+                                                    use_container_width=True,
+                                                    type="primary"
+                                                )
+                                        
+                                        st.markdown("""
+                                        <div style="
+                                            background: #f0fdf4;
+                                            border: 1px solid #bbf7d0;
+                                            border-radius: 8px;
+                                            padding: 1rem;
+                                            margin-top: 1rem;
+                                        ">
+                                            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                                               
+                                                <strong>Report Generated Successfully!</strong>
+                                            </div>
+                                        </div>
+                                        """, unsafe_allow_html=True)
+                                        
+                                        st.markdown(download_link, unsafe_allow_html=True)
+                                        
+                                    except Exception as e:
+                                        st.error(f" Failed to generate PDF: {str(e)}")
+                        
+                        with col2:
+                            st.markdown("""
+                            **Report Features:**
+                            - Professional formatting
+                            - Detailed analysis breakdown  
+                            - Confidence metrics
+                            - Optimization strategies
+                            - Quantum computing potential
+                            - Executive summary
+                            - Code snippets
+                            """)
+                        
+                        st.markdown("</div>", unsafe_allow_html=True)
+
+                        # Usage in your main analysis function:
+                        # After displaying analysis results, call:
+                        # add_pdf_download_section(code_input, predicted_labels, confidence_scores, operations_info)
+                      
                     with st.spinner("🔄 Generating professional report..."):
                         try:
                             pdf_data = create_analysis_pdf(
