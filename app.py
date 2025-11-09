@@ -9,7 +9,165 @@ from PIL import Image
 import base64
 from fpdf import FPDF
 from datetime import datetime
-# Load your logo
+
+
+
+def create_analysis_pdf(code_snippet, predicted_labels, confidence_scores, operations_info):
+    """Generate a professional PDF report"""
+    
+    pdf = FPDF()
+    pdf.add_page()
+    
+    # Set up fonts
+    pdf.set_font("Arial", size=12)
+    
+    # Header with gradient-like effect (using colors)
+    pdf.set_fill_color(59, 130, 246)  # Blue
+    pdf.set_text_color(255, 255, 255)
+    pdf.cell(0, 15, "Auburn AI - Code Analysis Report", ln=True, align='C', fill=True)
+    pdf.ln(5)
+    
+    # Report metadata
+    pdf.set_text_color(0, 0, 0)
+    pdf.set_font("Arial", 'B', 10)
+    pdf.cell(0, 8, f"Generated on: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}", ln=True)
+    pdf.cell(0, 8, f"Analysis ID: {hash(code_snippet) % 10000:04d}", ln=True)
+    pdf.ln(5)
+    
+    # Executive Summary
+    pdf.set_font("Arial", 'B', 14)
+    pdf.set_text_color(59, 130, 246)
+    pdf.cell(0, 10, "Executive Summary", ln=True)
+    pdf.set_font("Arial", size=10)
+    pdf.set_text_color(0, 0, 0)
+    
+    # FIX: Check if predicted_labels exists and is not empty
+    if predicted_labels and len(predicted_labels) > 0:
+        summary_text = f"Analysis detected {len(predicted_labels)} potential inefficiencies in your code."
+        pdf.multi_cell(0, 6, summary_text)
+    else:
+        pdf.multi_cell(0, 6, "No significant inefficiencies detected. Code appears well-optimized.")
+    pdf.ln(5)
+    
+    # Code Snippet Section
+    pdf.set_font("Arial", 'B', 12)
+    pdf.set_text_color(59, 130, 246)
+    pdf.cell(0, 8, "Analyzed Code", ln=True)
+    pdf.set_font("Arial", size=9)
+    pdf.set_text_color(100, 100, 100)
+    
+    # Code with background
+    pdf.set_fill_color(248, 250, 252)
+    pdf.cell(0, 6, "", ln=True, fill=True)
+    
+    # Split code into lines and add to PDF
+    code_lines = code_snippet.split('\n')
+    for line in code_lines[:20]:  # Limit to first 20 lines
+        pdf.cell(0, 4, line, ln=True)
+    
+    if len(code_lines) > 20:
+        pdf.cell(0, 4, "... (code truncated for report)", ln=True)
+    
+    pdf.cell(0, 6, "", ln=True, fill=True)
+    pdf.ln(5)
+    
+    # Detected Issues Section - FIX: Added proper check for predicted_labels
+    if predicted_labels and len(predicted_labels) > 0:
+        pdf.set_font("Arial", 'B', 14)
+        pdf.set_text_color(239, 68, 68)  # Red for issues
+        pdf.cell(0, 10, "Detected Inefficiencies", ln=True)
+        
+        for i, label in enumerate(predicted_labels, 1):
+            confidence = confidence_scores.get(label, 0) * 100
+            
+            # Issue header
+            pdf.set_font("Arial", 'B', 11)
+            pdf.set_text_color(0, 0, 0)
+            pdf.cell(0, 8, f"{i}. {label.replace('_', ' ').title()}", ln=True)
+            
+            # Confidence level
+            pdf.set_font("Arial", 'I', 9)
+            pdf.set_text_color(100, 100, 100)
+            pdf.cell(0, 6, f"Confidence: {confidence:.1f}%", ln=True)
+            
+            # Detailed analysis for each operation - FIX: Added check for operations_info
+            if operations_info and label in operations_info:
+                info = operations_info[label]
+                
+                # Description
+                pdf.set_font("Arial", 'B', 9)
+                pdf.set_text_color(30, 64, 175)  # Dark blue
+                pdf.cell(0, 6, "Description:", ln=True)
+                pdf.set_font("Arial", size=9)
+                pdf.set_text_color(0, 0, 0)
+                pdf.multi_cell(0, 5, info.get('description', 'N/A'))
+                
+                # Quantum Speedup
+                pdf.set_font("Arial", 'B', 9)
+                pdf.set_text_color(124, 58, 237)  # Purple
+                pdf.cell(0, 6, "Quantum Speedup:", ln=True)
+                pdf.set_font("Arial", size=9)
+                pdf.set_text_color(0, 0, 0)
+                pdf.multi_cell(0, 5, info.get('quantum_speedup', 'N/A'))
+                
+                # Classical Efficiency
+                pdf.set_font("Arial", 'B', 9)
+                pdf.set_text_color(21, 128, 61)  # Green
+                pdf.cell(0, 6, "Classical Efficiency:", ln=True)
+                pdf.set_font("Arial", size=9)
+                pdf.set_text_color(0, 0, 0)
+                pdf.multi_cell(0, 5, info.get('classical_efficiency', 'N/A'))
+                
+                # Optimization
+                pdf.set_font("Arial", 'B', 9)
+                pdf.set_text_color(180, 83, 9)  # Orange
+                pdf.cell(0, 6, "Optimization Recommendations:", ln=True)
+                pdf.set_font("Arial", size=9)
+                pdf.set_text_color(0, 0, 0)
+                pdf.multi_cell(0, 5, info.get('optimization_notes', 'N/A'))
+            else:
+                # If no operations info available, show generic message
+                pdf.set_font("Arial", 'I', 9)
+                pdf.set_text_color(100, 100, 100)
+                pdf.multi_cell(0, 5, "No detailed analysis available for this pattern.")
+            
+            pdf.ln(3)
+    
+    else:
+        pdf.set_font("Arial", 'B', 12)
+        pdf.set_text_color(34, 197, 94)  # Green for success
+        pdf.cell(0, 10, "✓ No Inefficiencies Detected", ln=True)
+        pdf.set_font("Arial", size=10)
+        pdf.set_text_color(0, 0, 0)
+        pdf.multi_cell(0, 6, "Your code appears to be well-optimized. No significant performance issues were found.")
+    
+    # Recommendations Section
+    pdf.ln(5)
+    pdf.set_font("Arial", 'B', 14)
+    pdf.set_text_color(59, 130, 246)
+    pdf.cell(0, 10, "Overall Recommendations", ln=True)
+    pdf.set_font("Arial", size=10)
+    pdf.set_text_color(0, 0, 0)
+    
+    recommendations = [
+        "Implement suggested classical optimizations for immediate performance gains",
+        "Consider quantum-ready algorithms for future scalability",
+        "Regularly profile and optimize computational hotspots",
+        "Use appropriate data structures for your specific use case"
+    ]
+    
+    for rec in recommendations:
+        pdf.cell(5)  # Indent
+        pdf.cell(0, 6, f"• {rec}", ln=True)
+    
+    # Footer
+    pdf.ln(10)
+    pdf.set_font("Arial", 'I', 8)
+    pdf.set_text_color(100, 100, 100)
+    pdf.cell(0, 5, "Generated by Auburn AI - Advanced Code Optimization for Pharmaceutical Research", ln=True, align='C')
+    pdf.cell(0, 5, "Confidential Report - For authorized use only", ln=True, align='C')
+    
+    return pdf.output(dest='S').encode('latin1')
 logo = Image.open("image0.jpeg")
 
 def get_base64_of_image(image_path):
@@ -213,12 +371,12 @@ if authenticate():
     col1, col2 = st.columns(2)
     
     with col1:
-        if st.button("🚀 **DEMO**", use_container_width=True, type="primary" if st.session_state.get('page', 'Demo') == "Demo" else "secondary"):
+        if st.button("**Demo**", use_container_width=True, type="primary" if st.session_state.get('page', 'Demo') == "Demo" else "secondary"):
             st.session_state.page = "Demo"
             st.rerun()
     
     with col2:
-        if st.button("📚 **ABOUT**", use_container_width=True, type="primary" if st.session_state.get('page', 'Demo') == "About" else "secondary"):
+        if st.button("**About**", use_container_width=True, type="primary" if st.session_state.get('page', 'Demo') == "About" else "secondary"):
             st.session_state.page = "About"
             st.rerun()
     
@@ -274,21 +432,21 @@ if authenticate():
 
     # Example codes database
     EXAMPLE_CODES = {
-        "🧬 Drug Compound Sorting (bubble sort)": """# Sort drug compounds by IC50 value
+        " Drug Compound Sorting (bubble sort)": """# Sort drug compounds by IC50 value
 compounds = load_compound_library()
 for i in range(len(compounds)):
     for j in range(len(compounds)-1):
         if compounds[j].ic50 > compounds[j+1].ic50:
             compounds[j], compounds[j+1] = compounds[j+1], compounds[j]""",
 
-        "🧬 Patient Record Search (linear search)": """# Find patient records by ID
+        " Patient Record Search (linear search)": """# Find patient records by ID
 def find_patient_by_id(patients, target_id):
     for patient in patients:
         if patient.id == target_id:
             return patient
     return None""",
 
-        "🧬 Inefficient Matrix Multiplication": """#matrix multiplication
+        " Inefficient Matrix Multiplication": """#matrix multiplication
 def manual_matrix_multiply(A, B):
     rows_A, cols_A = len(A), len(A[0])
     rows_B, cols_B = len(B), len(B[0])
@@ -299,7 +457,7 @@ def manual_matrix_multiply(A, B):
                 result[i][j] += A[i][k] * B[k][j]
     return result""",
 
-        "🧬 Estimate pharmacokinetic parameters (Matrix multiplication)": """
+        " Estimate pharmacokinetic parameters (Matrix multiplication)": """
 def estimate_pk_parameters(dose_matrix, transfer_matrix):
     num_patients = len(dose_matrix)
     num_compartments = len(transfer_matrix[0])
@@ -319,7 +477,7 @@ patient_doses = load_dosing_regimens()
 compartment_transfer = load_pk_parameters()
 tissue_concentrations = estimate_pk_parameters(patient_doses, compartment_transfer)""",
 
-        "🧬 Molecular Weight Sorting": """# Selection sort for compounds
+        " Molecular Weight Sorting": """# Selection sort for compounds
 def sort_compounds_by_weight(compounds):
     for i in range(len(compounds)):
         min_idx = i
@@ -329,7 +487,7 @@ def sort_compounds_by_weight(compounds):
         compounds[i], compounds[min_idx] = compounds[min_idx], compounds[i]
     return compounds""", 
 
-        "🧬 Search for Patient Biomarkers (Linear)": """
+        " Search for Patient Biomarkers (Linear)": """
 def find_patients_with_biomarker(patients, target_biomarker, threshold):
     matching_patients = []
     for patient in patients:
@@ -580,6 +738,50 @@ her2_positive = find_patients_with_biomarker(oncology_patients, "HER2", 2.0)"""
                         st.success("No inefficiencies detected!")
                         st.write("The code appears to use efficient implementations.")
                         st.markdown('</div>', unsafe_allow_html=True)
+
+                    st.subheader("📊 Export Report")
+            
+                    col1, col2 = st.columns([1, 2])
+                    
+                    with col1:
+                        if st.button("📄 Generate PDF Report", use_container_width=True, type="primary"):
+                            with st.spinner("🔄 Generating professional report..."):
+                                try:
+                                    pdf_data = create_analysis_pdf(
+                                        code_input, 
+                                        predicted_labels, 
+                                        confidence_scores, 
+                                        operations_info
+                                    )
+                    
+                                    filename = f"Auburn_AI_Report_{datetime.now().strftime('%Y%m%d_%H%M%S')}.pdf"
+                                    
+                                    # Use Streamlit's native download button
+                                    st.success("✅ PDF report generated successfully!")
+                                    st.download_button(
+                                        label="📥 Click to Download PDF Report",
+                                        data=pdf_data,
+                                        file_name=filename,
+                                        mime="application/pdf",
+                                        use_container_width=True,
+                                        type="primary"
+                                    )
+                                    
+                                except Exception as e:
+                                    st.error(f"❌ Failed to generate PDF: {str(e)}")
+                                    import traceback
+                                    st.code(traceback.format_exc())  # Show detailed error
+                    
+                    with col2:
+                        st.info("""
+                        **📋 Professional Report Includes:**
+                        - Executive summary
+                        - Analyzed code snippet
+                        - Detailed inefficiency analysis
+                        - Confidence scores and metrics
+                        - Optimization recommendations
+                        - Quantum computing insights
+                        """)
                         
                     # Detailed confidence scores
                     with st.expander("Detailed Confidence Scores"):
@@ -591,7 +793,7 @@ her2_positive = find_patients_with_biomarker(oncology_patients, "HER2", 2.0)"""
                     
                     # PDF Report Button
                     st.markdown("---")
-                    if st.button("📄 Generate PDF Report", use_container_width=True, type="primary"):
+                    if st.button("Generate PDF Report", use_container_width=True, type="primary"):
                         st.markdown("""
                         <div style="
                             background: white;
