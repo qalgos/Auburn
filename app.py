@@ -739,11 +739,18 @@ her2_positive = find_patients_with_biomarker(oncology_patients, "HER2", 2.0)"""
                         st.write("The code appears to use efficient implementations.")
                         st.markdown('</div>', unsafe_allow_html=True)
 
-                st.subheader("📊 Export Report")
-        
-                col1, col2 = st.columns([1, 2])
                 
-                with col1:
+             
+                    # Detailed confidence scores
+                    with st.expander("Detailed Confidence Scores"):
+                        st.write("All detected patterns with confidence levels:")
+                        for label, confidence in sorted(confidence_scores.items(), key=lambda x: x[1], reverse=True):
+                            progress_value = confidence
+                            st.write(f"**{label.replace('_', ' ').title()}**")
+                            st.progress(progress_value, text=f"{confidence:.1%} confidence")
+                    
+                    # PDF Report Button
+                    st.markdown("---")
                     if st.button("📄 Generate PDF Report", use_container_width=True, type="primary"):
                         with st.spinner("🔄 Generating professional report..."):
                             try:
@@ -771,46 +778,6 @@ her2_positive = find_patients_with_biomarker(oncology_patients, "HER2", 2.0)"""
                                 st.error(f"❌ Failed to generate PDF: {str(e)}")
                                 import traceback
                                 st.code(traceback.format_exc())  # Show detailed error
-                
-                with col2:
-                    st.info("""
-                    **📋 Professional Report Includes:**
-                    - Executive summary
-                    - Analyzed code snippet
-                    - Detailed inefficiency analysis
-                    - Confidence scores and metrics
-                    - Optimization recommendations
-                    - Quantum computing insights
-                    """)
-                    
-                    # Detailed confidence scores
-                    with st.expander("Detailed Confidence Scores"):
-                        st.write("All detected patterns with confidence levels:")
-                        for label, confidence in sorted(confidence_scores.items(), key=lambda x: x[1], reverse=True):
-                            progress_value = confidence
-                            st.write(f"**{label.replace('_', ' ').title()}**")
-                            st.progress(progress_value, text=f"{confidence:.1%} confidence")
-                    
-                    # PDF Report Button
-                    st.markdown("---")
-                    if st.button("Generate PDF Report", use_container_width=True, type="primary"):
-                        st.markdown("""
-                        <div style="
-                            background: white;
-                            border: 2px solid #f59e0b;
-                            border-radius: 12px;
-                            padding: 2rem;
-                            text-align: center;
-                            margin: 1rem 0;
-                        ">
-                            <div style="font-size: 3rem; margin-bottom: 1rem;">🚧</div>
-                            <h3 style="color: #b45309; margin-bottom: 1rem;">We're Working On It!</h3>
-                            <p style="color: #78350f; margin-bottom: 0;">
-                                The PDF report feature is coming soon. Our team is working hard to bring you 
-                                professional, downloadable analysis reports with detailed insights and recommendations.
-                            </p>
-                        </div>
-                        """, unsafe_allow_html=True)
                             
                 except Exception as e:
                     st.error(f"❌ Error analyzing code: {str(e)}")
