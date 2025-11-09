@@ -209,30 +209,11 @@ def authenticate():
 
 # Check authentication before running app
 if authenticate():
-    # Navigation
-   # Enhanced Permanent Navigation
-with st.sidebar:
-    # Navigation Header
-    st.markdown("""
-    <div style="padding: 1rem 0; border-bottom: 1px solid #e2e8f0; margin-bottom: 1rem;">
-        <h2 style="margin: 0; color: #1e293b; font-size: 1.5rem;">🧬 Auburn AI</h2>
-        <p style="margin: 0.25rem 0 0 0; color: #64748b; font-size: 0.875rem;">Navigation</p>
-    </div>
-    """, unsafe_allow_html=True)
-    
-    # Navigation Options with better styling
-    st.markdown("<div style='margin-bottom: 1rem;'>", unsafe_allow_html=True)
-    page = st.radio(
-        "Go to",
-        ["Demo", "About"],
-        index=0,
-        key="nav_radio",
-        label_visibility="collapsed"  # Hide the default label
-    )
-    st.markdown("</div>", unsafe_allow_html=True)
-    
-    # Visual separator
-    st.markdown("---")
+    # Simple Permanent Navigation
+    with st.sidebar:
+        st.title("🧬 Navigation")
+        page = st.radio("Select Page", ["Demo", "About"], index=0)
+        st.markdown("---")
     
     # Optional: Add quick stats or status
     st.markdown("""
