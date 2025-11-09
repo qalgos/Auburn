@@ -878,6 +878,47 @@ her2_positive = find_patients_with_biomarker(oncology_patients, "HER2", 2.0)"""
                         st.success("No inefficiencies detected!")
                         st.write("The code appears to use efficient implementations.")
                         st.markdown('</div>', unsafe_allow_html=True)
+
+                                st.markdown("---")
+            st.subheader("📊 Export Analysis Report")
+            
+            col1, col2 = st.columns([1, 2])
+            
+            with col1:
+                if st.button("📄 Generate PDF Report", use_container_width=True, type="primary"):
+                    with st.spinner("🔄 Creating professional report..."):
+                        try:
+                            pdf_data = create_analysis_pdf(
+                                code_input, 
+                                predicted_labels, 
+                                confidence_scores, 
+                                operations_info
+                            )
+                            
+                            # Create download link
+                            filename = f"Auburn_AI_Analysis_Report_{datetime.now().strftime('%Y%m%d_%H%M%S')}.pdf"
+                            download_link = get_download_link(pdf_data, filename)
+                            
+                            st.markdown(download_link, unsafe_allow_html=True)
+                            st.success("✅ Report generated successfully!")
+                            
+                        except Exception as e:
+                            st.error(f"❌ Failed to generate PDF: {str(e)}")
+            
+            with col2:
+                st.markdown("""
+                **📋 Professional Report Includes:**
+                - Executive summary
+                - Analyzed code snippet
+                - Detailed inefficiency analysis
+                - Confidence scores and metrics
+                - Optimization recommendations
+                - Quantum computing insights
+                - Actionable next steps
+                """)
+            
+        except Exception as e:
+            st.error(f"❌ Error analyzing code: {str(e)}")
                         
                     # Detailed confidence scores
                     with st.expander("Detailed Confidence Scores"):
