@@ -689,27 +689,7 @@ her2_positive = find_patients_with_biomarker(oncology_patients, "HER2", 2.0)"""
                     # Display results
                     st.subheader("Analysis Results")
 
-                    # ==================== PDF BUTTON - PUT THIS RIGHT HERE ====================
-                    col1, col2, col3 = st.columns([1, 2, 1])
-                    with col2:
-                        if st.button("📄 Generate PDF Report", use_container_width=True, type="primary"):
-                            with st.spinner("🔄 Generating professional report..."):
-                                try:
-                                    pdf_data = create_analysis_pdf(
-                                        code_input, 
-                                        predicted_labels, 
-                                        confidence_scores, 
-                                        operations_info
-                                    )
-                    
-                                    filename = f"Auburn_AI_Report_{datetime.now().strftime('%Y%m%d_%H%M%S')}.pdf"
-                                    download_link = get_download_link(pdf_data, filename)
-                                    
-                                    st.markdown(download_link, unsafe_allow_html=True)
-                                    st.success("✅ PDF report generated! Click the download link above.")
-                    
-                                except Exception as e:
-                                    st.error(f"❌ Failed to generate PDF: {str(e)}")
+                  
                     
                     if predicted_labels:
                         st.markdown('<div class="danger-box">', unsafe_allow_html=True)
@@ -836,6 +816,28 @@ her2_positive = find_patients_with_biomarker(oncology_patients, "HER2", 2.0)"""
                         st.success("No inefficiencies detected!")
                         st.write("The code appears to use efficient implementations.")
                         st.markdown('</div>', unsafe_allow_html=True)
+
+                      # ==================== PDF BUTTON - PUT THIS RIGHT HERE ====================
+                    col1, col2, col3 = st.columns([1, 2, 1])
+                    with col2:
+                        if st.button("📄 Generate PDF Report", use_container_width=True, type="primary"):
+                            with st.spinner("🔄 Generating professional report..."):
+                                try:
+                                    pdf_data = create_analysis_pdf(
+                                        code_input, 
+                                        predicted_labels, 
+                                        confidence_scores, 
+                                        operations_info
+                                    )
+                    
+                                    filename = f"Auburn_AI_Report_{datetime.now().strftime('%Y%m%d_%H%M%S')}.pdf"
+                                    download_link = get_download_link(pdf_data, filename)
+                                    
+                                    st.markdown(download_link, unsafe_allow_html=True)
+                                    st.success("✅ PDF report generated! Click the download link above.")
+                    
+                                except Exception as e:
+                                    st.error(f"❌ Failed to generate PDF: {str(e)}")
                         
                     # Detailed confidence scores
                     with st.expander("Detailed Confidence Scores"):
