@@ -766,14 +766,14 @@ her2_positive = find_patients_with_biomarker(oncology_patients, "HER2", 2.0)"""
                                         operations_info
                                     )
                     
-                    filename = f"Auburn_AI_Report_{datetime.now().strftime('%Y%m%d_%H%M%S')}.pdf"
-                    download_link = get_download_link(pdf_data, filename)
+                                    filename = f"Auburn_AI_Report_{datetime.now().strftime('%Y%m%d_%H%M%S')}.pdf"
+                                    download_link = get_download_link(pdf_data, filename)
+                                    
+                                    st.markdown(download_link, unsafe_allow_html=True)
+                                    st.success("✅ PDF report generated! Click the download link above.")
                     
-                    st.markdown(download_link, unsafe_allow_html=True)
-                    st.success("✅ PDF report generated! Click the download link above.")
-                    
-                        except Exception as e:
-                            st.error(f"❌ Failed to generate PDF: {str(e)}")
+                                except Exception as e:
+                                    st.error(f"❌ Failed to generate PDF: {str(e)}")
                     
                     if predicted_labels:
                         st.markdown('<div class="danger-box">', unsafe_allow_html=True)
