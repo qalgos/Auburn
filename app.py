@@ -461,8 +461,8 @@ her2_positive = find_patients_with_biomarker(oncology_patients, "HER2", 2.0)"""
                   
                     
                     if predicted_labels:
-                        st.markdown('<div class="danger-box">', unsafe_allow_html=True)
-                        st.error("Inefficiencies Detected")
+                        
+                        st.write("Inefficiencies Detected")
                         st.markdown('</div>', unsafe_allow_html=True)
                         
                         for label in predicted_labels:
