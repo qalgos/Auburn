@@ -10,6 +10,298 @@ import base64
 from fpdf import FPDF
 from datetime import datetime
 
+def create_analysis_pdf(code_snippet, predicted_labels, confidence_scores, operations_info):
+    """Generate a professional PDF report"""
+    
+    pdf = FPDF()
+    pdf.add_page()
+    
+    # Set up fonts
+    pdf.set_font("Arial", size=12)
+    
+    # Header with gradient-like effect (using colors)
+    pdf.set_fill_color(59, 130, 246)  # Blue
+    pdf.set_text_color(255, 255, 255)
+    pdf.cell(0, 15, "Auburn AI - Code Analysis Report", ln=True, align='C', fill=True)
+    pdf.ln(5)
+    
+    # Report metadata
+    pdf.set_text_color(0, 0, 0)
+    pdf.set_font("Arial", 'B', 10)
+    pdf.cell(0, 8, f"Generated on: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}", ln=True)
+    pdf.cell(0, 8, f"Analysis ID: {hash(code_snippet) % 10000:04d}", ln=True)
+    pdf.ln(5)
+    
+    # Executive Summary
+    pdf.set_font("Arial", 'B', 14)
+    pdf.set_text_color(59, 130, 246)
+    pdf.cell(0, 10, "Executive Summary", ln=True)
+    pdf.set_font("Arial", size=10)
+    pdf.set_text_color(0, 0, 0)
+    
+    if predicted_labels:
+        summary_text = f"Analysis detected {len(predicted_labels)} potential inefficiencies in your code."
+        pdf.multi_cell(0, 6, summary_text)
+    else:
+        pdf.multi_cell(0, 6, "No significant inefficiencies detected. Code appears well-optimized.")
+    pdf.ln(5)
+    
+    # Code Snippet Section
+    pdf.set_font("Arial", 'B', 12)
+    pdf.set_text_color(59, 130, 246)
+    pdf.cell(0, 8, "Analyzed Code", ln=True)
+    pdf.set_font("Arial", size=9)
+    pdf.set_text_color(100, 100, 100)
+    
+    # Code with background
+    pdf.set_fill_color(248, 250, 252)
+    pdf.cell(0, 6, "", ln=True, fill=True)
+    
+    # Split code into lines and add to PDF
+    code_lines = code_snippet.split('\n')
+    for line in code_lines[:20]:  # Limit to first 20 lines
+        pdf.cell(0, 4, line, ln=True)
+    
+    if len(code_lines) > 20:
+        pdf.cell(0, 4, "... (code truncated for report)", ln=True)
+    
+    pdf.cell(0, 6, "", ln=True, fill=True)
+    pdf.ln(5)
+    
+    # Detected Issues Section
+    if predicted_labels:
+        pdf.set_font("Arial", 'B', 14)
+        pdf.set_text_color(239, 68, 68)  # Red for issues
+        pdf.cell(0, 10, "Detected Inefficiencies", ln=True)
+        
+        for i, label in enumerate(predicted_labels, 1):
+            confidence = confidence_scores.get(label, 0) * 100
+            
+            # Issue header
+            pdf.set_font("Arial", 'B', 11)
+            pdf.set_text_color(0, 0, 0)
+            pdf.cell(0, 8, f"{i}. {label.replace('_', ' ').title()}", ln=True)
+            
+            # Confidence level
+            pdf.set_font("Arial", 'I', 9)
+            pdf.set_text_color(100, 100, 100)
+            pdf.cell(0, 6, f"Confidence: {confidence:.1f}%", ln=True)
+            
+            # Detailed analysis for each operation
+            if label in operations_info:
+                info = operations_info[label]
+                
+                # Description
+                pdf.set_font("Arial", 'B', 9)
+                pdf.set_text_color(30, 64, 175)  # Dark blue
+                pdf.cell(0, 6, "Description:", ln=True)
+                pdf.set_font("Arial", size=9)
+                pdf.set_text_color(0, 0, 0)
+                pdf.multi_cell(0, 5, info.get('description', 'N/A'))
+                
+                # Quantum Speedup
+                pdf.set_font("Arial", 'B', 9)
+                pdf.set_text_color(124, 58, 237)  # Purple
+                pdf.cell(0, 6, "Quantum Speedup:", ln=True)
+                pdf.set_font("Arial", size=9)
+                pdf.set_text_color(0, 0, 0)
+                pdf.multi_cell(0, 5, info.get('quantum_speedup', 'N/A'))
+                
+                # Classical Efficiency
+                pdf.set_font("Arial", 'B', 9)
+                pdf.set_text_color(21, 128, 61)  # Green
+                pdf.cell(0, 6, "Classical Efficiency:", ln=True)
+                pdf.set_font("Arial", size=9)
+                pdf.set_text_color(0, 0, 0)
+                pdf.multi_cell(0, 5, info.get('classical_efficiency', 'N/A'))
+                
+                # Optimization
+                pdf.set_font("Arial", 'B', 9)
+                pdf.set_text_color(180, 83, 9)  # Orange
+                pdf.cell(0, 6, "Optimization Recommendations:", ln=True)
+                pdf.set_font("Arial", size=9)
+                pdf.set_text_color(0, 0, 0)
+                pdf.multi_cell(0, 5, info.get('optimization_notes', 'N/A'))
+            
+            pdf.ln(3)
+    
+    else:
+        pdf.set_font("Arial", 'B', 12)
+        pdf.set_text_color(34, 197, 94)  # Green for success
+        pdf.cell(0, 10, "✓ No Inefficiencies Detected", ln=True)
+        pdf.set_font("Arial", size=10)
+        pdf.set_text_color(0, 0, 0)
+        pdf.multi_cell(0, 6, "Your code appears to be well-optimized. No significant performance issues were found.")
+    
+    # Recommendations Section
+    pdf.ln(5)
+    pdf.set_font("Arial", 'B', 14)
+    pdf.set_text_color(59, 130, 246)
+    pdf.cell(0, 10, "Overall Recommendations", ln=True)
+    pdf.set_font("Arial", size=10)
+    pdf.set_text_color(0, 0, 0)
+    
+    recommendations = [
+        "Implement suggested classical optimizations for immediate performance gains",
+        "Consider quantum-ready algorithms for future scalability",
+        "Regularly profile and optimize computational hotspots",
+        "Use appropriate data structures for your specific use case"
+    ]
+    
+    for rec in recommendations:
+        pdf.cell(5)  # Indent
+        pdf.cell(0, 6, f"• {rec}", ln=True)
+    
+    # Footer
+    pdf.ln(10)
+    pdf.set_font("Arial", 'I', 8)
+    pdf.set_text_color(100, 100, 100)
+    pdf.cell(0, 5, "Generated by Auburn AI - Advanced Code Optimization for Pharmaceutical Research", ln=True, align='C')
+    pdf.cell(0, 5, "Confidential Report - For authorized use only", ln=True, align='C')
+    
+    return pdf.output(dest='S').encode('latin1')
+
+def get_download_link(pdf_data, filename):
+    """Generate a download link for the PDF"""
+    b64 = base64.b64encode(pdf_data).decode()
+    return f'<a href="data:application/octet-stream;base64,{b64}" download="{filename}">📥 Download PDF Report</a>'
+
+# Integration into your existing analysis section:
+def render_analysis_with_pdf():
+    """Your existing analysis function enhanced with PDF download"""
+    
+    # ... your existing analysis code ...
+    
+    if analyze_clicked and code_input.strip():
+        with st.spinner("🔍 Analyzing code patterns..."):
+            try:
+                predicted_labels, confidence_scores = predict_operations(code_input)
+                
+                # Display results (your existing code)
+                st.subheader("Analysis Results")
+                
+                if predicted_labels:
+                    st.markdown('<div class="danger-box">', unsafe_allow_html=True)
+                    st.error("Inefficiencies Detected")
+                    st.markdown('</div>', unsafe_allow_html=True)
+                    
+                    for label in predicted_labels:
+                        confidence = confidence_scores.get(label, 0) * 100
+                        with st.container():
+                            col_a, col_b = st.columns([3, 1])
+                            with col_a:
+                                st.write(f"**{label.replace('_', ' ').title()}**")
+                            with col_b:
+                                st.write(f"`{confidence:.1f}%`")
+                        
+                        if label in operations_info:
+                            # Your existing detailed analysis display...
+                            pass
+                
+                # ADD PDF GENERATION BUTTON
+                st.markdown("---")
+                st.subheader("Generate Report")
+                
+                col1, col2 = st.columns([1, 2])
+                
+                with col1:
+                    if st.button("📄 Generate PDF Report", use_container_width=True, type="secondary"):
+                        with st.spinner("Generating professional report..."):
+                            try:
+                                pdf_data = create_analysis_pdf(
+                                    code_input, 
+                                    predicted_labels, 
+                                    confidence_scores, 
+                                    operations_info
+                                )
+                                
+                                # Create download link
+                                filename = f"auburn_analysis_{datetime.now().strftime('%Y%m%d_%H%M')}.pdf"
+                                download_link = get_download_link(pdf_data, filename)
+                                
+                                st.markdown(download_link, unsafe_allow_html=True)
+                                st.success("✅ Report generated successfully!")
+                                
+                            except Exception as e:
+                                st.error(f"❌ Failed to generate PDF: {str(e)}")
+                
+                with col2:
+                    st.info("""
+                    **Professional Report Includes:**
+                    • Executive summary
+                    • Code analysis details  
+                    • Confidence scores
+                    • Optimization recommendations
+                    • Quantum computing insights
+                    """)
+                
+            except Exception as e:
+                st.error(f"❌ Error analyzing code: {str(e)}")
+
+# Alternative: Add download button right after analysis results
+def add_pdf_download_section(code_input, predicted_labels, confidence_scores, operations_info):
+    """Add PDF download section to your analysis results"""
+    
+    st.markdown("---")
+    
+    # PDF Generation Section
+    st.markdown("""
+    <div class="content-card">
+        <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+            <div style="font-size: 1.5rem;">📊</div>
+            <h3 style="margin: 0; color: #1e293b;">Export Analysis Report</h3>
+        </div>
+    """, unsafe_allow_html=True)
+    
+    col1, col2 = st.columns([1, 1])
+    
+    with col1:
+        if st.button("🔄 Generate Comprehensive PDF Report", use_container_width=True, type="primary"):
+            with st.spinner("🔄 Creating professional report..."):
+                try:
+                    pdf_data = create_analysis_pdf(
+                        code_input, 
+                        predicted_labels, 
+                        confidence_scores, 
+                        operations_info
+                    )
+                    
+                    filename = f"Auburn_AI_Analysis_Report_{datetime.now().strftime('%Y%m%d_%H%M%S')}.pdf"
+                    download_link = get_download_link(pdf_data, filename)
+                    
+                    st.markdown("""
+                    <div style="
+                        background: #f0fdf4;
+                        border: 1px solid #bbf7d0;
+                        border-radius: 8px;
+                        padding: 1rem;
+                        margin-top: 1rem;
+                    ">
+                        <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                            <span style="color: #16a34a;">✅</span>
+                            <strong style="color: #166534;">Report Generated Successfully!</strong>
+                        </div>
+                    </div>
+                    """, unsafe_allow_html=True)
+                    
+                    st.markdown(download_link, unsafe_allow_html=True)
+                    
+                except Exception as e:
+                    st.error(f"❌ Failed to generate PDF: {str(e)}")
+    
+    with col2:
+        st.markdown("""
+        **Report Features:**
+        - Professional formatting
+        - Detailed analysis breakdown  
+        - Confidence metrics
+        - Optimization strategies
+        - Quantum computing potential
+        - Executive summary
+        - Code snippets
+        """)
+    
+    st.markdown("</div>", unsafe_allow_html=True)
 # Load your logo
 logo = Image.open("image0.jpeg")
 
@@ -336,298 +628,6 @@ her2_positive = find_patients_with_biomarker(oncology_patients, "HER2", 2.0)"""
         
    
     }
-def create_analysis_pdf(code_snippet, predicted_labels, confidence_scores, operations_info):
-    """Generate a professional PDF report"""
-    
-    pdf = FPDF()
-    pdf.add_page()
-    
-    # Set up fonts
-    pdf.set_font("Arial", size=12)
-    
-    # Header with gradient-like effect (using colors)
-    pdf.set_fill_color(59, 130, 246)  # Blue
-    pdf.set_text_color(255, 255, 255)
-    pdf.cell(0, 15, "Auburn AI - Code Analysis Report", ln=True, align='C', fill=True)
-    pdf.ln(5)
-    
-    # Report metadata
-    pdf.set_text_color(0, 0, 0)
-    pdf.set_font("Arial", 'B', 10)
-    pdf.cell(0, 8, f"Generated on: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}", ln=True)
-    pdf.cell(0, 8, f"Analysis ID: {hash(code_snippet) % 10000:04d}", ln=True)
-    pdf.ln(5)
-    
-    # Executive Summary
-    pdf.set_font("Arial", 'B', 14)
-    pdf.set_text_color(59, 130, 246)
-    pdf.cell(0, 10, "Executive Summary", ln=True)
-    pdf.set_font("Arial", size=10)
-    pdf.set_text_color(0, 0, 0)
-    
-    if predicted_labels:
-        summary_text = f"Analysis detected {len(predicted_labels)} potential inefficiencies in your code."
-        pdf.multi_cell(0, 6, summary_text)
-    else:
-        pdf.multi_cell(0, 6, "No significant inefficiencies detected. Code appears well-optimized.")
-    pdf.ln(5)
-    
-    # Code Snippet Section
-    pdf.set_font("Arial", 'B', 12)
-    pdf.set_text_color(59, 130, 246)
-    pdf.cell(0, 8, "Analyzed Code", ln=True)
-    pdf.set_font("Arial", size=9)
-    pdf.set_text_color(100, 100, 100)
-    
-    # Code with background
-    pdf.set_fill_color(248, 250, 252)
-    pdf.cell(0, 6, "", ln=True, fill=True)
-    
-    # Split code into lines and add to PDF
-    code_lines = code_snippet.split('\n')
-    for line in code_lines[:20]:  # Limit to first 20 lines
-        pdf.cell(0, 4, line, ln=True)
-    
-    if len(code_lines) > 20:
-        pdf.cell(0, 4, "... (code truncated for report)", ln=True)
-    
-    pdf.cell(0, 6, "", ln=True, fill=True)
-    pdf.ln(5)
-    
-    # Detected Issues Section
-    if predicted_labels:
-        pdf.set_font("Arial", 'B', 14)
-        pdf.set_text_color(239, 68, 68)  # Red for issues
-        pdf.cell(0, 10, "Detected Inefficiencies", ln=True)
-        
-        for i, label in enumerate(predicted_labels, 1):
-            confidence = confidence_scores.get(label, 0) * 100
-            
-            # Issue header
-            pdf.set_font("Arial", 'B', 11)
-            pdf.set_text_color(0, 0, 0)
-            pdf.cell(0, 8, f"{i}. {label.replace('_', ' ').title()}", ln=True)
-            
-            # Confidence level
-            pdf.set_font("Arial", 'I', 9)
-            pdf.set_text_color(100, 100, 100)
-            pdf.cell(0, 6, f"Confidence: {confidence:.1f}%", ln=True)
-            
-            # Detailed analysis for each operation
-            if label in operations_info:
-                info = operations_info[label]
-                
-                # Description
-                pdf.set_font("Arial", 'B', 9)
-                pdf.set_text_color(30, 64, 175)  # Dark blue
-                pdf.cell(0, 6, "Description:", ln=True)
-                pdf.set_font("Arial", size=9)
-                pdf.set_text_color(0, 0, 0)
-                pdf.multi_cell(0, 5, info.get('description', 'N/A'))
-                
-                # Quantum Speedup
-                pdf.set_font("Arial", 'B', 9)
-                pdf.set_text_color(124, 58, 237)  # Purple
-                pdf.cell(0, 6, "Quantum Speedup:", ln=True)
-                pdf.set_font("Arial", size=9)
-                pdf.set_text_color(0, 0, 0)
-                pdf.multi_cell(0, 5, info.get('quantum_speedup', 'N/A'))
-                
-                # Classical Efficiency
-                pdf.set_font("Arial", 'B', 9)
-                pdf.set_text_color(21, 128, 61)  # Green
-                pdf.cell(0, 6, "Classical Efficiency:", ln=True)
-                pdf.set_font("Arial", size=9)
-                pdf.set_text_color(0, 0, 0)
-                pdf.multi_cell(0, 5, info.get('classical_efficiency', 'N/A'))
-                
-                # Optimization
-                pdf.set_font("Arial", 'B', 9)
-                pdf.set_text_color(180, 83, 9)  # Orange
-                pdf.cell(0, 6, "Optimization Recommendations:", ln=True)
-                pdf.set_font("Arial", size=9)
-                pdf.set_text_color(0, 0, 0)
-                pdf.multi_cell(0, 5, info.get('optimization_notes', 'N/A'))
-            
-            pdf.ln(3)
-    
-    else:
-        pdf.set_font("Arial", 'B', 12)
-        pdf.set_text_color(34, 197, 94)  # Green for success
-        pdf.cell(0, 10, "✓ No Inefficiencies Detected", ln=True)
-        pdf.set_font("Arial", size=10)
-        pdf.set_text_color(0, 0, 0)
-        pdf.multi_cell(0, 6, "Your code appears to be well-optimized. No significant performance issues were found.")
-    
-    # Recommendations Section
-    pdf.ln(5)
-    pdf.set_font("Arial", 'B', 14)
-    pdf.set_text_color(59, 130, 246)
-    pdf.cell(0, 10, "Overall Recommendations", ln=True)
-    pdf.set_font("Arial", size=10)
-    pdf.set_text_color(0, 0, 0)
-    
-    recommendations = [
-        "Implement suggested classical optimizations for immediate performance gains",
-        "Consider quantum-ready algorithms for future scalability",
-        "Regularly profile and optimize computational hotspots",
-        "Use appropriate data structures for your specific use case"
-    ]
-    
-    for rec in recommendations:
-        pdf.cell(5)  # Indent
-        pdf.cell(0, 6, f"• {rec}", ln=True)
-    
-    # Footer
-    pdf.ln(10)
-    pdf.set_font("Arial", 'I', 8)
-    pdf.set_text_color(100, 100, 100)
-    pdf.cell(0, 5, "Generated by Auburn AI - Advanced Code Optimization for Pharmaceutical Research", ln=True, align='C')
-    pdf.cell(0, 5, "Confidential Report - For authorized use only", ln=True, align='C')
-    
-    return pdf.output(dest='S').encode('latin1')
-
-def get_download_link(pdf_data, filename):
-    """Generate a download link for the PDF"""
-    b64 = base64.b64encode(pdf_data).decode()
-    return f'<a href="data:application/octet-stream;base64,{b64}" download="{filename}">📥 Download PDF Report</a>'
-
-# Integration into your existing analysis section:
-def render_analysis_with_pdf():
-    """Your existing analysis function enhanced with PDF download"""
-    
-    # ... your existing analysis code ...
-    
-    if analyze_clicked and code_input.strip():
-        with st.spinner("🔍 Analyzing code patterns..."):
-            try:
-                predicted_labels, confidence_scores = predict_operations(code_input)
-                
-                # Display results (your existing code)
-                st.subheader("Analysis Results")
-                
-                if predicted_labels:
-                    st.markdown('<div class="danger-box">', unsafe_allow_html=True)
-                    st.error("Inefficiencies Detected")
-                    st.markdown('</div>', unsafe_allow_html=True)
-                    
-                    for label in predicted_labels:
-                        confidence = confidence_scores.get(label, 0) * 100
-                        with st.container():
-                            col_a, col_b = st.columns([3, 1])
-                            with col_a:
-                                st.write(f"**{label.replace('_', ' ').title()}**")
-                            with col_b:
-                                st.write(f"`{confidence:.1f}%`")
-                        
-                        if label in operations_info:
-                            # Your existing detailed analysis display...
-                            pass
-                
-                # ADD PDF GENERATION BUTTON
-                st.markdown("---")
-                st.subheader("Generate Report")
-                
-                col1, col2 = st.columns([1, 2])
-                
-                with col1:
-                    if st.button("📄 Generate PDF Report", use_container_width=True, type="secondary"):
-                        with st.spinner("Generating professional report..."):
-                            try:
-                                pdf_data = create_analysis_pdf(
-                                    code_input, 
-                                    predicted_labels, 
-                                    confidence_scores, 
-                                    operations_info
-                                )
-                                
-                                # Create download link
-                                filename = f"auburn_analysis_{datetime.now().strftime('%Y%m%d_%H%M')}.pdf"
-                                download_link = get_download_link(pdf_data, filename)
-                                
-                                st.markdown(download_link, unsafe_allow_html=True)
-                                st.success("✅ Report generated successfully!")
-                                
-                            except Exception as e:
-                                st.error(f"❌ Failed to generate PDF: {str(e)}")
-                
-                with col2:
-                    st.info("""
-                    **Professional Report Includes:**
-                    • Executive summary
-                    • Code analysis details  
-                    • Confidence scores
-                    • Optimization recommendations
-                    • Quantum computing insights
-                    """)
-                
-            except Exception as e:
-                st.error(f"❌ Error analyzing code: {str(e)}")
-
-# Alternative: Add download button right after analysis results
-def add_pdf_download_section(code_input, predicted_labels, confidence_scores, operations_info):
-    """Add PDF download section to your analysis results"""
-    
-    st.markdown("---")
-    
-    # PDF Generation Section
-    st.markdown("""
-    <div class="content-card">
-        <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
-            <div style="font-size: 1.5rem;">📊</div>
-            <h3 style="margin: 0; color: #1e293b;">Export Analysis Report</h3>
-        </div>
-    """, unsafe_allow_html=True)
-    
-    col1, col2 = st.columns([1, 1])
-    
-    with col1:
-        if st.button("🔄 Generate Comprehensive PDF Report", use_container_width=True, type="primary"):
-            with st.spinner("🔄 Creating professional report..."):
-                try:
-                    pdf_data = create_analysis_pdf(
-                        code_input, 
-                        predicted_labels, 
-                        confidence_scores, 
-                        operations_info
-                    )
-                    
-                    filename = f"Auburn_AI_Analysis_Report_{datetime.now().strftime('%Y%m%d_%H%M%S')}.pdf"
-                    download_link = get_download_link(pdf_data, filename)
-                    
-                    st.markdown("""
-                    <div style="
-                        background: #f0fdf4;
-                        border: 1px solid #bbf7d0;
-                        border-radius: 8px;
-                        padding: 1rem;
-                        margin-top: 1rem;
-                    ">
-                        <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
-                            <span style="color: #16a34a;">✅</span>
-                            <strong style="color: #166534;">Report Generated Successfully!</strong>
-                        </div>
-                    </div>
-                    """, unsafe_allow_html=True)
-                    
-                    st.markdown(download_link, unsafe_allow_html=True)
-                    
-                except Exception as e:
-                    st.error(f"❌ Failed to generate PDF: {str(e)}")
-    
-    with col2:
-        st.markdown("""
-        **Report Features:**
-        - Professional formatting
-        - Detailed analysis breakdown  
-        - Confidence metrics
-        - Optimization strategies
-        - Quantum computing potential
-        - Executive summary
-        - Code snippets
-        """)
-    
-    st.markdown("</div>", unsafe_allow_html=True)
 
     # ABOUT PAGE
     if page == "About":
