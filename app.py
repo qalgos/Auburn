@@ -209,29 +209,8 @@ def authenticate():
 
 # Check authentication before running app
 if authenticate():
-    # Clean Permanent Navigation
-    with st.sidebar:
-        # Navigation Header
-        st.markdown("""
-        <div style="padding: 1rem 0; border-bottom: 1px solid #e2e8f0; margin-bottom: 1rem;">
-            <h2 style="margin: 0; color: #1e293b; font-size: 1.5rem;">Auburn</h2>
-            <p style="margin: 0.25rem 0 0 0; color: #64748b; font-size: 0.875rem;">Navigation</p>
-        </div>
-        """, unsafe_allow_html=True)
-        
-        # Navigation Options
-        st.markdown("<div style='margin-bottom: 1rem;'>", unsafe_allow_html=True)
-        page = st.radio(
-            "Go to",
-            ["Demo", "About"],
-            index=0,
-            key="nav_radio",
-            label_visibility="collapsed"
-        )
-        st.markdown("</div>", unsafe_allow_html=True)
-        
-        # Visual separator
-        st.markdown("---")
+   
+    
         # Top Navigation Bar
     st.markdown("""
     <style>
@@ -270,15 +249,15 @@ if authenticate():
     # Navigation Bar
     col1, col2, col3, col4 = st.columns([2, 1, 1, 1])
     with col1:
-        st.markdown("<h1 style='color: white; margin: 0;'>🧬 Auburn AI</h1>", unsafe_allow_html=True)
+        st.markdown("<h1 style='color: white; margin: 0;'> Auburn AI</h1>", unsafe_allow_html=True)
     
     with col2:
-        if st.button("🏠 Demo", use_container_width=True, type="primary" if st.session_state.page == "Demo" else "secondary"):
+        if st.button("Demo", use_container_width=True, type="primary" if st.session_state.page == "Demo" else "secondary"):
             st.session_state.page = "Demo"
             st.rerun()
     
     with col3:
-        if st.button("ℹ️ About", use_container_width=True, type="primary" if st.session_state.page == "About" else "secondary"):
+        if st.button("About", use_container_width=True, type="primary" if st.session_state.page == "About" else "secondary"):
             st.session_state.page = "About"
             st.rerun()
     
