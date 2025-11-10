@@ -24,7 +24,7 @@ def create_analysis_pdf(code_snippet, predicted_labels, confidence_scores, opera
     # Header with gradient-like effect (using colors)
     pdf.set_fill_color(59, 130, 246)  # Blue
     pdf.set_text_color(255, 255, 255)
-    pdf.cell(0, 15, "Auburn AI - Code Analysis Report", ln=True, align='C', fill=True)
+    pdf.cell(0, 15, "Auburn AI - Code Analysis", ln=True, align='C', fill=True)
     pdf.ln(5)
     
     # Report metadata
@@ -502,7 +502,7 @@ her2_positive = find_patients_with_biomarker(oncology_patients, "HER2", 2.0)"""
     # Page content based on selection
     if st.session_state.get('page', 'Demo') == "About":
         # ABOUT PAGE CONTENT
-        st.title("About Auburn AI")
+        st.title("About Auburn")
         
         col1, col2 = st.columns([2, 1])
         
@@ -511,7 +511,7 @@ her2_positive = find_patients_with_biomarker(oncology_patients, "HER2", 2.0)"""
             st.markdown("""
             <div class="feature-card">
             Auburn is an advanced AI-powered tool designed specifically for 
-            the pharmaceutical and biotechnology industries. It automatically detects inefficient 
+            the pharmaceutical industry. It automatically detects inefficient 
             code patterns and suggests improvements.
             </div>
             """, unsafe_allow_html=True)
@@ -519,7 +519,7 @@ her2_positive = find_patients_with_biomarker(oncology_patients, "HER2", 2.0)"""
             st.subheader("Key Features")
             
             features = [
-                ("Domain-Specific AI-Powered Analysis", "Deep learning models optimized for pharma/biotech computational workflows, trained to recognise inefficiencies."),
+                ("Domain-Specific AI-Powered Analysis", "Deep learning algorithms optimized for pharma computational workflows, trained to recognise inefficiencies."),
                 ("Private and Secure", "Scan your codebase without worrying about leaks. Optimize your codebase fully in-house, without your proprietary code ever leaving your company."),
                 ("Detailed Reporting", "Comprehensive analysis with improvement suggestions. Learn if your business can benefit from quantum computers!")
             ]
