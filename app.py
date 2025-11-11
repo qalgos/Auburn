@@ -586,7 +586,7 @@ her2_positive = find_patients_with_biomarker(oncology_patients, "HER2", 2.0)"""
         
         # Code input area
         code_input = st.text_area(
-            "Paste or write your Python code here:", 
+            "Paste or write your code here:", 
             height=250,
             value=st.session_state.get('analysis_code', ''),
             placeholder="""# Write your code here or use an example above\n\ndef your_function():\n    # Your code here\n    return result""",
